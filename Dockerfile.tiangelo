@@ -1,0 +1,19 @@
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7 as base
+WORKDIR /app/
+
+COPY ./requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt \
+	&& rm -rf /root/.cache/pip
+
+COPY ./icon_governance /app/icon_governance
+COPY ./prestart.sh /app/prestart.sh
+COPY ./icon_governance/main.py /app/main.py
+RUN chmod +x /app/prestart.sh
+
+
+FROM base as prod
+
+FROM base as test
+COPY ./requirements_dev.txt /requirements_dev.txt
+RUN pip install -r /requirements_dev.txt
+COPY ./tests ./tests

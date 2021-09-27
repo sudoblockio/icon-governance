@@ -1,0 +1,4 @@
+pytest
+pytest-mock
+docker-compose
+grpcio-tools==1.40.0
