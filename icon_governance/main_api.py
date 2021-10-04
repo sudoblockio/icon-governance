@@ -6,6 +6,7 @@ from fastapi_health import health
 from prometheus_client import start_http_server
 from starlette.middleware.cors import CORSMiddleware
 
+from icon_governance.api.health import is_database_online
 from icon_governance.api.v1.router import api_router
 from icon_governance.config import settings
 from icon_governance.log import logger
