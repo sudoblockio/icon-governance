@@ -28,21 +28,20 @@ x-env: &env
 
   # Kafka
   KAFKA_BROKER_URL: "kafka:9092"
-  SCHEMA_REGISTRY_URL: "schemaregistry:8081"
+  SCHEMA_REGISTRY_URL: "http://schemaregistry:8081"
   KAFKA_GROUP_ID: "governance-service"
 
   # Topics
   CONSUMER_GROUP: "governance-consumer-group"
   SCHEMA_NAME_TOPICS: "governance-ws:block"
 
-  CONSUMER_TOPIC_BLOCKS: "governance"
+  CONSUMER_TOPIC_BLOCKS: "blocks"
   CONSUMER_TOPIC_TRANSACTIONS: "transactions"
   CONSUMER_TOPIC_LOGS: "logs"
 
   # DB
   POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: "changeme"
-#  POSTGRES_SERVER: "127.0.0.1"
   POSTGRES_SERVER: "postgres"
   POSTGRES_PORT: "5432"
   POSTGRES_DATABASE: "postgres"
