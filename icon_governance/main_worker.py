@@ -1,7 +1,7 @@
-from threading import Thread
-from multiprocessing.pool import ThreadPool
-
 import asyncio
+from multiprocessing.pool import ThreadPool
+from threading import Thread
+
 from loguru import logger
 from prometheus_client import start_http_server
 
@@ -16,6 +16,11 @@ logger.info("Starting metrics server.")
 # asyncio.run(init_db())
 
 transactions_worker_thread = Thread(
+    target=transactions_worker,
+    args=(),
+)
+
+prep_cron = Thread(
     target=transactions_worker,
     args=(),
 )

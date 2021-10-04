@@ -1,52 +1,47 @@
-from typing import Optional, Any, List
+from typing import Any, List, Optional
+
 from sqlmodel import Field, Session, SQLModel, create_engine
 
 
-class PrepBase(SQLModel):
-    address: str
-
-
-class PrepCreate(PrepBase):
-    pass
-
-
-class Prep(PrepBase, table=True):
+class Prep(SQLModel, table=True):
     address: str = Field(primary_key=True)
 
-    name: Optional[str]
-    country: Optional[str]
-    city: Optional[str]
-    email: Optional[str]
-    website: Optional[str]
-    details: Optional[str]
-    p2p_endpoint: Optional[str]
-    node_address: Optional[str]
+    name: Optional[str] = Field(None, index=False)
+    country: Optional[str] = Field(None, index=False)
+    city: Optional[str] = Field(None, index=False)
+    email: Optional[str] = Field(None, index=False)
+    website: Optional[str] = Field(None, index=False)
+    details: Optional[str] = Field(None, index=False)
+    p2p_endpoint: Optional[str] = Field(None, index=False)
+    node_address: Optional[str] = Field(None, index=False)
 
-    status: Optional[str] = "active"
+    status: Optional[str] = Field(None, index=False)
+    penalty: Optional[str] = Field(None, index=False)
+    grade: Optional[str] = Field(None, index=False)
 
-    last_updated_block: Optional[int]
-    last_updated_timestamp: Optional[int]
-    created_block: Optional[int]
-    created_timestamp: Optional[int]
+    last_updated_block: Optional[int] = Field(None, index=False)
+    last_updated_timestamp: Optional[int] = Field(None, index=False)
+    created_block: Optional[int] = Field(None, index=False)
+    created_timestamp: Optional[int] = Field(None, index=False)
 
     # Logos
-    logo_256: Optional[str] = None
-    logo_1024: Optional[str] = None
-    logo_svg: Optional[str] = None
+    logo_256: Optional[str] = Field(None, index=False)
+    logo_1024: Optional[str] = Field(None, index=False)
+    logo_svg: Optional[str] = Field(None, index=False)
 
     # Social Media
-    steemit: Optional[str] = None
-    twitter: Optional[str] = None
-    youtube: Optional[str] = None
-    facebook: Optional[str] = None
-    github: Optional[str] = None
-    reddit: Optional[str] = None
-    keybase: Optional[str] = None
-    telegram: Optional[str] = None
-    wechat: Optional[str] = None
+    steemit: Optional[str] = Field(None, index=False)
+    twitter: Optional[str] = Field(None, index=False)
+    youtube: Optional[str] = Field(None, index=False)
+    facebook: Optional[str] = Field(None, index=False)
+    github: Optional[str] = Field(None, index=False)
+    reddit: Optional[str] = Field(None, index=False)
+    keybase: Optional[str] = Field(None, index=False)
+    telegram: Optional[str] = Field(None, index=False)
+    wechat: Optional[str] = Field(None, index=False)
 
     # Server
-    api_endpoint: Optional[str] = None
-    server_country: Optional[str] = None
-    server_city: Optional[str] = None
-    server_type: Optional[str] = None
+    api_endpoint: Optional[str] = Field(None, index=False)
+    server_country: Optional[str] = Field(None, index=False)
+    server_city: Optional[str] = Field(None, index=False)
+    server_type: Optional[str] = Field(None, index=False)

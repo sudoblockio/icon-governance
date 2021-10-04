@@ -1,13 +1,10 @@
 import logging
-
-from _pytest.logging import caplog as _caplog
-from loguru import logger
-
 from typing import Generator
-import pytest
-from fastapi.testclient import TestClient
-from icon_governance.main_api import app
 
+import pytest
+from _pytest.logging import caplog as _caplog
+from fastapi.testclient import TestClient
+from loguru import logger
 
 # from icon_governance.db import get_session
 # @pytest.fixture(scope="session")
@@ -22,6 +19,8 @@ from icon_governance.main_api import app
 
 @pytest.fixture(scope="module")
 def client() -> Generator:
+    from icon_governance.main_api import app
+
     with TestClient(app) as c:
         yield c
 

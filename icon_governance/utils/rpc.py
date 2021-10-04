@@ -1,10 +1,21 @@
 import json
+
 import requests
+
+from icon_governance.config import settings
+from icon_governance.log import logger
 
 
 def post_rpc(payload: dict):
-    uri = "https://icon.geometry-dev.net/api/v3"
-    r = requests.post(uri, data=json.dumps(payload)).json()
+    r = requests.post(settings.ICON_NODE_URL, data=json.dumps(payload))
+
+    if r.status_code != 200:
+        logger.info(f"Error {r.status_code} with payload {payload}")
+        r = requests.post(settings.BACKUP_ICON_NODE_URL, data=json.dumps(payload))
+        if r.status_code != 200:
+            logger.info(f"Error {r.status_code} with payload {payload} to backup")
+        return r
+
     return r
 
 
@@ -13,9 +24,7 @@ def icx_getTransactionResult(txHash: str):
         "jsonrpc": "2.0",
         "method": "icx_getTransactionResult",
         "id": 1234,
-        "params": {
-            "txHash": txHash
-        }
+        "params": {"txHash": txHash},
     }
     return post_rpc(payload)
 
@@ -30,18 +39,8 @@ def getPReps():
             "dataType": "call",
             "data": {
                 "method": "getPReps",
-                "params": {
-                    "startRanking": "0x1",
-                    "endRanking": "0xaaa"  # Should be all preps
-                }
-            }
-        }
+                "params": {"startRanking": "0x1", "endRanking": "0xaaa"},  # Should be all preps
+            },
+        },
     }
     return post_rpc(payload)
-
-
-if __name__ == '__main__':
-    x = icx_getTransactionResult('0x3bea9c00f108496a264d6562dfe6f11901cfb76aecb21a1f128eeae514603bd9')
-    print()
-    # x = getPReps()
-    # print()
