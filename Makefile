@@ -5,7 +5,7 @@ test: up-dbs test-unit test-integration
 up-dbs:  ## Bring up the DBs
 	docker-compose -f docker-compose.db.yml up -d
 	sleep 5
-	cd icon_contracts && PYTHONPATH=$PYTHONPATH:`pwd`/.. alembic upgrade head
+	cd icon_governance && PYTHONPATH=$PYTHONPATH:`pwd`/.. alembic upgrade head
 
 down-dbs:  ## Take down the DBs
 	docker-compose -f docker-compose.db.yml down
