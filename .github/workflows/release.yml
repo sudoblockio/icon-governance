@@ -16,6 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install deps
+        run: |
+          pip3 install -r requirements_api.txt -r requirements_worker.txt -r requirements_dev.txt
+          pip3 install --upgrade protobuf
+
       - name: Tag name
         id: source
         run: |
