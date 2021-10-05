@@ -19,10 +19,10 @@ class TransactionsWorker(KafkaClient):
 
     def process(self, msg):
         # Filter on only txs to the governance address
-        self.msg_count += 1
         if self.msg_count % 10000 == 0:
             logger.info(f"msg count {self.msg_count} and block {msg.value().block_number}")
             metrics.block_height.set(msg.value().block_number)
+        self.msg_count += 1
 
         if msg.key() != settings._governance_address:
             return
