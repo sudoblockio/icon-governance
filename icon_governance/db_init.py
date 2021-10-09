@@ -88,7 +88,7 @@ def get_initial_preps():
         prep.penalty = (p["penalty"],)
 
         try:
-            r = requests.get(p["details"], timeout=1)
+            r = requests.get(p["details"], timeout=4)
             if r.status_code == 200:
                 try:
                     details = r.json()
