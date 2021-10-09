@@ -93,7 +93,7 @@ def get_initial_preps():
                 details = r.json()
                 extract_details(details, prep)
 
-        except (ConnectTimeout, ConnectionError, JSONDecodeError):
+        except Exception:
             # Details not available so no more parsing
             pass
 
