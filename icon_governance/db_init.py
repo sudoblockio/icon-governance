@@ -90,13 +90,10 @@ def get_initial_preps():
         try:
             r = requests.get(p["details"], timeout=4)
             if r.status_code == 200:
-                try:
-                    details = r.json()
-                    extract_details(details, prep)
-                except JSONDecodeError:
-                    pass
+                details = r.json()
+                extract_details(details, prep)
 
-        except (ConnectTimeout, ConnectionError):
+        except (ConnectTimeout, ConnectionError, JSONDecodeError):
             # Details not available so no more parsing
             pass
 
