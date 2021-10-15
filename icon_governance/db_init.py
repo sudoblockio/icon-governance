@@ -70,10 +70,6 @@ def get_initial_preps():
                 address=p["address"],
             )
 
-        if prep.country is not None:
-            # Check random nested field and if it is in there then move on.
-            continue
-
         prep.name = (p["name"],)
         prep.country = (p["country"],)
         prep.city = (p["city"],)
@@ -103,8 +99,10 @@ def get_initial_preps():
             # Details not available so no more parsing
             pass
 
-        session.add(prep)
-        session.commit()
+        if prep.country is None:
+            # Check random nested field and if it is in there then move on.
+            session.add(prep)
+            session.commit()
 
         processes_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
         kafka.produce_protobuf(
