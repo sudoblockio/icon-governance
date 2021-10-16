@@ -104,12 +104,13 @@ def get_initial_preps():
             session.add(prep)
             session.commit()
 
-        processes_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
+        processed_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
         kafka.produce_protobuf(
             settings.PRODUCER_TOPIC_GOVERNANCE_PREPS,
             p["address"],  # Keyed on address for init - hash for Tx updates
-            processes_prep,
+            processed_prep,
         )
+        logger.info(f"Emitting new prep {processed_prep.address}")
 
 
 if __name__ == "__main__":
