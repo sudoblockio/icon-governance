@@ -99,10 +99,10 @@ def get_initial_preps():
             # Details not available so no more parsing
             pass
 
-        if prep.country is None:
-            # Check random nested field and if it is in there then move on.
-            session.add(prep)
-            session.commit()
+        # if prep.country is None:
+        #     # Check random nested field and if it is in there then move on.
+        session.add(prep)
+        session.commit()
 
         processed_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
         kafka.produce_protobuf(
