@@ -14,6 +14,8 @@ def test_api_get_prep(db: Session, client: TestClient):
         f"{settings.REST_PREFIX}/preps/hx0b047c751658f7ce1b2595da34d57a0e7dad357d"
     )
     assert response.status_code == 200
+    assert isinstance(response.json(), list)
+    assert len(response.json()) == 1
 
 
 def test_api_get_prep_error(db: Session, client: TestClient):
