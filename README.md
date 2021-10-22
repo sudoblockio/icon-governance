@@ -6,11 +6,6 @@
 
 Off chain indexer for the ICON Blockchain serving the **governance** context of the [icon-explorer](https://github.com/geometry-labs/icon-explorer). Service is broken up into API and worker components that are run as individual docker containers. It depends on data coming in from [icon-etl](https://github.com/geometry-labs/icon-etl) over a Kafka message queue with persistence on a postgres database.
 
-
-### Endpoints
-
-TODO: Links and table
-
 ### Deployment
 
 Service can be run in the following ways:
@@ -22,18 +17,7 @@ docker-compose -f docker-compose.db.yml -f docker-compose.yml up -d
 make up
 ```
 
-2. With the whole stack from the main [icon-explorer]() repo.
-
-3. With the helm chart.
-
-**Please note this is for advanced users who are capable of setting external DBs / Strimzi and configuring them properly.**
-
-TODO:
-
-```bash
-helm add
-helm install
-```
+2. With the whole stack from the main [icon-explorer](https://github.com/geometry-labs/icon-explorer) repo.
 
 Run `make help` for more options.
 
