@@ -88,3 +88,33 @@ def getStake(address: str):
         },
     }
     return post_rpc(payload)
+
+
+def getProposals():
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 100,
+        "method": "icx_call",
+        "params": {
+            "to": "cx0000000000000000000000000000000000000001",
+            "dataType": "call",
+            "data": {
+                "method": "getProposals",
+            },
+        },
+    }
+    return post_rpc(payload)
+
+
+def get_sponsors_record():
+    payload = {
+        "jsonrpc": "2.0",
+        "method": "icx_call",
+        "params": {
+            "to": "cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f",
+            "dataType": "call",
+            "data": {"method": "get_sponsors_record"},
+        },
+        "id": 3205148222,
+    }
+    return post_rpc(payload)

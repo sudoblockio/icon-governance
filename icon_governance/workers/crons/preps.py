@@ -1,7 +1,6 @@
-from json import JSONDecodeError
+from time import sleep
 
 import requests
-from requests.exceptions import ConnectionError, ConnectTimeout
 
 from icon_governance.config import settings
 from icon_governance.db import session
@@ -119,6 +118,9 @@ def preps_cron():
             )
             logger.info(f"Emitting new prep {processed_prep.address}")
 
+        logger.info("Prep cron ran.")
+        sleep(settings.CRON_SLEEP_SEC)
+
 
 if __name__ == "__main__":
-    get_initial_preps()
+    preps_cron()

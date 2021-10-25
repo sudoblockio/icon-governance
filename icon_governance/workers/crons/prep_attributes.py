@@ -1,5 +1,7 @@
 from time import sleep
 
+from sqlmodel import select
+
 from icon_governance.config import settings
 from icon_governance.db import session
 from icon_governance.log import logger
@@ -12,7 +14,7 @@ from icon_governance.utils.rpc import (
 )
 
 
-def prep_details_cron_worker():
+def prep_attributes_cron():
 
     while True:
         logger.info("")
@@ -30,12 +32,16 @@ def prep_details_cron_worker():
 
             delegation = post_rpc_json(getDelegation(p["address"]))
 
-            prep.voted = convert_hex_int(delegation["totalDelegated"]) / 1e8
-            prep.voting_power = convert_hex_int(delegation["votingPower"]) / 1e8
+            prep.voted = convert_hex_int(delegation["totalDelegated"]) / 1e18
+            prep.voting_power = convert_hex_int(delegation["votingPower"]) / 1e18
 
-            prep.delegated = convert_hex_int(p["delegated"]) / 1e8
-            prep.stake = convert_hex_int(p["stake"]) / 1e8
-            prep.irep = convert_hex_int(p["irep"]) / 1e8
+            prep.total_blocks = convert_hex_int(p["totalBlocks"])
+            prep.total_blocks = convert_hex_int(p["validatedBlocks"])
+            prep.total_blocks = convert_hex_int(p["unvalidatedSequenceBlocks"])
+
+            prep.delegated = convert_hex_int(p["delegated"]) / 1e18
+            prep.stake = convert_hex_int(p["stake"]) / 1e18
+            prep.irep = convert_hex_int(p["irep"]) / 1e18
 
             prep.grade = p["grade"]
             prep.penalty = p["penalty"]
@@ -43,9 +49,9 @@ def prep_details_cron_worker():
             session.add(prep)
             session.commit()
 
-        logger.info("Cron ran.")
+        logger.info("Prep attributes ran.")
         sleep(settings.CRON_SLEEP_SEC)
 
 
 if __name__ == "__main__":
-    prep_details_cron_worker()
+    prep_attributes_cron()
