@@ -49,11 +49,6 @@ jobs:
         id: login-ecr-worker
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Tag name
-        id: source
-        run: |
-          echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
-
       - name: Worker - Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr-worker.outputs.registry }}
