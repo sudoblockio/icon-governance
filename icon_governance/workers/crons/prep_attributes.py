@@ -36,8 +36,8 @@ def prep_attributes_cron():
             prep.voting_power = convert_hex_int(delegation["votingPower"]) / 1e18
 
             prep.total_blocks = convert_hex_int(p["totalBlocks"])
-            prep.total_blocks = convert_hex_int(p["validatedBlocks"])
-            prep.total_blocks = convert_hex_int(p["unvalidatedSequenceBlocks"])
+            prep.validated_blocks = convert_hex_int(p["validatedBlocks"])
+            prep.unvalidated_sequence_blocks = convert_hex_int(p["unvalidatedSequenceBlocks"])
 
             prep.delegated = convert_hex_int(p["delegated"]) / 1e18
             prep.stake = convert_hex_int(p["stake"]) / 1e18

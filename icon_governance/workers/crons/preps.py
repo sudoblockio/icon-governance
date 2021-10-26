@@ -66,7 +66,7 @@ def preps_cron():
 
         for p in rpc_preps["preps"]:
             prep = session.get(Prep, p["address"])
-            logger.info(f"Parsing {p['name']}")
+            # logger.info(f"Parsing {p['name']}")
             if prep is None:
                 prep = Prep(
                     address=p["address"],

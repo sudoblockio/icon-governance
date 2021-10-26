@@ -1,6 +1,1 @@
 __pycache__
-.gitignore
-.github
-env
-.pytest_cache
-docker-compose.*
