@@ -1,8 +1,6 @@
 from icon_governance.utils.rpc import (
     convert_hex_int,
     getDelegation,
-    getPReps,
-    getProposals,
     getStake,
     post_rpc_json,
 )
@@ -26,18 +24,6 @@ def test_convert_hex_int():
 
 def test_get_delegation():
     delegation = post_rpc_json(getDelegation(ADDRESS))
-
-    total_delegation = 0
-    for d in delegation["delegations"]:
-        total_delegation += convert_hex_int(d["value"])
-
-    totalDelegated = convert_hex_int(delegation["totalDelegated"])
-    assert totalDelegated == total_delegation
-
-
-def test_get_proposals():
-
-    delegation = post_rpc_json(getProposals())
 
     total_delegation = 0
     for d in delegation["delegations"]:

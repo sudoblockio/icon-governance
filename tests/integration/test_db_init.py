@@ -1,6 +1,8 @@
-from icon_governance.db import session
-from icon_governance.db_init import get_initial_preps
-from icon_governance.models.preps import Prep
+# from icon_governance.db import session
+#
+# from icon_governance.db_init import preps_cron
+#
+# from icon_governance.models.preps import Prep
 
 # def test_get_initial_preps(run_process_wait):
 #     run_process_wait(get_initial_preps)
