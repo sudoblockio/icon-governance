@@ -21,22 +21,25 @@ jobs:
           pip3 install -r requirements_api.txt -r requirements_worker.txt -r requirements_dev.txt
           pip3 install --upgrade protobuf
 
+      - name: Bring up stack
+        run: make up-dbs && sleep 30
+
+      - name: Check stack
+        run: make ps
+
+      - name: Run tests with coverage
+        run: make test-coverage
+
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: true
+
       - name: Tag name
         id: source
         run: |
           echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
-
-      - name: Bring up DBs
-        run: docker-compose -f docker-compose.db.yml up -d
-
-      - name: Run unit tests
-        run: cd src && go test ./... -v
-
-      - name: Bring up stack
-        run: make up
-
-      - name: Run integration tests
-        run: cd tests && go test ./... -v
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
