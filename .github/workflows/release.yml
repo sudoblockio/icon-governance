@@ -62,17 +62,6 @@ jobs:
           docker build --target prod --build-arg SERVICE_NAME=worker -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_API }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_API }}
-          aws-region: us-west-2
-
-      - name: Login to Amazon ECR
-        id: login-ecr-api
-        uses: aws-actions/amazon-ecr-login@v1
-
       - name: API - Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr-api.outputs.registry }}
@@ -129,7 +118,7 @@ jobs:
           repository: geometry-labs/icon-charts
           valueFile: 'deployments/prod/mainnet/governance/values.yaml'
           propertyPath: 'api.image.tag'
-          value: ${{ github.run_number }}
+          value: ${{ steps.source.outputs.TAG }}
           branch: main
           createPR: 'false'
           updateFile: true
@@ -142,7 +131,7 @@ jobs:
           repository: geometry-labs/icon-charts
           valueFile: 'deployments/prod/mainnet/governance/values.yaml'
           propertyPath: 'worker.image.tag'
-          value: ${{ github.run_number }}
+          value: ${{ steps.source.outputs.TAG }}
           branch: main
           createPR: 'false'
           message: 'governance prod deployment (mainnet) image versions to ${{ github.run_number }}'
