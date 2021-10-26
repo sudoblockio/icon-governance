@@ -79,7 +79,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Checkout charts repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
         with:
           repository: geometry-labs/icon-charts
           ref: main
