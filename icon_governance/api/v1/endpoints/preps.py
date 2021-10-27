@@ -16,7 +16,7 @@ async def get_preps(
     session: AsyncSession = Depends(get_session),
 ) -> List[Prep]:
     """Return list of preps"""
-    result = await session.execute(select(Prep).order_by(Prep.delegated))
+    result = await session.execute(select(Prep).order_by(Prep.delegated.desc()))
     preps = result.scalars().all()
 
     return preps
