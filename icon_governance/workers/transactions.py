@@ -2,7 +2,8 @@ import json
 from uuid import uuid4
 
 from icon_governance.config import settings
-from icon_governance.db import session
+
+# from icon_governance.db import session
 from icon_governance.log import logger
 from icon_governance.metrics import Metrics
 from icon_governance.models.preps import Prep
@@ -38,13 +39,14 @@ class TransactionsWorker(KafkaClient):
             metrics.block_height.set(msg.value().block_number)
         self.msg_count += 1
 
-        if msg.key() != settings._governance_address:
+        if settings.governance_address == msg.headers()[1][1]:
             return
 
         value = msg.value()
 
         # Ignore any unsuccessful txs
         if value.receipt_status != 1:
+            logger.debug(f"invalid tx {value.hash}")
             return
 
         data = json.loads(value.data)
@@ -114,7 +116,13 @@ class TransactionsWorker(KafkaClient):
             metrics.preps_updated.set(self.preps_updated)
 
             self.session.add(prep)
-            self.session.commit()
+            try:
+                self.session.commit()
+            except:
+                self.session.rollback()
+                raise
+            finally:
+                self.session.close()
 
             # Emit message
             if method == "registerPRep":
@@ -147,7 +155,7 @@ class TransactionsWorker(KafkaClient):
             print()
 
 
-def transactions_worker_head():
+def transactions_worker_head(session):
     kafka = TransactionsWorker(
         session=session,
         topic=settings.CONSUMER_TOPIC_TRANSACTIONS,
@@ -157,7 +165,7 @@ def transactions_worker_head():
     kafka.start()
 
 
-def transactions_worker_tail():
+def transactions_worker_tail(session):
     kafka = TransactionsWorker(
         session=session,
         topic=settings.CONSUMER_TOPIC_TRANSACTIONS,

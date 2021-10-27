@@ -3,7 +3,8 @@ from time import sleep
 import requests
 
 from icon_governance.config import settings
-from icon_governance.db import session
+
+# from icon_governance.db import session
 from icon_governance.log import logger
 from icon_governance.models.preps import Prep
 from icon_governance.schemas.governance_prep_processed_pb2 import (
@@ -57,12 +58,12 @@ def extract_details(details: dict, prep: Prep):
                 prep.server_city = details["server"]["location"]["city"]
 
 
-def preps_cron():
+def preps_cron(session):
     kafka = KafkaClient()
     rpc_preps = getPReps().json()["result"]
 
     while True:
-        logger.info("")
+        logger.info("Starting prep collection cron")
 
         for p in rpc_preps["preps"]:
             prep = session.get(Prep, p["address"])
@@ -108,7 +109,13 @@ def preps_cron():
             # if prep.country is None:
             #     # Check random nested field and if it is in there then move on.
             session.add(prep)
-            session.commit()
+            try:
+                session.commit()
+            except:
+                session.rollback()
+                raise
+            finally:
+                session.close()
 
             processed_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
             kafka.produce_protobuf(
@@ -123,4 +130,6 @@ def preps_cron():
 
 
 if __name__ == "__main__":
-    preps_cron()
+    from icon_governance.db import session_factory
+
+    preps_cron(session_factory())

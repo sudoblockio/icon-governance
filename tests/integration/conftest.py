@@ -1,16 +1,20 @@
+import os
 from threading import Thread
 from time import sleep
-import os
 
 import pytest
 from compose.cli.command import project_from_options
 from compose.service import ImageType
-from icon_governance.db import session
+from sqlalchemy.orm import scoped_session
+
+from icon_governance.db import session_factory
 from icon_governance.models.preps import Prep
 
 
 @pytest.fixture(scope="session")
 def db():
+    Session = scoped_session(session_factory)
+    session = Session()
     yield session
 
 
@@ -19,12 +23,13 @@ def db_migration():
     import alembic.config
 
     cur_dir = os.path.abspath(os.path.dirname(__file__))
-    alembic_dir = os.path.join(cur_dir, '../../icon_governance')
+    alembic_dir = os.path.join(cur_dir, "../../icon_governance")
     os.chdir(alembic_dir)
 
     alembicArgs = [
-        '--raiseerr',
-        'upgrade', 'head',
+        "--raiseerr",
+        "upgrade",
+        "head",
     ]
     alembic.config.main(argv=alembicArgs)
     yield
@@ -58,7 +63,7 @@ def get_path_to_file():
 def get_compose_project(get_path_to_file):
     def f(compose_files=None):
         if compose_files is None:
-            compose_files = ['docker-compose.db.yml']
+            compose_files = ["docker-compose.db.yml"]
 
         project_dir = get_path_to_file(compose_files[0])
 
@@ -75,7 +80,7 @@ def get_compose_project(get_path_to_file):
 def docker_up_block(get_compose_project):
     def f(block, compose_files=None):
         get_compose_project(compose_files)
-        os.environ['START_BLOCK'] = block
+        os.environ["START_BLOCK"] = block
 
         project = get_compose_project()
         project.up()
@@ -95,10 +100,12 @@ def docker_project_down(get_compose_project):
 
 @pytest.fixture()
 def run_process_wait():
-    def f(target, timeout: int = 1):
+    def f(target, args=None, timeout: int = 1):
+        if args is None:
+            args: tuple = ()
         thread = Thread(
             target=target,
-            args=(),
+            args=args,
         )
         thread.daemon = True
         thread.start()

@@ -67,7 +67,7 @@ class Settings(BaseSettings):
     # REDIS_SENTINEL_CLIENT_MODE: bool = False
     # REDIS_SENTINEL_CLIENT_MASTER_NAME: str = "master"
 
-    _governance_address: str = "cx0000000000000000000000000000000000000000"
+    governance_address: str = "cx0000000000000000000000000000000000000000"
 
     CRON_SLEEP_SEC: int = 600
 

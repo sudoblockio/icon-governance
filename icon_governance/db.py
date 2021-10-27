@@ -1,11 +1,10 @@
-from icon_governance.models.preps import Prep
-from sqlmodel import SQLModel
-
-from icon_governance.config import settings
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import create_engine
+from sqlmodel import SQLModel, create_engine
+
+from icon_governance.config import settings
+from icon_governance.models.preps import Prep
 
 SQLALCHEMY_DATABASE_URL_STUB = "://{user}:{password}@{server}:{port}/{db}".format(
     user=settings.POSTGRES_USER,
@@ -31,17 +30,34 @@ async def init_db():
 
 
 async def get_session() -> AsyncSession:
-    async_session = sessionmaker(
-        async_engine, class_=AsyncSession, expire_on_commit=False
-    )
+    async_session = sessionmaker(async_engine, class_=AsyncSession, expire_on_commit=False)
     async with async_session() as session:
         yield session
 
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SessionMade = sessionmaker(bind=engine)
-session = SessionMade()
+from contextlib import contextmanager
 
-if __name__ == '__main__':
+
+@contextmanager
+def session_scope():
+    """Provide a transactional scope around a series of operations."""
+    session = Session()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+session_factory = sessionmaker(bind=engine)
+# session = SessionMade()
+
+
+if __name__ == "__main__":
     import asyncio
+
     asyncio.run(init_db())

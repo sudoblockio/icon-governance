@@ -3,7 +3,8 @@ from time import sleep
 from sqlmodel import select
 
 from icon_governance.config import settings
-from icon_governance.db import session
+
+# from icon_governance.db import session
 from icon_governance.log import logger
 from icon_governance.models.preps import Prep
 from icon_governance.utils.rpc import (
@@ -14,10 +15,10 @@ from icon_governance.utils.rpc import (
 )
 
 
-def prep_attributes_cron():
+def prep_attributes_cron(session):
 
     while True:
-        logger.info("")
+        logger.info("Starting proposals cron")
         preps = post_rpc_json(getPReps())
         if preps is None:
             logger.info("No preps found from rpc. Chilling for a bit.")
@@ -26,6 +27,7 @@ def prep_attributes_cron():
 
         for p in preps["preps"]:
             prep = session.get(Prep, p["address"])
+
             if prep is None:
                 logger.info("No preps found in db? Should not ever happen cuz of db_init.")
                 continue
@@ -47,11 +49,19 @@ def prep_attributes_cron():
             prep.penalty = p["penalty"]
 
             session.add(prep)
-            session.commit()
+            try:
+                session.commit()
+            except:
+                session.rollback()
+                raise
+            finally:
+                session.close()
 
         logger.info("Prep attributes ran.")
         sleep(settings.CRON_SLEEP_SEC)
 
 
 if __name__ == "__main__":
-    prep_attributes_cron()
+    from icon_governance.db import session_factory
+
+    prep_attributes_cron(session_factory())
