@@ -149,7 +149,7 @@ jobs:
         with:
           workDir: charts
           repository: geometry-labs/icon-charts
-          valueFile: 'deployments/prod/mainnet/governance/values.yaml'
+          valueFile: 'deployments/prod-us-west-2/mainnet/governance/values.yaml'
           propertyPath: 'api.image.tag'
           value: ${{ steps.source.outputs.TAG }}
           branch: main
@@ -162,7 +162,7 @@ jobs:
         with:
           workDir: charts
           repository: geometry-labs/icon-charts
-          valueFile: 'deployments/prod/mainnet/governance/values.yaml'
+          valueFile: 'deployments/prod-us-west-2/mainnet/governance/values.yaml'
           propertyPath: 'worker.image.tag'
           value: ${{ steps.source.outputs.TAG }}
           branch: main
