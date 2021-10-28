@@ -51,7 +51,7 @@ def prep_attributes_cron(session):
             session.add(prep)
             try:
                 session.commit()
-                session.refresh()
+                session.refresh(prep)
             except:
                 session.rollback()
                 raise
