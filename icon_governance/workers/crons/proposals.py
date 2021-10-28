@@ -55,6 +55,7 @@ def proposals_cron(session):
             session.add(proposal)
             try:
                 session.commit()
+                session.refresh()
             except:
                 session.rollback()
                 raise

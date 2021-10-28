@@ -34,6 +34,7 @@ def cps_cron(session):
             session.add(prep)
             try:
                 session.commit()
+                session.refresh()
             except:
                 session.rollback()
                 raise
