@@ -34,7 +34,7 @@ with ExitStack() as stack:
     )
     prep_cron.start()
 
-    # sleep(60)
+    sleep(60)
 
     prep_attributes_cron_session = Session()
     prep_attributes_cron = Thread(
@@ -50,21 +50,24 @@ with ExitStack() as stack:
     )
     cps_cron.start()
 
+    proposals_cron_session = Session()
     proposals_cron = Thread(
         target=proposals_cron,
-        args=(Session(),),
+        args=(proposals_cron_session,),
     )
     proposals_cron.start()
 
+    transactions_worker_head_thread_session = Session()
     transactions_worker_head_thread = Thread(
         target=transactions_worker_head,
-        args=(Session(),),
+        args=(transactions_worker_head_thread_session,),
     )
     transactions_worker_head_thread.start()
 
+    transactions_worker_tail_thread_session = Session()
     transactions_worker_tail_thread = Thread(
         target=transactions_worker_tail,
-        args=(Session(),),
+        args=(transactions_worker_tail_thread_session,),
     )
     transactions_worker_tail_thread.start()
 
