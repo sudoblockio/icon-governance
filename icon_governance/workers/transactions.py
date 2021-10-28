@@ -55,7 +55,10 @@ class TransactionsWorker(KafkaClient):
         timestamp = int(value.timestamp, 16) / 1e6
 
         # Ignore anything without a method call like contract creation events
-        if "method" not in data:
+        if data is not None:
+            if "method" not in data:
+                return
+        else:
             return
 
         method = data["method"]
