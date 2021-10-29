@@ -166,3 +166,9 @@ jobs:
           message: 'governance prod deployment (mainnet) image versions to ${{ github.run_number }}'
           token: ${{ secrets.ICON_CHARTS_PAT }}
           updateFile: true
+
+      - name: Push tags
+        run: |
+          git tag ${{ steps.source.outputs.TAG }}
+          git push origin --tags
+        working-directory: charts
