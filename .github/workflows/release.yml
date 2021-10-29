@@ -169,7 +169,7 @@ jobs:
 
       - name: Push tags
         run: |
-          git tag -f ${{steps.source.outputs.SERVICE}}-prod-uswest2
-          git tag -f ${{steps.source.outputs.SERVICE}}-prod-euwest2
+          git tag -f governance-prod-uswest2
+          git tag -f governance-prod-euwest2
           git push -f origin --tags
         working-directory: charts
