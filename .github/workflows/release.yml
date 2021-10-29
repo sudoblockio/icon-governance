@@ -169,6 +169,6 @@ jobs:
 
       - name: Push tags
         run: |
-          git tag ${{ steps.source.outputs.TAG }}
+          git tag governance-${{ steps.source.outputs.TAG }}
           git push origin --tags
         working-directory: charts
