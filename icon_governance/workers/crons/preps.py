@@ -84,7 +84,8 @@ def preps_cron(session):
             prep.p2p_endpoint = (p["p2pEndpoint"],)
             prep.node_address = (p["nodeAddress"],)
             prep.status = (p["status"],)
-            prep.created_block = (convert_hex_int(p["blockHeight"]),)
+
+            # prep.created_block = (convert_hex_int(p["blockHeight"]),)
 
             # prep.delegated = (p["delegated"],)
             # prep.stake = (p["stake"],)
