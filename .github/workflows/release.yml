@@ -169,6 +169,8 @@ jobs:
 
       - name: Push tags
         run: |
+          git stash
+          git pull
           git tag -f governance-prod-uswest2
           git tag -f governance-prod-euwest2
           git push -f origin --tags
