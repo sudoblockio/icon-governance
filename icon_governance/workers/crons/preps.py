@@ -116,8 +116,8 @@ def preps_cron(session):
             except:
                 session.rollback()
                 raise
-            finally:
-                session.close()
+            # finally:
+            #     session.close()
 
             processed_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
             kafka.produce_protobuf(
