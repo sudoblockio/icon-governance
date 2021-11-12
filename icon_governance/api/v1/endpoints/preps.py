@@ -1,9 +1,12 @@
+from http import HTTPStatus
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlmodel import select
+from starlette.responses import Response
+from starlette.status import HTTP_204_NO_CONTENT
 
 from icon_governance.db import get_session
 from icon_governance.models.preps import Prep
@@ -22,7 +25,10 @@ async def get_preps(
     return preps
 
 
-@router.get("/preps/{address}")
+@router.get(
+    "/preps/{address}",
+    status_code=HTTPStatus.NO_CONTENT,
+)
 async def get_prep(
     address: str,
     session: AsyncSession = Depends(get_session),
@@ -32,6 +38,6 @@ async def get_prep(
     preps = result.scalars().all()
 
     if len(preps) == 0:
-        raise HTTPException(status_code=204, detail="P-Rep address not found")
+        return Response(status_code=HTTPStatus.NO_CONTENT.value)
 
     return preps

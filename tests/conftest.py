@@ -5,16 +5,22 @@ import pytest
 from _pytest.logging import caplog as _caplog
 from fastapi.testclient import TestClient
 from loguru import logger
+from sqlalchemy.orm import sessionmaker
+
+from icon_governance.db import engine
 
 # from icon_governance.db import get_session
 # @pytest.fixture(scope="session")
 # def db() -> Generator:
 #     yield get_session()
 
-# from icon_governance.db import session
-# @pytest.fixture(scope="session")
-# def db():
-#     yield session
+
+@pytest.fixture(scope="session")
+def db():
+    SessionMade = sessionmaker(bind=engine)
+    session = SessionMade()
+
+    yield session
 
 
 @pytest.fixture(scope="module")

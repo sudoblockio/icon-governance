@@ -37,10 +37,3 @@ async def get_session() -> AsyncSession:
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 session_factory = sessionmaker(bind=engine)
-# session = SessionMade()
-
-
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(init_db())

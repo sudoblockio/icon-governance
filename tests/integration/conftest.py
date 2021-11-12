@@ -100,7 +100,7 @@ def docker_project_down(get_compose_project):
 
 @pytest.fixture()
 def run_process_wait():
-    def f(target, args=None, timeout: int = 1):
+    def f(target, args=None, timeout: int = 3):
         if args is None:
             args: tuple = ()
         thread = Thread(
