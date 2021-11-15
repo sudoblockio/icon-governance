@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlmodel import select
 from starlette.responses import Response
-from starlette.status import HTTP_204_NO_CONTENT
 
 from icon_governance.db import get_session
 from icon_governance.models.preps import Prep

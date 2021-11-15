@@ -24,7 +24,7 @@ metrics_pool.apply_async(start_http_server, (settings.METRICS_PORT, settings.MET
 
 Session = scoped_session(session_factory)
 
-if not settings.IS_TAIL_WORKER:
+if not settings.CONSUMER_IS_TAIL:
     # Base
     prep_cron_session = Session()
     prep_cron = Thread(
