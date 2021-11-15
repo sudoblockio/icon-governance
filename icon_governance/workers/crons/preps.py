@@ -59,66 +59,70 @@ def extract_details(details: dict, prep: Prep):
                 prep.server_city = details["server"]["location"]["city"]
 
 
-def preps_cron(session):
-    """Gets metadata about a prep that does not change often."""
-    kafka = KafkaClient()
+def get_preps(session, kafka=None):
     rpc_preps = getPReps().json()["result"]
+    logger.info("Starting prep collection cron")
 
-    while True:
-        logger.info("Starting prep collection cron")
+    for p in rpc_preps["preps"]:
+        prep = session.get(Prep, p["address"])
+        # logger.info(f"Parsing {p['name']}")
+        if prep is None:
+            prep = Prep(
+                address=p["address"],
+            )
+        else:
+            continue
 
-        for p in rpc_preps["preps"]:
-            prep = session.get(Prep, p["address"])
-            # logger.info(f"Parsing {p['name']}")
-            if prep is None:
-                prep = Prep(
-                    address=p["address"],
-                )
-            else:
-                continue
+        prep.name = p["name"]
+        prep.country = p["country"]
+        prep.city = p["city"]
+        prep.email = p["email"]
+        prep.website = p["website"]
+        prep.details = p["details"]
+        prep.p2p_endpoint = p["p2pEndpoint"]
+        prep.node_address = p["nodeAddress"]
+        prep.status = p["status"]
+        prep.grade = p["grade"]
+        prep.penalty = p["penalty"]
+        # prep.created_block = (convert_hex_int(p["blockHeight"])
 
-            prep.name = p["name"]
-            prep.country = p["country"]
-            prep.city = p["city"]
-            prep.email = p["email"]
-            prep.website = p["website"]
-            prep.details = p["details"]
-            prep.p2p_endpoint = p["p2pEndpoint"]
-            prep.node_address = p["nodeAddress"]
-            prep.status = p["status"]
-            prep.grade = p["grade"]
-            prep.penalty = p["penalty"]
-            # prep.created_block = (convert_hex_int(p["blockHeight"])
+        try:
+            r = requests.get(p["details"], timeout=4)
+            if r.status_code == 200:
+                details = r.json()
+                extract_details(details, prep)
 
-            try:
-                r = requests.get(p["details"], timeout=4)
-                if r.status_code == 200:
-                    details = r.json()
-                    extract_details(details, prep)
+        except Exception:
+            # Details not available so no more parsing
+            pass
 
-            except Exception:
-                # Details not available so no more parsing
-                pass
+        # if prep.country is None:
+        #     # Check random nested field and if it is in there then move on.
+        session.add(prep)
+        try:
+            session.commit()
+            session.refresh(prep)
+        except:
+            session.rollback()
+            raise
+        # finally:
+        #     session.close()
 
-            # if prep.country is None:
-            #     # Check random nested field and if it is in there then move on.
-            session.add(prep)
-            try:
-                session.commit()
-                session.refresh(prep)
-            except:
-                session.rollback()
-                raise
-            # finally:
-            #     session.close()
-
-            processed_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
+        processed_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
+        if kafka:
             kafka.produce_protobuf(
                 settings.PRODUCER_TOPIC_GOVERNANCE_PREPS,
                 p["address"],  # Keyed on address for init - hash for Tx updates
                 processed_prep,
             )
-            logger.info(f"Emitting new prep {processed_prep.address}")
+        logger.info(f"Emitting new prep {processed_prep.address}")
+
+
+def preps_cron(session):
+    """Gets metadata about a prep that does not change often."""
+    kafka = KafkaClient()
+    while True:
+        get_preps(session, kafka)
 
         logger.info("Prep cron ran.")
         prom_metrics.preps_base_cron_ran.inc()
