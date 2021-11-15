@@ -60,6 +60,9 @@ class Prep(SQLModel, table=True):
     validated_blocks: Optional[float] = Field(None, index=False)
     unvalidated_sequence_blocks: Optional[float] = Field(None, index=False)
 
+    bonded: Optional[str] = Field(None, index=False)
+    bondedDelegation: Optional[str] = Field(None, index=False)
+
     # CPS
     sponsored_cps_grants: Optional[int] = Field(None, index=False)
 

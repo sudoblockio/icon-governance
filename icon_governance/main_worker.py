@@ -13,20 +13,19 @@ from icon_governance.db import session_factory
 from icon_governance.workers.crons.cps import cps_cron
 from icon_governance.workers.crons.prep_attributes import prep_attributes_cron
 from icon_governance.workers.crons.preps import preps_cron
+from icon_governance.workers.crons.preps_stake import prep_stake_cron
 from icon_governance.workers.crons.proposals import proposals_cron
-from icon_governance.workers.transactions import (
-    transactions_worker_head,
-    transactions_worker_tail,
-)
+from icon_governance.workers.transactions import transactions_worker_head
 
 logger.info("Starting metrics server.")
 metrics_pool = ThreadPool(1)
 metrics_pool.apply_async(start_http_server, (settings.METRICS_PORT, settings.METRICS_ADDRESS))
 
 
-with ExitStack() as stack:
-    Session = scoped_session(session_factory)
+Session = scoped_session(session_factory)
 
+if not settings.IS_TAIL_WORKER:
+    # Base
     prep_cron_session = Session()
     prep_cron = Thread(
         target=preps_cron,
@@ -36,6 +35,7 @@ with ExitStack() as stack:
 
     sleep(60)
 
+    # Attributes
     prep_attributes_cron_session = Session()
     prep_attributes_cron = Thread(
         target=prep_attributes_cron,
@@ -43,6 +43,7 @@ with ExitStack() as stack:
     )
     prep_attributes_cron.start()
 
+    # CPS
     cps_cron_session = Session()
     cps_cron = Thread(
         target=cps_cron,
@@ -50,6 +51,7 @@ with ExitStack() as stack:
     )
     cps_cron.start()
 
+    # Proposals
     proposals_cron_session = Session()
     proposals_cron = Thread(
         target=proposals_cron,
@@ -57,6 +59,15 @@ with ExitStack() as stack:
     )
     proposals_cron.start()
 
+    # Stake
+    prep_stake_cron_session = Session()
+    prep_stake_cron = Thread(
+        target=prep_stake_cron,
+        args=(proposals_cron_session,),
+    )
+    proposals_cron.start()
+
+    # Kafka
     transactions_worker_head_thread_session = Session()
     transactions_worker_head_thread = Thread(
         target=transactions_worker_head,
@@ -64,12 +75,11 @@ with ExitStack() as stack:
     )
     transactions_worker_head_thread.start()
 
-    transactions_worker_tail_thread_session = Session()
-    transactions_worker_tail_thread = Thread(
-        target=transactions_worker_tail,
-        args=(transactions_worker_tail_thread_session,),
+else:
+    # Kafka
+    transactions_worker_head_thread_session = Session()
+    transactions_worker_head_thread = Thread(
+        target=transactions_worker_head,
+        args=(transactions_worker_head_thread_session,),
     )
-    transactions_worker_tail_thread.start()
-
-    stack.callback(partial(print, "Removed connection"))
-    stack.callback(partial(Session.remove))
+    transactions_worker_head_thread.start()

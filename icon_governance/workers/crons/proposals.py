@@ -4,7 +4,7 @@ from sqlmodel import select
 
 from icon_governance.config import settings
 from icon_governance.log import logger
-from icon_governance.models.preps import Prep
+from icon_governance.metrics import prom_metrics
 from icon_governance.models.proposals import Proposal
 from icon_governance.utils.rpc import convert_hex_int, getProposals, post_rpc_json
 
@@ -63,6 +63,7 @@ def proposals_cron(session):
                 session.close()
 
         logger.info("Proposals cron ran.")
+        prom_metrics.preps_proposals_cron_ran.inc()
         sleep(settings.CRON_SLEEP_SEC)
 
 

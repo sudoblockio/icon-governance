@@ -1,4 +1,4 @@
-from prometheus_client import Gauge
+from prometheus_client import Counter, Gauge
 
 
 class Metrics:
@@ -14,7 +14,17 @@ class Metrics:
             "Num updated.",
         )
 
-        self.block_height = Gauge(
-            "max_block_number_transactions_raw",
-            "The block height",
+        self.preps_attributes_cron_ran = Counter(
+            "preps_attributes_cron_ran", "Number times cron ran"
         )
+
+        self.preps_proposals_cron_ran = Counter("preps_proposals_cron_ran", "Number times cron ran")
+
+        self.preps_cps_cron_ran = Counter("preps_cps_cron_ran", "Number times cron ran")
+
+        self.preps_base_cron_ran = Counter("preps_base_cron_ran", "Number times cron ran")
+
+        self.preps_stake_cron_ran = Counter("preps_stake_cron_ran", "Number times cron ran")
+
+
+prom_metrics = Metrics()

@@ -6,6 +6,7 @@ from icon_governance.config import settings
 
 # from icon_governance.db import session
 from icon_governance.log import logger
+from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
 from icon_governance.schemas.governance_prep_processed_pb2 import (
     GovernancePrepProcessed,
@@ -59,6 +60,7 @@ def extract_details(details: dict, prep: Prep):
 
 
 def preps_cron(session):
+    """Gets metadata about a prep that does not change often."""
     kafka = KafkaClient()
     rpc_preps = getPReps().json()["result"]
 
@@ -75,27 +77,18 @@ def preps_cron(session):
             else:
                 continue
 
-            prep.name = (p["name"],)
-            prep.country = (p["country"],)
-            prep.city = (p["city"],)
-            prep.email = (p["email"],)
-            prep.website = (p["website"],)
-            prep.details = (p["details"],)
-            prep.p2p_endpoint = (p["p2pEndpoint"],)
-            prep.node_address = (p["nodeAddress"],)
-            prep.status = (p["status"],)
-
-            # prep.created_block = (convert_hex_int(p["blockHeight"]),)
-
-            # prep.delegated = (p["delegated"],)
-            # prep.stake = (p["stake"],)
-            # prep.irep = (p["irep"],)
-
-            prep.total_blocks = (p["totalBlocks"],)
-            prep.validated_blocks = (p["validatedBlocks"],)
-            prep.unvalidated_sequence_blocks = (p["unvalidatedSequenceBlocks"],)
-            prep.grade = (p["grade"],)
-            prep.penalty = (p["penalty"],)
+            prep.name = p["name"]
+            prep.country = p["country"]
+            prep.city = p["city"]
+            prep.email = p["email"]
+            prep.website = p["website"]
+            prep.details = p["details"]
+            prep.p2p_endpoint = p["p2pEndpoint"]
+            prep.node_address = p["nodeAddress"]
+            prep.status = p["status"]
+            prep.grade = p["grade"]
+            prep.penalty = p["penalty"]
+            # prep.created_block = (convert_hex_int(p["blockHeight"])
 
             try:
                 r = requests.get(p["details"], timeout=4)
@@ -128,6 +121,7 @@ def preps_cron(session):
             logger.info(f"Emitting new prep {processed_prep.address}")
 
         logger.info("Prep cron ran.")
+        prom_metrics.preps_base_cron_ran.inc()
         sleep(settings.CRON_SLEEP_SEC)
 
 

@@ -5,15 +5,13 @@ from icon_governance.config import settings
 
 # from icon_governance.db import session
 from icon_governance.log import logger
-from icon_governance.metrics import Metrics
+from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
 from icon_governance.schemas.governance_prep_processed_pb2 import (
     GovernancePrepProcessed,
 )
 from icon_governance.utils.details import get_details
 from icon_governance.workers.kafka import KafkaClient
-
-metrics = Metrics()
 
 
 class TransactionsWorker(KafkaClient):
@@ -36,7 +34,7 @@ class TransactionsWorker(KafkaClient):
                 f"msg count {self.msg_count} and block {msg.value().block_number} "
                 f"for consumer group {self.consumer_group}"
             )
-            metrics.block_height.set(msg.value().block_number)
+            prom_metrics.block_height.set(msg.value().block_number)
         self.msg_count += 1
 
         if settings.governance_address == msg.headers()[1][1]:
@@ -46,7 +44,6 @@ class TransactionsWorker(KafkaClient):
 
         # Ignore any unsuccessful txs
         if value.receipt_status != 1:
-            logger.debug(f"invalid tx {value.hash}")
             return
 
         data = json.loads(value.data)
@@ -79,7 +76,7 @@ class TransactionsWorker(KafkaClient):
                     self.produce_prep(value.from_address, is_prep=False)
 
                     self.preps_created += 1
-                    metrics.preps_created.set(self.preps_created)
+                    prom_metrics.preps_created.set(self.preps_created)
 
                     self.session.add(prep)
                     self.session.commit()
@@ -116,7 +113,7 @@ class TransactionsWorker(KafkaClient):
                 setattr(prep, k, v)
 
             self.preps_updated += 1
-            metrics.preps_updated.set(self.preps_updated)
+            prom_metrics.preps_updated.set(self.preps_updated)
 
             self.session.add(prep)
             try:

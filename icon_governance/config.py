@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     # Kafka
     KAFKA_BROKER_URL: str = "localhost:29092"
     SCHEMA_REGISTRY_URL: str = "http://localhost:8081"
+    IS_TAIL_WORKER: bool = False
 
     KAFKA_GROUP_ID: str = "governance-service"
 

@@ -1,11 +1,8 @@
 from time import sleep
 
-from sqlmodel import select
-
 from icon_governance.config import settings
-
-# from icon_governance.db import session
 from icon_governance.log import logger
+from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
 from icon_governance.utils.rpc import (
     convert_hex_int,
@@ -18,7 +15,7 @@ from icon_governance.utils.rpc import (
 def prep_attributes_cron(session):
 
     while True:
-        logger.info("Starting proposals cron")
+        logger.info("Starting attributes cron")
         preps = post_rpc_json(getPReps())
         if preps is None:
             logger.info("No preps found from rpc. Chilling for a bit.")
@@ -39,16 +36,19 @@ def prep_attributes_cron(session):
 
             prep.total_blocks = convert_hex_int(p["totalBlocks"])
             prep.validated_blocks = convert_hex_int(p["validatedBlocks"])
-            prep.unvalidated_sequence_blocks = convert_hex_int(p["unvalidatedSequenceBlocks"])
+            # prep.unvalidated_sequence_blocks = convert_hex_int(p["unvalidatedSequenceBlocks"])
+
+            prep.bonded = convert_hex_int(p["bonded"])
+            prep.bondedDelegation = convert_hex_int(p["bondedDelegation"])
 
             prep.delegated = convert_hex_int(p["delegated"]) / 1e18
-            prep.stake = convert_hex_int(p["stake"]) / 1e18
+
             prep.irep = convert_hex_int(p["irep"]) / 1e18
 
             prep.grade = p["grade"]
             prep.penalty = p["penalty"]
 
-            session.add(prep)
+            session.merge(prep)
             try:
                 session.commit()
                 session.refresh(prep)
@@ -59,6 +59,7 @@ def prep_attributes_cron(session):
                 session.close()
 
         logger.info("Prep attributes ran.")
+        prom_metrics.preps_attributes_cron_ran.inc()
         sleep(settings.CRON_SLEEP_SEC)
 
 
