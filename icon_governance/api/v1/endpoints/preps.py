@@ -24,10 +24,7 @@ async def get_preps(
     return preps
 
 
-@router.get(
-    "/preps/{address}",
-    status_code=HTTPStatus.NO_CONTENT,
-)
+@router.get("/preps/{address}")
 async def get_prep(
     address: str,
     session: AsyncSession = Depends(get_session),
