@@ -2,6 +2,7 @@ import json
 from uuid import uuid4
 
 from icon_governance.config import settings
+from icon_governance.db import session_factory
 
 # from icon_governance.db import session
 from icon_governance.log import logger
@@ -11,7 +12,7 @@ from icon_governance.schemas.governance_prep_processed_pb2 import (
     GovernancePrepProcessed,
 )
 from icon_governance.utils.details import get_details
-from icon_governance.workers.kafka import KafkaClient
+from icon_governance.workers.kafka import KafkaClient, get_current_offset
 
 
 class TransactionsWorker(KafkaClient):
@@ -28,15 +29,10 @@ class TransactionsWorker(KafkaClient):
         )
 
     def process(self, msg):
-        # Filter on only txs to the governance address
-        if self.msg_count % 10000 == 0:
-            logger.info(
-                f"msg count {self.msg_count} and block {msg.value().block_number} "
-                f"for consumer group {self.consumer_group}"
-            )
-            prom_metrics.block_height.set(msg.value().block_number)
-        self.msg_count += 1
+        # For backfilling only
+        self.handle_backfill_stop(msg)
 
+        # Filter on only txs to the governance address
         if settings.governance_address == msg.headers()[1][1]:
             return
 
@@ -155,26 +151,27 @@ class TransactionsWorker(KafkaClient):
             print()
 
 
-def transactions_worker_head(session):
-    kafka = TransactionsWorker(
-        session=session,
-        topic=settings.CONSUMER_TOPIC_TRANSACTIONS,
-        consumer_group=settings.CONSUMER_GROUP_HEAD,
-    )
+def transactions_worker_head():
+    with session_factory() as session:
+        kafka = TransactionsWorker(
+            session=session,
+            topic=settings.CONSUMER_TOPIC_TRANSACTIONS,
+            consumer_group=settings.CONSUMER_GROUP + "head",
+        )
 
-    kafka.start()
-
-
-def transactions_worker_tail(session):
-    kafka = TransactionsWorker(
-        session=session,
-        topic=settings.CONSUMER_TOPIC_TRANSACTIONS,
-        consumer_group=settings.CONSUMER_GROUP_TAIL,
-    )
-
-    kafka.start()
+        kafka.start()
 
 
-if __name__ == "__main__":
-    # transactions_worker_head()
-    transactions_worker_tail()
+def transactions_worker_tail():
+
+    with session_factory() as session:
+        consumer_group, partition_dict = get_current_offset(session)
+
+        kafka = TransactionsWorker(
+            session=session,
+            topic=settings.CONSUMER_TOPIC_TRANSACTIONS,
+            consumer_group=consumer_group,
+            partition_dict=partition_dict,
+        )
+
+        kafka.start()

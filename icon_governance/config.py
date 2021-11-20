@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     ICON_NODE_URL = "https://icon.geometry-dev.net/api/v3"
     BACKUP_ICON_NODE_URL = "https://ctz.solidwallet.io/api/v3"
 
+    # ICON Peers - Used to discover nodes across the network
+    PEER_SEED_IP: str = "52.196.159.184"
+    PEER_SEED_ADDRESS: str = "hx9c63f73d3c564a54d0eed84f90718b1ebed16f09"
+
     # Kafka
     KAFKA_BROKER_URL: str = "localhost:29092"
     SCHEMA_REGISTRY_URL: str = "http://localhost:8081"
@@ -42,8 +46,7 @@ class Settings(BaseSettings):
     KAFKA_GROUP_ID: str = "governance-service"
 
     # Topics
-    CONSUMER_GROUP_HEAD: str = "governance-head"
-    CONSUMER_GROUP_TAIL: str = "governance-tail"
+    CONSUMER_GROUP: str = "governance"
     SCHEMA_NAME_TOPICS: str = "governance-ws:block"
 
     CONSUMER_TOPIC_BLOCKS: str = "governance"

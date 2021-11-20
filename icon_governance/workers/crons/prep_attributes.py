@@ -12,52 +12,54 @@ from icon_governance.utils.rpc import (
 )
 
 
-def prep_attributes_cron(session):
+def get_prep_attributes(session):
+    preps = post_rpc_json(getPReps())
+    if preps is None:
+        logger.info("No preps found from rpc.")
+        sleep(1)
+        return
 
-    while True:
-        logger.info("Starting attributes cron")
-        preps = post_rpc_json(getPReps())
-        if preps is None:
-            logger.info("No preps found from rpc. Chilling for a bit.")
-            sleep(60)
+    for p in preps["preps"]:
+        prep = session.get(Prep, p["address"])
+
+        if prep is None:
+            logger.info("No preps found in db? Should not ever happen cuz of db_init.")
             continue
 
-        for p in preps["preps"]:
-            prep = session.get(Prep, p["address"])
+        delegation = post_rpc_json(getDelegation(p["address"]))
 
-            if prep is None:
-                logger.info("No preps found in db? Should not ever happen cuz of db_init.")
-                continue
+        prep.voted = convert_hex_int(delegation["totalDelegated"]) / 1e18
+        prep.voting_power = convert_hex_int(delegation["votingPower"]) / 1e18
 
-            delegation = post_rpc_json(getDelegation(p["address"]))
+        prep.total_blocks = convert_hex_int(p["totalBlocks"])
+        prep.validated_blocks = convert_hex_int(p["validatedBlocks"])
+        # prep.unvalidated_sequence_blocks = convert_hex_int(p["unvalidatedSequenceBlocks"])
 
-            prep.voted = convert_hex_int(delegation["totalDelegated"]) / 1e18
-            prep.voting_power = convert_hex_int(delegation["votingPower"]) / 1e18
+        prep.bonded = convert_hex_int(p["bonded"])
+        prep.bondedDelegation = convert_hex_int(p["bondedDelegation"])
 
-            prep.total_blocks = convert_hex_int(p["totalBlocks"])
-            prep.validated_blocks = convert_hex_int(p["validatedBlocks"])
-            # prep.unvalidated_sequence_blocks = convert_hex_int(p["unvalidatedSequenceBlocks"])
+        prep.delegated = convert_hex_int(p["delegated"]) / 1e18
 
-            prep.bonded = convert_hex_int(p["bonded"])
-            prep.bondedDelegation = convert_hex_int(p["bondedDelegation"])
+        prep.irep = convert_hex_int(p["irep"]) / 1e18
 
-            prep.delegated = convert_hex_int(p["delegated"]) / 1e18
+        prep.grade = p["grade"]
+        prep.penalty = p["penalty"]
 
-            prep.irep = convert_hex_int(p["irep"]) / 1e18
+        session.merge(prep)
+        try:
+            session.commit()
+            session.refresh(prep)
+        except:
+            session.rollback()
+            raise
+        finally:
+            session.close()
 
-            prep.grade = p["grade"]
-            prep.penalty = p["penalty"]
 
-            session.merge(prep)
-            try:
-                session.commit()
-                session.refresh(prep)
-            except:
-                session.rollback()
-                raise
-            finally:
-                session.close()
-
+def prep_attributes_cron(session):
+    while True:
+        logger.info("Starting attributes cron")
+        get_prep_attributes(session)
         logger.info("Prep attributes ran.")
         prom_metrics.preps_attributes_cron_ran.inc()
         sleep(settings.CRON_SLEEP_SEC)
@@ -66,4 +68,4 @@ def prep_attributes_cron(session):
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    prep_attributes_cron(session_factory())
+    get_prep_attributes(session_factory())

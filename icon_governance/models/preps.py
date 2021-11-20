@@ -16,6 +16,8 @@ class Prep(SQLModel, table=True):
     p2p_endpoint: Optional[str] = Field(None, index=False)
     node_address: Optional[str] = Field(None, index=False)
 
+    node_state: Optional[str] = Field(None, index=False)
+
     status: Optional[str] = Field(None, index=False)
     penalty: Optional[str] = Field(None, index=False)
     grade: Optional[str] = Field(None, index=False)

@@ -6,6 +6,7 @@ from confluent_kafka import (
     KafkaError,
     Producer,
     SerializingProducer,
+    TopicPartition,
 )
 from confluent_kafka.admin import AdminClient
 from confluent_kafka.schema_registry import SchemaRegistryClient
@@ -25,6 +26,34 @@ from icon_governance.schemas.governance_prep_processed_pb2 import (
 from icon_governance.schemas.transaction_raw_pb2 import TransactionRaw
 
 
+def get_current_offset(session):
+    """
+    For backfilling only, this function works with the init container to look up
+    it's job_id so it can line that up with it's consumer group and offest so that
+    we can backfill up to a given point and then kill the worker afterwards.
+    """
+    if settings.JOB_ID is None:
+        return settings.CONSUMER_GROUP, None
+
+    output = {}
+    while True:
+        logger.info(f"Getting kafka job with job_id = {settings.JOB_ID}")
+        sql = f"select * from kafka_jobs WHERE job_id='{settings.JOB_ID}';"
+        result = session.execute(sql).fetchall()
+        session.commit()
+
+        if len(result) == 0:
+            logger.info(f"Did not find job_id={settings.JOB_ID} - sleeping")
+            sleep(2)
+            continue
+
+        for r in result:
+            # Keyed on tuple of topic, partition to look up the stop_offset
+            output[(r[2], r[3])] = r[4]
+
+        return r[1], output
+
+
 class KafkaClient(BaseModel):
     name: str = None
     schema_registry_url: str = settings.SCHEMA_REGISTRY_URL
@@ -37,12 +66,15 @@ class KafkaClient(BaseModel):
     consumer_group: str = None
 
     topic: str = None
+    msg_count: int = 0
 
     consumer: Any = None
     consumer_schema: Any = None
     consumer_deserializer: Any = None
 
     json_producer: Any = None
+
+    partition_dict: dict = None
 
     protobuf_producer: Any = None
     protobuf_serializer: Any = None
@@ -119,6 +151,13 @@ class KafkaClient(BaseModel):
             # Poll for a message
             msg = self.consumer.poll(timeout=1)
 
+            if self.msg_count % 10000 == 0:
+                logger.info(
+                    f"msg count {self.msg_count} and block {msg.value().block_number} "
+                    f"for consumer group {self.consumer_group}"
+                )
+            self.msg_count += 1
+
             # If no new message, try again
             if msg is None:
                 continue
@@ -153,3 +192,31 @@ class KafkaClient(BaseModel):
     def process(self, msg):
         """Overridable process that processes each message."""
         pass
+
+    def get_offset_per_partition(self):
+        topic = self.consumer.list_topics(topic=self.topic)
+        partitions = [
+            TopicPartition(self.topic, partition)
+            for partition in list(topic.topics[self.topic].partitions.keys())
+        ]
+
+        return self.consumer.position(partitions)
+
+    def handle_backfill_stop(self, msg):
+        if self.partition_dict is not None:
+            if self.msg_count % 1000 == 0:
+                end_offset = self.partition_dict[(self.topic, msg.partition())]
+                offset = [
+                    i.offset
+                    for i in self.get_offset_per_partition()
+                    if i.partition == msg.partition() and i.topic == self.topic
+                ][0]
+
+                logger.info(f"offset={offset} and end={end_offset}")
+
+                if offset > end_offset:
+                    logger.info(f"Reached end of job at offset={offset} and end={end_offset}")
+                    import sys
+
+                    logger.info("Exiting.")
+                    sys.exit(0)

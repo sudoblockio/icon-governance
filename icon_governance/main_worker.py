@@ -10,76 +10,65 @@ from sqlalchemy.orm import scoped_session
 
 from icon_governance.config import settings
 from icon_governance.db import session_factory
-from icon_governance.workers.crons.cps import cps_cron
-from icon_governance.workers.crons.prep_attributes import prep_attributes_cron
-from icon_governance.workers.crons.preps import preps_cron
-from icon_governance.workers.crons.preps_stake import prep_stake_cron
-from icon_governance.workers.crons.proposals import proposals_cron
-from icon_governance.workers.transactions import transactions_worker_head
+from icon_governance.metrics import prom_metrics
+from icon_governance.workers.crons.cps import get_cps
+from icon_governance.workers.crons.prep_attributes import get_prep_attributes
+from icon_governance.workers.crons.preps_base import get_preps_base
+from icon_governance.workers.crons.preps_ip import get_prep_state
+from icon_governance.workers.crons.preps_stake import get_prep_stake
+from icon_governance.workers.crons.proposals import get_proposals
+from icon_governance.workers.transactions import (
+    transactions_worker_head,
+    transactions_worker_tail,
+)
 
-logger.info("Starting metrics server.")
-metrics_pool = ThreadPool(1)
-metrics_pool.apply_async(start_http_server, (settings.METRICS_PORT, settings.METRICS_ADDRESS))
+
+def main(worker_type: str = None):
+    logger.info("Starting metrics server.")
+    start_http_server(settings.METRICS_PORT, settings.METRICS_ADDRESS)
+
+    logger.info(f"Worker is a {worker_type}.")
+
+    if worker_type == "head":
+        transactions_worker_head()
+    if worker_type == "tail":
+        transactions_worker_tail()
+
+    if worker_type == "cron":
+        while True:
+            with session_factory() as session:
+                logger.info("Starting cron")
+                get_preps_base(session)
+                prom_metrics.preps_base_cron_ran.inc()
+
+                logger.info("Starting cps cron")
+                get_cps(session)
+                prom_metrics.preps_stake_cron_ran.inc()
+
+                logger.info("Starting attributes cron")
+                get_prep_attributes(session)
+                prom_metrics.preps_attributes_cron_ran.inc()
+
+                logger.info("Starting state cron")
+                get_prep_state(session)
+                prom_metrics.preps_attributes_cron_ran.inc()
+
+                logger.info("Starting stake cron")
+                get_prep_stake(session)
+                prom_metrics.preps_attributes_cron_ran.inc()
+
+                logger.info("Starting proposals cron")
+                get_proposals(session)
+                prom_metrics.preps_attributes_cron_ran.inc()
+
+                logger.info("Sleeping after crons.")
+                sleep(settings.CRON_SLEEP_SEC)
 
 
-Session = scoped_session(session_factory)
+if __name__ == "__main__":
+    import argparse
 
-if not settings.CONSUMER_IS_TAIL:
-    # Base
-    prep_cron_session = Session()
-    prep_cron = Thread(
-        target=preps_cron,
-        args=(prep_cron_session,),
-    )
-    prep_cron.start()
-
-    sleep(60)
-
-    # Attributes
-    prep_attributes_cron_session = Session()
-    prep_attributes_cron = Thread(
-        target=prep_attributes_cron,
-        args=(prep_attributes_cron_session,),
-    )
-    prep_attributes_cron.start()
-
-    # CPS
-    cps_cron_session = Session()
-    cps_cron = Thread(
-        target=cps_cron,
-        args=(cps_cron_session,),
-    )
-    cps_cron.start()
-
-    # Proposals
-    proposals_cron_session = Session()
-    proposals_cron = Thread(
-        target=proposals_cron,
-        args=(proposals_cron_session,),
-    )
-    proposals_cron.start()
-
-    # Stake
-    prep_stake_cron_session = Session()
-    prep_stake_cron = Thread(
-        target=prep_stake_cron,
-        args=(proposals_cron_session,),
-    )
-    proposals_cron.start()
-
-    # Kafka
-    transactions_worker_head_thread_session = Session()
-    transactions_worker_head_thread = Thread(
-        target=transactions_worker_head,
-        args=(transactions_worker_head_thread_session,),
-    )
-    transactions_worker_head_thread.start()
-
-else:
-    # Kafka
-    transactions_worker_head_thread_session = Session()
-    transactions_worker_head_thread = Thread(
-        target=transactions_worker_head,
-        args=(transactions_worker_head_thread_session,),
-    )
-    transactions_worker_head_thread.start()
+    parser = argparse.ArgumentParser(description="Worker type input.")
+    parser.add_argument("worker_type", type=str, help="The type of worker")
+    args = parser.parse_args()
+    main(args.worker_type)

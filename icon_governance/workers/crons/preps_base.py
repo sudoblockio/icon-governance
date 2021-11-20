@@ -59,7 +59,7 @@ def extract_details(details: dict, prep: Prep):
                 prep.server_city = details["server"]["location"]["city"]
 
 
-def get_preps(session, kafka=None):
+def get_preps_base(session, kafka=None):
     rpc_preps = getPReps().json()["result"]
     logger.info("Starting prep collection cron")
 
@@ -79,7 +79,7 @@ def get_preps(session, kafka=None):
         prep.email = p["email"]
         prep.website = p["website"]
         prep.details = p["details"]
-        prep.p2p_endpoint = p["p2pEndpoint"]
+        # prep.p2p_endpoint = p["p2pEndpoint"]
         prep.node_address = p["nodeAddress"]
         prep.status = p["status"]
         prep.grade = p["grade"]
@@ -116,15 +116,18 @@ def get_preps(session, kafka=None):
                 processed_prep,
             )
         logger.info(f"Emitting new prep {processed_prep.address}")
+    logger.info("Ending prep collection cron")
 
 
 def preps_cron(session):
     """Gets metadata about a prep that does not change often."""
     kafka = KafkaClient()
     while True:
-        get_preps(session, kafka)
-
         logger.info("Prep cron ran.")
+
+        with session_factory() as session:
+            get_preps_base(session, kafka)
+
         prom_metrics.preps_base_cron_ran.inc()
         sleep(settings.CRON_SLEEP_SEC)
 
@@ -132,4 +135,4 @@ def preps_cron(session):
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    preps_cron(session_factory())
+    get_preps_base(session_factory())

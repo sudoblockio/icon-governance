@@ -118,3 +118,18 @@ def get_sponsors_record():
         "id": 3205148222,
     }
     return post_rpc(payload)
+
+
+def get_admin_chain(ip_address: str):
+    """Get the response from the admin API."""
+    url = f"http://{ip_address}:9000/admin/chain/0x1"
+
+    try:
+        response = requests.get(url, timeout=2)
+    except requests.exceptions.RequestException:
+        return None
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None

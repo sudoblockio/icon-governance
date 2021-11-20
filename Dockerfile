@@ -25,4 +25,4 @@ FROM base as test
 FROM base as prod
 COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
-ENTRYPOINT ./entrypoint.sh $SERVICE_NAME
+ENTRYPOINT ["./entrypoint.sh"]

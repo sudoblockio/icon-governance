@@ -83,9 +83,9 @@ services:
       target: ${GOVERNANCE_TARGET:-prod}
       args:
         - SERVICE_NAME=worker
-    ports:
-      - "8181:8181"     # Health
-      - "9401:9401"     # Prometheus
+    command:
+      - worker
+      - head
     security_opt:
       - "seccomp:unconfined"
     cap_add:
@@ -95,10 +95,21 @@ services:
     environment:
       <<: *env
 
-#  postgres:
-#    image: postgres
-#    environment:
-#      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
-#    ports:
-#      - "5432:5432"
+  governance-cron:
+    build:
+      context: ${GOVERNANCE_CONTEXT:-.}
+      target: ${GOVERNANCE_TARGET:-prod}
+      args:
+        - SERVICE_NAME=worker
+    command:
+      - worker
+      - cron
+
+    security_opt:
+      - "seccomp:unconfined"
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - ${GOVERNANCE_CONTEXT:-.}/icon_governance:/app
+    environment:
+      <<: *env
