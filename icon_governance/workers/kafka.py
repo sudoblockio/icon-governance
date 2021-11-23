@@ -151,13 +151,6 @@ class KafkaClient(BaseModel):
             # Poll for a message
             msg = self.consumer.poll(timeout=1)
 
-            if self.msg_count % 10000 == 0:
-                logger.info(
-                    f"msg count {self.msg_count} and block {msg.value().block_number} "
-                    f"for consumer group {self.consumer_group}"
-                )
-            self.msg_count += 1
-
             # If no new message, try again
             if msg is None:
                 continue
@@ -179,8 +172,13 @@ class KafkaClient(BaseModel):
                 sleep(1)
                 continue
             else:
+                if self.msg_count % 10000 == 0:
+                    logger.info(
+                        f"msg count {self.msg_count} and block {msg.value().block_number} "
+                        f"for consumer group {self.consumer_group}"
+                    )
+                self.msg_count += 1
                 self.process(msg)
-                self.consumer.commit()
 
         # Flush the last of the messages
         self.json_producer.flush()
