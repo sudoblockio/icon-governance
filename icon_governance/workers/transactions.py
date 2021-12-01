@@ -156,7 +156,7 @@ def transactions_worker_head():
         kafka = TransactionsWorker(
             session=session,
             topic=settings.CONSUMER_TOPIC_TRANSACTIONS,
-            consumer_group=settings.CONSUMER_GROUP + "head",
+            consumer_group=settings.CONSUMER_GROUP + "-head",
         )
 
         kafka.start()
