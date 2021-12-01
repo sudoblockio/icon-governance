@@ -45,7 +45,7 @@ class TransactionsWorker(KafkaClient):
         data = json.loads(value.data)
 
         address = value.from_address
-        timestamp = int(value.timestamp, 16) / 1e6
+        # timestamp = int(value.timestamp, 16) / 1e6
 
         # Ignore anything without a method call like contract creation events
         if data is not None:
@@ -78,11 +78,13 @@ class TransactionsWorker(KafkaClient):
                     self.session.commit()
                     return
 
-                if prep.last_updated_block > value.block_number and method == "setPrep":
-                    logger.info(
-                        f"Skipping setPrep call in tx_hash {value.hash} because it has since been updated."
-                    )
-                    return
+                if prep.last_updated_block is not None:
+
+                    if prep.last_updated_block > value.block_number and method == "setPrep":
+                        logger.info(
+                            f"Skipping setPrep call in tx_hash {value.hash} because it has since been updated."
+                        )
+                        return
             else:
                 prep = Prep(
                     address=address,
@@ -91,10 +93,10 @@ class TransactionsWorker(KafkaClient):
             if prep.last_updated_block is None:
                 logger.info(f"Prep update registration tx hash {value.hash}")
                 prep.created_block = value.block_number
-                prep.created_timestamp = timestamp
+                # prep.created_timestamp = timestamp
 
             prep.last_updated_block = value.block_number
-            prep.last_updated_timestamp = timestamp
+            # prep.last_updated_timestamp = timestamp
             prep.name = params["name"]
             prep.email = params["email"]
             prep.city = params["city"]
