@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi_health import health
 from prometheus_client import start_http_server
 from starlette.middleware.cors import CORSMiddleware
+from brotli_asgi import BrotliMiddleware
 
 from icon_governance.api.health import is_database_online
 from icon_governance.api.v1.router import api_router
@@ -33,6 +34,11 @@ app.add_middleware(
     allow_methods=[method.strip() for method in settings.CORS_ALLOW_METHODS.split(',')],
     allow_headers=[header.strip() for header in settings.CORS_ALLOW_HEADERS.split(',')],
     expose_headers=[header.strip() for header in settings.CORS_EXPOSE_HEADERS.split(',')],
+)
+
+app.add_middleware(
+    BrotliMiddleware,
+    quality=8,
 )
 
 logger.info("Starting metrics server.")
