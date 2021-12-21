@@ -49,7 +49,8 @@ def getPReps():
             "dataType": "call",
             "data": {
                 "method": "getPReps",
-                "params": {"startRanking": "0x1", "endRanking": "0xaaa"},  # Should be all preps
+                "params": {"startRanking": "0x1", "endRanking": "0xaaa"},
+                # Should be all preps
             },
         },
     }
@@ -116,6 +117,20 @@ def get_sponsors_record():
             "data": {"method": "get_sponsors_record"},
         },
         "id": 3205148222,
+    }
+    return post_rpc(payload)
+
+
+def get_preps_cps():
+    payload = {
+        "jsonrpc": "2.0",
+        "method": "icx_call",
+        "params": {
+            "to": "cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f",
+            "dataType": "call",
+            "data": {"method": "get_PReps"},
+        },
+        "id": 3746196027,
     }
     return post_rpc(payload)
 

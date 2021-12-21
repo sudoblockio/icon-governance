@@ -66,6 +66,7 @@ def get_peers(peer_set: set, added_peers: list = None):
 
 
 def get_prep_state(session):
+    # Gets a full set of IP addresses
     peers = get_peers({(settings.PEER_SEED_IP, settings.PEER_SEED_ADDRESS)})
 
     result = session.execute(select(Prep))

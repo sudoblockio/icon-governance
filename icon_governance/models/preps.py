@@ -67,6 +67,7 @@ class Prep(SQLModel, table=True):
 
     # CPS
     sponsored_cps_grants: Optional[int] = Field(None, index=False)
+    cps_governance: bool = Field(False, index=False)
 
     @declared_attr
     def __tablename__(cls) -> str:  # noqa: N805

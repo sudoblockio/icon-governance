@@ -1,5 +1,7 @@
 from icon_governance.utils.rpc import (
     convert_hex_int,
+    get_preps_cps,
+    get_sponsors_record,
     getDelegation,
     getPReps,
     getStake,
@@ -37,3 +39,16 @@ def test_get_delegation():
 
     totalDelegated = convert_hex_int(delegation["totalDelegated"])
     assert totalDelegated == total_delegation
+
+
+def test_get_sponsors_record():
+    sponsors = post_rpc_json(get_sponsors_record())
+    assert len(sponsors) > 10
+
+
+def test_get_preps_cps():
+    cps_preps = post_rpc_json(get_preps_cps())
+    assert len(cps_preps) > 10
+
+    prep_list = [i["address"] for i in cps_preps]
+    print()
