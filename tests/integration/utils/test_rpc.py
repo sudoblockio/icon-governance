@@ -13,8 +13,8 @@ ADDRESS = "hx28c08b299995a88756af64374e13db2240bc3142"
 
 
 def test_get_preps():
-    x = getPReps().json()
-    print()
+    result = getPReps().json()["result"]
+    assert len(result["preps"]) > 50
 
 
 def test_post_rpc_json():
