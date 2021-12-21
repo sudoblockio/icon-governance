@@ -96,8 +96,6 @@ def get_preps_base(session, kafka=None):
             # Details not available so no more parsing
             pass
 
-        # if prep.country is None:
-        #     # Check random nested field and if it is in there then move on.
         session.add(prep)
         try:
             session.commit()
@@ -115,7 +113,7 @@ def get_preps_base(session, kafka=None):
                 p["address"],  # Keyed on address for init - hash for Tx updates
                 processed_prep,
             )
-        logger.info(f"Emitting new prep {processed_prep.address}")
+            logger.info(f"Emitting new prep {processed_prep.address}")
     logger.info("Ending prep collection cron")
 
 

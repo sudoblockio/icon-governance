@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     LOG_FORMAT: str = "string"
 
     # ICON Nodes
-    ICON_NODE_URL = "https://icon.geometry-dev.net/api/v3"
+    ICON_NODE_URL = "https://api.icon.geometry.io/api/v3"
     BACKUP_ICON_NODE_URL = "https://ctz.solidwallet.io/api/v3"
 
     # ICON Peers - Used to discover nodes across the network
