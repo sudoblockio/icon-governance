@@ -50,7 +50,6 @@ def getPReps():
             "data": {
                 "method": "getPReps",
                 "params": {"startRanking": "0x1", "endRanking": "0xaaa"},
-                # Should be all preps
             },
         },
     }

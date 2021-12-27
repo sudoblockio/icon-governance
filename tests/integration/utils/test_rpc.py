@@ -4,6 +4,7 @@ from icon_governance.utils.rpc import (
     get_sponsors_record,
     getDelegation,
     getPReps,
+    getProposals,
     getStake,
     post_rpc_json,
 )
@@ -52,3 +53,8 @@ def test_get_preps_cps():
 
     prep_list = [i["address"] for i in cps_preps]
     assert len(prep_list) > 20
+
+
+def test_getProposals():
+    proposals = post_rpc_json(getProposals())
+    print()
