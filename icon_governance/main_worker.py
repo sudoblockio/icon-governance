@@ -1,12 +1,7 @@
-from contextlib import ExitStack
-from functools import partial
-from multiprocessing.pool import ThreadPool
-from threading import Thread
 from time import sleep
 
 from loguru import logger
 from prometheus_client import start_http_server
-from sqlalchemy.orm import scoped_session
 
 from icon_governance.config import settings
 from icon_governance.db import session_factory

@@ -36,6 +36,7 @@ def get_prep_attributes(session):
         # prep.unvalidated_sequence_blocks = convert_hex_int(p["unvalidatedSequenceBlocks"])
 
         prep.bonded = convert_hex_int(p["bonded"])
+        prep.power = convert_hex_int(p["power"])
 
         prep.delegated = convert_hex_int(p["delegated"]) / 1e18
 
