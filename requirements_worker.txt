@@ -8,4 +8,4 @@ confluent_kafka
 alembic==1.7.1
 asyncpg==0.24.0
 psycopg2-binary
-sqlmodel==0.0.4
+sqlmodel==0.0.5
