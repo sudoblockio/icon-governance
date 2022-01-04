@@ -12,6 +12,7 @@ from icon_governance.workers.crons.preps_base import get_preps_base
 from icon_governance.workers.crons.preps_ip import get_prep_state
 from icon_governance.workers.crons.preps_stake import get_prep_stake
 from icon_governance.workers.crons.proposals import get_proposals
+from icon_governance.workers.kafka import KafkaClient
 from icon_governance.workers.transactions import (
     transactions_worker_head,
     transactions_worker_tail,
@@ -28,6 +29,10 @@ def main(worker_type: str = None):
         transactions_worker_head()
     if worker_type == "tail":
         transactions_worker_tail()
+
+    kafka = KafkaClient()
+    with session_factory() as session:
+        get_preps_base(session, kafka)
 
     if worker_type == "cron":
         while True:
