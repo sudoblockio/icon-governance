@@ -9,6 +9,9 @@ on:
     types: [created]
     tags:
       - "v*.*.*"
+  push:
+    branches:
+      - main
 
 jobs:
   docker:
