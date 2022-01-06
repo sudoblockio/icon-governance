@@ -72,6 +72,19 @@ def get_preps_base(session, kafka=None):
             )
         else:
             logger.info(f"prep not found {p['address']}")
+
+            # This is a hack until
+            # https://github.com/geometry-labs/icon-addresses/issues/60
+            # is done. Emitting from governance.
+            processed_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
+            if kafka:
+                kafka.produce_protobuf(
+                    settings.PRODUCER_TOPIC_GOVERNANCE_PREPS,
+                    p["address"],  # Keyed on address for init - hash for Tx updates
+                    processed_prep,
+                )
+                logger.info(f"Emitting new prep {processed_prep.address}")
+
             continue
 
         prep.name = p["name"]
@@ -104,17 +117,7 @@ def get_preps_base(session, kafka=None):
         except:
             session.rollback()
             raise
-        # finally:
-        #     session.close()
 
-        processed_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
-        if kafka:
-            kafka.produce_protobuf(
-                settings.PRODUCER_TOPIC_GOVERNANCE_PREPS,
-                p["address"],  # Keyed on address for init - hash for Tx updates
-                processed_prep,
-            )
-            logger.info(f"Emitting new prep {processed_prep.address}")
     logger.info("Ending prep collection cron")
 
 
