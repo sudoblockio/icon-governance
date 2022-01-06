@@ -71,8 +71,6 @@ def get_preps_base(session, kafka=None):
                 address=p["address"],
             )
         else:
-            logger.info(f"prep not found {p['address']}")
-
             # This is a hack until
             # https://github.com/geometry-labs/icon-addresses/issues/60
             # is done. Emitting from governance.
