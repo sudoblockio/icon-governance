@@ -71,6 +71,7 @@ def get_preps_base(session, kafka=None):
                 address=p["address"],
             )
         else:
+            logger.info(f"prep not found {p['address']}")
             continue
 
         prep.name = p["name"]
@@ -94,7 +95,7 @@ def get_preps_base(session, kafka=None):
 
         except Exception:
             # Details not available so no more parsing
-            pass
+            logger.info(f"error parsing {p['address']}")
 
         session.add(prep)
         try:
