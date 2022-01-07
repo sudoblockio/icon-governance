@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     PEER_SEED_IP: str = "52.196.159.184"
     PEER_SEED_ADDRESS: str = "hx9c63f73d3c564a54d0eed84f90718b1ebed16f09"
 
+    # Backfilling
+    JOB_ID: str = None
+
     # Kafka
     KAFKA_BROKER_URL: str = "localhost:29092"
     SCHEMA_REGISTRY_URL: str = "http://localhost:8081"
