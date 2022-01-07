@@ -12,7 +12,7 @@ from icon_governance.models.delegations import Delegation
 router = APIRouter()
 
 
-@router.get("/delegations/{address}")
+@router.get("/governance/delegations/{address}")
 async def get_delegations(
     response: Response,
     address: str,
@@ -45,7 +45,7 @@ async def get_delegations(
     return delegations
 
 
-@router.get("/votes/{address}")
+@router.get("/governance/votes/{address}")
 async def get_delegations(
     address: str,
     response: Response,

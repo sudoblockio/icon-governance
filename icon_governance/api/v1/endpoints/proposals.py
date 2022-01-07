@@ -11,7 +11,7 @@ from icon_governance.models.proposals import Proposal
 router = APIRouter()
 
 
-@router.get("/proposals")
+@router.get("/governance/proposals")
 async def get_proposals(
     session: AsyncSession = Depends(get_session),
 ) -> List[Proposal]:
