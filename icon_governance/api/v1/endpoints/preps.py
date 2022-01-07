@@ -17,7 +17,7 @@ router = APIRouter()
 async def get_preps(
     session: AsyncSession = Depends(get_session),
 ) -> List[Prep]:
-    """Return list of preps"""
+    """Return list of preps which is limitted to 150 records so no skip."""
     result = await session.execute(select(Prep).order_by(Prep.delegated.desc()))
     preps = result.scalars().all()
 
