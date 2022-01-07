@@ -119,8 +119,6 @@ class TransactionsWorker(KafkaClient):
             except:
                 self.session.rollback()
                 raise
-            finally:
-                self.session.close()
 
             # Emit message
             if method == "registerPRep":
