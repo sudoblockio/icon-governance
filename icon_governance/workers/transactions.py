@@ -1,10 +1,9 @@
 import json
-from uuid import uuid4
+
+from sqlmodel import select
 
 from icon_governance.config import settings
 from icon_governance.db import session_factory
-
-# from icon_governance.db import session
 from icon_governance.log import logger
 from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
@@ -12,6 +11,7 @@ from icon_governance.schemas.governance_prep_processed_pb2 import (
     GovernancePrepProcessed,
 )
 from icon_governance.utils.details import get_details
+from icon_governance.workers.delegations import set_delegation
 from icon_governance.workers.kafka import KafkaClient, get_current_offset
 
 
@@ -126,29 +126,23 @@ class TransactionsWorker(KafkaClient):
 
         # Staking
         if method == "setStake":
-            print()
+            pass
 
         if method == "setDelegation":
-            logger.info(f"{value.block_number}")
-            # for i in data['params']['delegations']:
-            #     logger.info(str(i))
+            logger.info(f"set delegation {value.hash}")
+            set_delegation(session=self.session, data=data, address=address)
 
         if method == "claimIScore":
-            print()
-
-        if method == "setGovernanceVariables":
-            import sys
-
-            sys.exit(1)
+            pass
 
         if method == "registerProposal":
-            print()
+            pass
 
         if method == "cancelProposal":
-            print()
+            pass
 
         if method == "voteProposal":
-            print()
+            pass
 
 
 def transactions_worker_head():

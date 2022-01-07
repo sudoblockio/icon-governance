@@ -10,7 +10,7 @@ from icon_governance.utils.rpc import (
 )
 
 SKIMPY_ADDRESS = "hxf5a52d659df00ef0517921647516daaf7502a728"
-ADDRESS = "hx28c08b299995a88756af64374e13db2240bc3142"
+ADDRESS = "hxdf6bd350edae21f84e0a12392c17eac7e04817e7"
 
 
 def test_get_preps():

@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlmodel import SQLModel
 
 from icon_governance.db import ASYNC_SQLALCHEMY_DATABASE_URL, SQLALCHEMY_DATABASE_URL
+from icon_governance.models.delegations import Delegation
 from icon_governance.models.preps import Prep
 from icon_governance.models.proposals import Proposal
 

@@ -9,7 +9,7 @@ services:
       "-s", "${START_BLOCK:-10767242}",
       "-o", "kafka:9092",
       "--period-seconds", "1",
-      "--provider-uri", "https://icon.geometry-dev.net/api/v3",
+      "--provider-uri", "https://api.icon.geometry.io/api/v3",
 #      "-b", "100",
 #      "-B", "100",
       "--kafka-schema-registry-url", "http://schemaregistry:8081",
@@ -87,6 +87,7 @@ services:
       - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
       SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_ORIGIN: '*'
       SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_METHODS: 'GET,POST,PUT,OPTIONS'
