@@ -30,15 +30,15 @@ def set_delegation(session, data, address):
             # There can be only one
             delegation = delegation[0]
 
-        if value == 0:
-            # Delete the record
-            session.delete(delegation)
-        else:
-            # Update the record
-            delegation.value = value
-            session.add(delegation)
-            try:
-                session.commit()
-            except:
-                session.rollback()
-                raise
+        # if value == 0:
+        #     # Delete the record
+        #     session.delete(delegation)
+        # else:
+        # Update the record
+        delegation.value = value
+        session.add(delegation)
+        try:
+            session.commit()
+        except:
+            session.rollback()
+            raise
