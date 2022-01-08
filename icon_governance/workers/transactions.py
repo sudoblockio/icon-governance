@@ -104,7 +104,9 @@ class TransactionsWorker(KafkaClient):
             prep.country = params["country"]
             prep.details = params["details"]
             prep.p2p_endpoint = params["p2pEndpoint"]
-            prep.node_address = params["nodeAddress"]
+
+            if "nodeAddress" in params:
+                prep.node_address = params["nodeAddress"]
 
             # Add information from details
             for k, v in details.items():
