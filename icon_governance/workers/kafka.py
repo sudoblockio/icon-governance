@@ -105,7 +105,8 @@ class KafkaClient(BaseModel):
         self.protobuf_serializer = ProtobufSerializer(
             GovernancePrepProcessed,
             self.schema_registry_client,
-            conf={"auto.register.schemas": True},
+            conf={"auto.register.schemas": True,
+                  "use.deprecated.format": True,},
         )
 
         self.protobuf_producer = SerializingProducer(
