@@ -84,7 +84,7 @@ class KafkaClient(BaseModel):
         if self.name is None:
             self.name = self.topic
 
-        self.consumer_deserializer = ProtobufDeserializer(message_type=TransactionRaw, conf={"use.deprecated.format": "True"})
+        self.consumer_deserializer = ProtobufDeserializer(message_type=TransactionRaw, conf={"use.deprecated.format": True})
 
         self.consumer = DeserializingConsumer(
             {
