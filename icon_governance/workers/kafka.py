@@ -84,7 +84,7 @@ class KafkaClient(BaseModel):
         if self.name is None:
             self.name = self.topic
 
-        self.consumer_deserializer = ProtobufDeserializer(TransactionRaw)
+        self.consumer_deserializer = ProtobufDeserializer(message_type=TransactionRaw, conf={"use.deprecated.format": "True"})
 
         self.consumer = DeserializingConsumer(
             {
@@ -93,7 +93,6 @@ class KafkaClient(BaseModel):
                 "key.deserializer": StringDeserializer("utf_8"),
                 "value.deserializer": self.consumer_deserializer,
                 "auto.offset.reset": "earliest",
-                "use.deprecated.format": "True",
             }
         )
 
