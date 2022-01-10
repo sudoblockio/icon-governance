@@ -93,6 +93,7 @@ class KafkaClient(BaseModel):
                 "key.deserializer": StringDeserializer("utf_8"),
                 "value.deserializer": self.consumer_deserializer,
                 "auto.offset.reset": "earliest",
+                "use.deprecated.format": "True",
             }
         )
 
