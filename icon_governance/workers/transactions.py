@@ -111,7 +111,10 @@ class TransactionsWorker(KafkaClient):
             # Add information from details
             if details is not None:
                 for k, v in details.items():
-                    setattr(prep, k, v)
+                    try:
+                        setattr(prep, k, v)
+                    except ValueError:
+                        continue
 
             self.preps_updated += 1
             prom_metrics.preps_updated.set(self.preps_updated)
