@@ -59,7 +59,6 @@ class TransactionsWorker(KafkaClient):
         # P-Reps
         if method in ["registerPRep", "setPrep", "unregisterPRep"]:
             params = data["params"]
-            details = get_details(params["details"])
 
             prep = self.session.get(Prep, address)
 
@@ -108,9 +107,11 @@ class TransactionsWorker(KafkaClient):
             if "nodeAddress" in params:
                 prep.node_address = params["nodeAddress"]
 
+            details = get_details(params["details"])
             # Add information from details
-            for k, v in details.items():
-                setattr(prep, k, v)
+            if details is not None:
+                for k, v in details.items():
+                    setattr(prep, k, v)
 
             self.preps_updated += 1
             prom_metrics.preps_updated.set(self.preps_updated)
