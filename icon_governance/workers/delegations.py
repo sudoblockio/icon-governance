@@ -6,6 +6,10 @@ from icon_governance.utils.rpc import convert_hex_int
 
 def set_delegation(session, data, address):
     params = data["params"]
+
+    if "delegations" not in params:
+        return
+
     for d in params["delegations"]:
         prep_address = d["address"]
         value = convert_hex_int(d["value"])
