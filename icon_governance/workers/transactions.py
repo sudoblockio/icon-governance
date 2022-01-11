@@ -58,7 +58,13 @@ class TransactionsWorker(KafkaClient):
 
         # P-Reps
         if method in ["registerPRep", "setPrep", "unregisterPRep"]:
-            params = data["params"]
+
+            try:
+                params = data["params"]
+            except KeyError:
+                # Must be a failed Tx or something?
+                logger.info(f"Skipping Tx - no params {value.hash}")
+                return
 
             prep = self.session.get(Prep, address)
 
