@@ -83,8 +83,6 @@ def get_preps_base(session, kafka=None):
                 )
                 logger.info(f"Emitting new prep {processed_prep.address}")
 
-            continue
-
         prep.name = p["name"]
         prep.country = p["country"]
         prep.city = p["city"]
