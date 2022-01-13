@@ -20,7 +20,8 @@ def get_iscore_value(tx_hash):
         try:
             data = json.loads(response.json()[0]["data"])
             return convert_hex_int(data[0]) / 1e18, convert_hex_int(data[1]) / 1e18
-        except ValueError:
+        except Exception as e:
+            logger.info(f"Exception in iscore - \n{e} - \n{tx_hash}")
             return None
     else:
         logger.info(f"Could not find Tx hash from logs service {tx_hash}")
