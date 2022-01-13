@@ -6,7 +6,7 @@ services:
     command: [
       "stream",
 #       "-s", "${START_BLOCK:-36747915}",
-      "-s", "${START_BLOCK:-10767242}",
+      "-s", "${START_BLOCK:-44332997}",
       "-o", "kafka:9092",
       "--period-seconds", "1",
       "--provider-uri", "https://api.icon.geometry.io/api/v3",

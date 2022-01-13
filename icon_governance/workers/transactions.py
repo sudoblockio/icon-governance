@@ -13,6 +13,7 @@ from icon_governance.schemas.governance_prep_processed_pb2 import (
 from icon_governance.utils.details import get_details
 from icon_governance.workers.delegations import set_delegation
 from icon_governance.workers.kafka import KafkaClient, get_current_offset
+from icon_governance.workers.rewards import set_rewards
 
 
 class TransactionsWorker(KafkaClient):
@@ -145,7 +146,8 @@ class TransactionsWorker(KafkaClient):
             set_delegation(session=self.session, data=data, address=address)
 
         if method == "claimIScore":
-            pass
+            logger.info(f"set delegation {value.hash}")
+            set_rewards(session=self.session, value=value)
 
         if method == "registerProposal":
             pass

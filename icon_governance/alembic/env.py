@@ -14,6 +14,7 @@ from icon_governance.db import ASYNC_SQLALCHEMY_DATABASE_URL, SQLALCHEMY_DATABAS
 from icon_governance.models.delegations import Delegation
 from icon_governance.models.preps import Prep
 from icon_governance.models.proposals import Proposal
+from icon_governance.models.rewards import Reward
 
 # Other versions imported each object
 config = context.config

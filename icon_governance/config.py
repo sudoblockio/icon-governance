@@ -38,6 +38,10 @@ class Settings(BaseSettings):
     ICON_NODE_URL: str = "https://api.icon.geometry.io/api/v3"
     BACKUP_ICON_NODE_URL: str = "https://ctz.solidwallet.io/api/v3"
 
+    # Logs service - For getting value for iscore
+    # TODO: Replace this when stateful processing comes in maybe
+    LOGS_SERVICE_URL: str = "https://tracker.icon.community"
+
     # ICON Peers - Used to discover nodes across the network
     PEER_SEED_IP: str = "52.196.159.184"
     PEER_SEED_ADDRESS: str = "hx9c63f73d3c564a54d0eed84f90718b1ebed16f09"
