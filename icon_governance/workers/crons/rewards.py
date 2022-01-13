@@ -22,7 +22,7 @@ def get_iscore_value(tx_hash):
             return convert_hex_int(data[0]) / 1e18, convert_hex_int(data[1]) / 1e18
         except Exception as e:
             logger.info(f"Exception in iscore - \n{e} - \n{tx_hash}")
-            return None
+            return None, None
     else:
         logger.info(f"Could not find Tx hash from logs service {tx_hash}")
 
@@ -34,6 +34,9 @@ def get_rewards(session):
     for r in rewards:
         # Get value from logs service
         iscore, value = get_iscore_value(tx_hash=r.tx_hash)
+
+        if iscore is None:
+            continue
 
         r.value = value
         r.iscore = iscore
