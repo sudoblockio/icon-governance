@@ -4,7 +4,7 @@ new Txs, this job backfills the value and iscore from the logs service.
 """
 import json
 
-from requests import get
+from requests import RequestException, get
 from sqlmodel import select
 
 from icon_governance.config import settings
@@ -15,7 +15,12 @@ from icon_governance.utils.rpc import convert_hex_int
 
 def get_iscore_value(tx_hash):
     """Get rewards value and Tx from logs service."""
-    response = get(f"{settings.LOGS_SERVICE_URL}/api/v1/logs?transaction_hash={tx_hash}")
+    try:
+        response = get(f"{settings.LOGS_SERVICE_URL}/api/v1/logs?transaction_hash={tx_hash}")
+    except RequestException as e:
+        logger.info(f"Exception in iscore - \n{e} - \n{tx_hash}")
+        return None, None
+
     if response.status_code == 200:
         try:
             data = json.loads(response.json()[0]["data"])
