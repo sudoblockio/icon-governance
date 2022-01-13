@@ -42,8 +42,8 @@ def get_rewards(session):
 
     logger.info(f"Found {count} number of rewards records.")
 
-    chunk_size = 100
-    for i in range(0, count[0] % chunk_size + 1):
+    chunk_size = 10
+    for i in range(0, int(count[0] / chunk_size) + 1):
         rewards = (
             session.execute(select(Reward).where(Reward.value == None).limit(chunk_size))
             .scalars()
