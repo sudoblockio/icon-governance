@@ -38,7 +38,11 @@ def main(worker_type: str = None):
     if worker_type == "cron":
         while True:
             with session_factory() as session:
-                logger.info("Starting cron")
+                logger.info("Starting rewards cron")
+                get_rewards(session)
+                prom_metrics.rewards_cron_ran.inc()
+
+                logger.info("Starting base cron")
                 get_preps_base(session)
                 prom_metrics.preps_base_cron_ran.inc()
 
@@ -61,10 +65,6 @@ def main(worker_type: str = None):
                 logger.info("Starting proposals cron")
                 get_proposals(session)
                 prom_metrics.preps_attributes_cron_ran.inc()
-
-                logger.info("Starting rewards cron")
-                get_rewards(session)
-                prom_metrics.rewards_cron_ran.inc()
 
                 logger.info("Sleeping after crons.")
                 sleep(settings.CRON_SLEEP_SEC)

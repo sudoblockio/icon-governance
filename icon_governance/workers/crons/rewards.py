@@ -5,7 +5,7 @@ new Txs, this job backfills the value and iscore from the logs service.
 import json
 
 from requests import RequestException, get
-from sqlmodel import select
+from sqlmodel import func, select
 
 from icon_governance.config import settings
 from icon_governance.log import logger
@@ -34,21 +34,32 @@ def get_iscore_value(tx_hash):
 
 def get_rewards(session):
     """Simple cron to get all the values and iscores for rewards txs."""
-    rewards = session.execute(select(Reward).where(Reward.value == None)).scalars().all()
+    count = (
+        session.execute(select([func.count(Reward.address)]).where(Reward.value == None))
+        .scalars()
+        .all()
+    )
 
-    for r in rewards:
-        # Get value from logs service
-        iscore, value = get_iscore_value(tx_hash=r.tx_hash)
+    chunk_size = 100
+    for i in range(0, count[0] % chunk_size + 1):
+        rewards = (
+            session.execute(select(Reward).where(Reward.value == None).limit(chunk_size))
+            .scalars()
+            .all()
+        )
+        for r in rewards:
+            # Get value from logs service
+            iscore, value = get_iscore_value(tx_hash=r.tx_hash)
 
-        if iscore is None:
-            continue
+            if iscore is None:
+                continue
 
-        r.value = value
-        r.iscore = iscore
+            r.value = value
+            r.iscore = iscore
 
-        session.add(r)
-        try:
-            session.commit()
-        except:
-            session.rollback()
-            raise
+            session.add(r)
+            try:
+                session.commit()
+            except:
+                session.rollback()
+                raise
