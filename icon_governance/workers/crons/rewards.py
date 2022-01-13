@@ -40,6 +40,8 @@ def get_rewards(session):
         .all()
     )
 
+    logger.info(f"Found {count} number of rewards records.")
+
     chunk_size = 100
     for i in range(0, count[0] % chunk_size + 1):
         rewards = (
