@@ -37,7 +37,7 @@ async def get_delegations(
         return Response(status_code=HTTPStatus.NO_CONTENT.value)
 
     # Return the count in header
-    query_count = select([func.count(Delegation.address)])
+    query_count = select([func.count(Delegation.address)]).where(Delegation.address == address)
     result_count = await session.execute(query_count)
     total_count = str(result_count.scalars().all()[0])
     response.headers["x-total-count"] = total_count
