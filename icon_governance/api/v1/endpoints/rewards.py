@@ -27,7 +27,7 @@ async def get_delegations(
         # .where(Reward.value != None)
         .offset(skip)
         .limit(limit)
-        .order_by(Reward.timestamp)
+        .order_by(Reward.timestamp.desc())
     )
 
     result = await session.execute(query)
