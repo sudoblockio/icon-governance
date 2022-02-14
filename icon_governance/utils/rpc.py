@@ -134,6 +134,20 @@ def get_preps_cps():
     return post_rpc(payload)
 
 
+def get_bond(address: str):
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": {
+            "to": "cx0000000000000000000000000000000000000000",
+            "dataType": "call",
+            "data": {"method": "getBond", "params": {"address": address}},
+        },
+    }
+    return post_rpc(payload)
+
+
 def get_admin_chain(ip_address: str):
     """Get the response from the admin API."""
     url = f"http://{ip_address}:9000/admin/chain/0x1"

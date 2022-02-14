@@ -84,7 +84,9 @@ class KafkaClient(BaseModel):
         if self.name is None:
             self.name = self.topic
 
-        self.consumer_deserializer = ProtobufDeserializer(message_type=TransactionRaw, conf={"use.deprecated.format": True})
+        self.consumer_deserializer = ProtobufDeserializer(
+            message_type=TransactionRaw, conf={"use.deprecated.format": True}
+        )
 
         self.consumer = DeserializingConsumer(
             {
@@ -105,8 +107,10 @@ class KafkaClient(BaseModel):
         self.protobuf_serializer = ProtobufSerializer(
             GovernancePrepProcessed,
             self.schema_registry_client,
-            conf={"auto.register.schemas": True,
-                  "use.deprecated.format": True,},
+            conf={
+                "auto.register.schemas": True,
+                "use.deprecated.format": True,
+            },
         )
 
         self.protobuf_producer = SerializingProducer(

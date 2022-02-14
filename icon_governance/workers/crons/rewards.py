@@ -33,7 +33,12 @@ def get_iscore_value(tx_hash):
 
 
 def get_rewards(session):
-    """Simple cron to get all the values and iscores for rewards txs."""
+    """
+    Cron to get all the values and iscores for rewards txs. Works by getting all the
+    iscore distributions which are picked up by the transactions processor and insert
+    them into a DB. The values are then inserted with this cron job by querying for
+    rewards that have no value.
+    """
     count = (
         session.execute(select([func.count(Reward.address)]).where(Reward.value == None))
         .scalars()

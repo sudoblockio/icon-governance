@@ -143,7 +143,13 @@ class TransactionsWorker(KafkaClient):
 
         if method == "setDelegation":
             logger.info(f"set delegation {value.hash}")
-            set_delegation(session=self.session, data=data, address=address)
+            set_delegation(
+                session=self.session,
+                data=data,
+                address=address,
+                block_height=value.block_number,
+                hash=value.hash,
+            )
 
         if method == "claimIScore":
             logger.info(f"set delegation {value.hash}")

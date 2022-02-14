@@ -1,5 +1,6 @@
 from icon_governance.utils.rpc import (
     convert_hex_int,
+    get_bond,
     get_preps_cps,
     get_sponsors_record,
     getDelegation,
@@ -10,7 +11,7 @@ from icon_governance.utils.rpc import (
 )
 
 SKIMPY_ADDRESS = "hxf5a52d659df00ef0517921647516daaf7502a728"
-ADDRESS = "hxdf6bd350edae21f84e0a12392c17eac7e04817e7"
+ADDRESS = "hx0cc3a3d55ed55df7c8eee926a4fafb5412d0cca4"
 
 
 def test_get_preps():
@@ -57,4 +58,10 @@ def test_get_preps_cps():
 
 def test_getProposals():
     proposals = post_rpc_json(getProposals())
-    print()
+    assert proposals
+
+
+def test_get_bond():
+    # bond = post_rpc_json(get_bond('hx0b047c751658f7ce1b2595da34d57a0e7dad357d'))
+    bond = post_rpc_json(get_bond("hx1e15b53379e5ee634a2da493a43fdc2d03d0c718"))
+    assert bond

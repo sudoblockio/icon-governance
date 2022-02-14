@@ -1,4 +1,7 @@
+from sqlmodel import select
+
 from icon_governance.db import session_factory
+from icon_governance.models.delegations import Delegation
 from icon_governance.workers.delegations import set_delegation
 
 
@@ -32,4 +35,33 @@ def test_set_delegations():
     }
 
     with session_factory() as session:
-        set_delegation(session, data, "hxf55eccb07a95a263a81d79561adb372bc39b3ca8")
+        set_delegation(
+            session, data, "hxf55eccb07a95a263a81d79561adb372bc39b3ca8", 1000, "foo-hash"
+        )
+        # Should have no effect
+        set_delegation(
+            session, data, "hxf55eccb07a95a263a81d79561adb372bc39b3ca8", 1000, "foo-hash"
+        )
+        statement = select(Delegation).where(
+            Delegation.address == "hxf55eccb07a95a263a81d79561adb372bc39b3ca8"
+        )
+        result = session.execute(statement)
+        address_delegation = result.scalars().all()
+
+        assert len(address_delegation) == 5
+
+        set_delegation(
+            session, data, "hxf55eccb07a95a263a81d79561adb372bc39b3ca8", 1001, "foo-hash"
+        )
+
+        set_delegation(session, data, "hxf55eccb07a95a263a81d79561adb372bc39b3ca8", 999, "foo-hash")
+
+        assert len(address_delegation) == 5
+
+        result = session.execute(statement)
+        address_delegation = result.scalars().all()
+        blocks = [i.last_updated_block for i in address_delegation]
+        last_updated_block_set = set(blocks)
+
+        assert len(last_updated_block_set) == 1
+        assert blocks[0] == 1001
