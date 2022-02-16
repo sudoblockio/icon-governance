@@ -54,7 +54,7 @@ def set_delegation(session, data, address, block_height, hash):
         else:
             for d in address_delegation:
                 session.delete(d)
-            session.commit()
+                session.commit()
 
     for d in params["delegations"]:
         delegation = Delegation(
