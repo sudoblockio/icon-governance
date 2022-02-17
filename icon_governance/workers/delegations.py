@@ -55,6 +55,7 @@ def set_delegation(session, data, address, block_height, hash):
             for d in address_delegation:
                 session.delete(d)
                 session.commit()
+            session.refresh()
 
     for d in params["delegations"]:
         delegation = Delegation(
@@ -66,3 +67,4 @@ def set_delegation(session, data, address, block_height, hash):
 
         session.add(delegation)
         session.commit()
+        session.refresh()
