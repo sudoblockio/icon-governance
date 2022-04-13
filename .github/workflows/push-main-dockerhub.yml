@@ -111,12 +111,12 @@ jobs:
           git pull
         working-directory: charts
 
-      - name: Update dev-lax mainnet deployment values file (API)
+      - name: Update deployment values file (API)
         uses: fjogeleit/yaml-update-action@master
         with:
           workDir: charts
           repository: sudoblockio/icon-charts
-          valueFile: 'deployments/${{ matrix.cluster }}/${{ matrix.network_name }}-${{ matrix.network_version }}/governance/values.yaml'
+          valueFile: 'deployments/${{ matrix.cluster }}/${{ matrix.network_name }}-${{ matrix.network_version }}/governance/tags.yaml'
           propertyPath: 'api.image.tag'
           value: ${{needs.docker.outputs.tag}}
           branch: main
@@ -124,12 +124,12 @@ jobs:
           updateFile: true
           commitChange: false
 
-      - name: Update dev-lax mainnet deployment values file (WORKER)
+      - name: Update deployment values file (WORKER)
         uses: fjogeleit/yaml-update-action@master
         with:
           workDir: charts
           repository: sudoblockio/icon-charts
-          valueFile: 'deployments/${{ matrix.cluster }}/${{ matrix.network_name }}-${{ matrix.network_version }}/governance/values.yaml'
+          valueFile: 'deployments/${{ matrix.cluster }}/${{ matrix.network_name }}-${{ matrix.network_version }}/governance/tags.yaml'
           propertyPath: 'worker.image.tag'
           value: ${{needs.docker.outputs.tag}}
           branch: main
@@ -146,6 +146,7 @@ jobs:
       - name: Commit all updates
         run: |
           git add -A
+          git pull
           git commit -m "governance ${{ matrix.cluster }}/${{ matrix.network_name }}-${{ matrix.network_version }} deployment image version to ${{needs.docker.outputs.tag}}"
           git push origin
         working-directory: charts
