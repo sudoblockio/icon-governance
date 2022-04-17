@@ -44,13 +44,13 @@ def set_delegation(session, data, address, block_height, hash):
                 f"- {last_updated_block_set}"
             )
             return
-        elif last_updated_block == block_height:
-            # Already have latest data in DB
-            logger.info(
-                f"Skipping setDelegation {hash} - already updated this Tx"
-                f"- {last_updated_block_set}"
-            )
-            return
+        # elif last_updated_block == block_height:
+        #     # Already have latest data in DB
+        #     logger.info(
+        #         f"Skipping setDelegation {hash} - already updated this Tx"
+        #         f"- {last_updated_block_set}"
+        #     )
+        #     return
         else:
 
             for d in address_delegation:
