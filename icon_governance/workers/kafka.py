@@ -1,7 +1,8 @@
 from time import sleep
-from typing import Any
+from typing import Any, Type
 
 from confluent_kafka import (
+    Consumer,
     DeserializingConsumer,
     KafkaError,
     Producer,
@@ -20,10 +21,12 @@ from pydantic import BaseModel, validator
 
 # from icon_governance.log import logger
 from icon_governance.config import settings
+
+# from icon_governance.schemas.transaction_raw_pb2 import TransactionRaw
+from icon_governance.schemas.block_etl_pb2 import BlockETL
 from icon_governance.schemas.governance_prep_processed_pb2 import (
     GovernancePrepProcessed,
 )
-from icon_governance.schemas.transaction_raw_pb2 import TransactionRaw
 
 
 def get_current_offset(session):
@@ -56,8 +59,8 @@ def get_current_offset(session):
 
 class KafkaClient(BaseModel):
     name: str = None
-    schema_registry_url: str = settings.SCHEMA_REGISTRY_URL
-    schema_registry_client: Any = None
+    # schema_registry_url: str = settings.SCHEMA_REGISTRY_URL
+    # schema_registry_client: Any = None
     sleep_seconds: float = 0.25
 
     session: Any = None
@@ -84,17 +87,27 @@ class KafkaClient(BaseModel):
         if self.name is None:
             self.name = self.topic
 
-        self.consumer_deserializer = ProtobufDeserializer(
-            message_type=TransactionRaw, conf={"use.deprecated.format": True}
-        )
+        # self.consumer_deserializer = ProtobufDeserializer(
+        #     message_type=BlockETL, conf={"use.deprecated.format": True}
+        # )
+        #
+        # self.consumer = DeserializingConsumer(
+        #     {
+        #         "bootstrap.servers": self.kafka_server,
+        #         "group.id": self.consumer_group,
+        #         "key.deserializer": StringDeserializer("utf_8"),
+        #         "value.deserializer": self.consumer_deserializer,
+        #         "auto.offset.reset": "earliest",
+        #     }
+        # )
 
-        self.consumer = DeserializingConsumer(
+        self.consumer = Consumer(
             {
                 "bootstrap.servers": self.kafka_server,
                 "group.id": self.consumer_group,
-                "key.deserializer": StringDeserializer("utf_8"),
-                "value.deserializer": self.consumer_deserializer,
-                "auto.offset.reset": "earliest",
+                # "queued.max.messages.kbytes": "100MB",
+                # Offset determined by worker type head (latest) or tail (earliest)
+                "auto.offset.reset": settings.CONSUMER_AUTO_OFFSET_RESET,
             }
         )
 
@@ -102,24 +115,24 @@ class KafkaClient(BaseModel):
         # Json producer for dead letter queues
         self.json_producer = Producer({"bootstrap.servers": self.kafka_server})
 
-        self.schema_registry_client = SchemaRegistryClient({"url": settings.SCHEMA_REGISTRY_URL})
+        # self.schema_registry_client = SchemaRegistryClient({"url": settings.SCHEMA_REGISTRY_URL})
 
-        self.protobuf_serializer = ProtobufSerializer(
-            GovernancePrepProcessed,
-            self.schema_registry_client,
-            conf={
-                "auto.register.schemas": True,
-                "use.deprecated.format": True,
-            },
-        )
-
-        self.protobuf_producer = SerializingProducer(
-            {
-                "bootstrap.servers": self.kafka_server,
-                "key.serializer": StringSerializer("utf_8"),
-                "value.serializer": self.protobuf_serializer,
-            }
-        )
+        # self.protobuf_serializer = ProtobufSerializer(
+        #     GovernancePrepProcessed,
+        #     self.schema_registry_client,
+        #     conf={
+        #         "auto.register.schemas": True,
+        #         "use.deprecated.format": True,
+        #     },
+        # )
+        #
+        # self.protobuf_producer = SerializingProducer(
+        #     {
+        #         "bootstrap.servers": self.kafka_server,
+        #         "key.serializer": StringSerializer("utf_8"),
+        #         "value.serializer": self.protobuf_serializer,
+        #     }
+        # )
 
         admin_client = AdminClient({"bootstrap.servers": self.kafka_server})
         topics = admin_client.list_topics().topics
@@ -129,24 +142,25 @@ class KafkaClient(BaseModel):
 
         self.init()
 
-    def produce_json(self, topic, key, value):
-        try:
-            # https://github.com/confluentinc/confluent-kafka-python/issues/137#issuecomment-282427382
-            self.json_producer.produce(topic=topic, value=value, key=key)
-            self.json_producer.poll(0)
-        except BufferError:
-            self.json_producer.poll(1)
-            self.json_producer.produce(topic=topic, value=value, key=key)
-        self.json_producer.flush()
+    # TODO: RM - no longer needed
+    # def produce_json(self, topic, key, value):
+    #     try:
+    #         # https://github.com/confluentinc/confluent-kafka-python/issues/137#issuecomment-282427382
+    #         self.json_producer.produce(topic=topic, value=value, key=key)
+    #         self.json_producer.poll(0)
+    #     except BufferError:
+    #         self.json_producer.poll(1)
+    #         self.json_producer.produce(topic=topic, value=value, key=key)
+    #     self.json_producer.flush()
 
-    def produce_protobuf(self, topic, key, value):
-        try:
-            self.protobuf_producer.produce(topic=topic, value=value, key=key)
-            self.protobuf_producer.poll(0)
-        except BufferError:
-            self.protobuf_producer.poll(1)
-            self.protobuf_producer.produce(topic=topic, value=value, key=key)
-        self.protobuf_producer.flush()
+    # def produce_protobuf(self, topic, key, value):
+    #     try:
+    #         self.protobuf_producer.produce(topic=topic, value=value, key=key)
+    #         self.protobuf_producer.poll(0)
+    #     except BufferError:
+    #         self.protobuf_producer.poll(1)
+    #         self.protobuf_producer.produce(topic=topic, value=value, key=key)
+    #     self.protobuf_producer.flush()
 
     def start(self):
         self.consumer.subscribe([self.topic])
@@ -177,12 +191,15 @@ class KafkaClient(BaseModel):
                 sleep(1)
                 continue
             else:
+                self.msg_count += 1
+                # For backfilling only
+                self.handle_backfill_stop(msg)
+                # value = msg.value()
                 if self.msg_count % 10000 == 0:
                     logger.info(
-                        f"msg count {self.msg_count} and block {msg.value().block_number} "
-                        f"for consumer group {self.consumer_group}"
+                        f"msg count {self.msg_count} for consumer group " f"{self.consumer_group}"
                     )
-                self.msg_count += 1
+
                 self.process(msg)
 
         # Flush the last of the messages

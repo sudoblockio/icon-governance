@@ -57,12 +57,13 @@ class Settings(BaseSettings):
     KAFKA_GROUP_ID: str = "governance-service"
 
     # Topics
-    CONSUMER_GROUP: str = "governance"
+    CONSUMER_GROUP: str = "governance-1"
     SCHEMA_NAME_TOPICS: str = "governance-ws:block"
 
-    CONSUMER_TOPIC_BLOCKS: str = "governance"
-    CONSUMER_TOPIC_TRANSACTIONS: str = "transactions"
-    CONSUMER_TOPIC_LOGS: str = "logs"
+    CONSUMER_TOPIC_BLOCKS: str = "blocks"
+    CONSUMER_AUTO_OFFSET_RESET: str = "earliest"
+    # CONSUMER_TOPIC_TRANSACTIONS: str = "transactions"
+    # CONSUMER_TOPIC_LOGS: str = "logs"
 
     # DB
     POSTGRES_USER: str = "postgres"

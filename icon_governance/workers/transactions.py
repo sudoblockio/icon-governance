@@ -1,4 +1,5 @@
 import json
+from typing import Type
 
 from sqlmodel import select
 
@@ -7,6 +8,8 @@ from icon_governance.db import session_factory
 from icon_governance.log import logger
 from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
+from icon_governance.models.rewards import Reward
+from icon_governance.schemas.block_etl_pb2 import BlockETL, LogETL, TransactionETL
 from icon_governance.schemas.governance_prep_processed_pb2 import (
     GovernancePrepProcessed,
 )
@@ -21,155 +24,180 @@ class TransactionsWorker(KafkaClient):
     preps_created: int = 0
     preps_updated: int = 0
 
-    def produce_prep(self, address, is_prep: bool = True):
-        processes_prep = GovernancePrepProcessed(address=address, is_prep=is_prep)
-        self.produce_protobuf(
-            settings.PRODUCER_TOPIC_GOVERNANCE_PREPS,
-            address,  # Keyed on address
-            processes_prep,
-        )
+    block: Type[BlockETL] = BlockETL()
+    transaction: Type[TransactionETL] = TransactionETL()
+    log: Type[LogETL] = LogETL()
 
-    def process(self, msg):
-        # For backfilling only
-        self.handle_backfill_stop(msg)
+    # def produce_prep(self, address, is_prep: bool = True):
+    #     processes_prep = GovernancePrepProcessed(address=address, is_prep=is_prep)
+    #     self.produce_protobuf(
+    #         settings.PRODUCER_TOPIC_GOVERNANCE_PREPS,
+    #         address,  # Keyed on address
+    #         processes_prep,
+    #     )
 
-        # Filter on only txs to the governance address
-        if settings.governance_address == msg.headers()[1][1]:
+    def process_transaction_preps(self, data, method):
+        try:
+            params = data["params"]
+        except KeyError:
+            # Must be a failed Tx or something?
+            logger.info(f"Skipping Tx - no params {self.transaction.hash}")
             return
 
-        value = msg.value()
+        prep = self.session.get(Prep, self.transaction.from_address)
 
-        # Ignore any unsuccessful txs
-        if value.receipt_status != 1:
-            return
+        if prep is not None:
+            if method == "unregisterPRep":
+                logger.info(f"Prep unregistration tx hash {self.transaction.hash}")
+                prep.status = "unregistered"
 
-        data = json.loads(value.data)
+                # Emit message
+                # self.produce_prep(value.from_address, is_prep=False)
 
-        address = value.from_address
-        # timestamp = int(value.timestamp, 16) / 1e6
+                self.preps_created += 1
+                prom_metrics.preps_created.set(self.preps_created)
 
-        # Ignore anything without a method call like contract creation events
-        if data is not None:
-            if "method" not in data:
-                return
-        else:
-            return
-
-        method = data["method"]
-
-        # P-Reps
-        if method in ["registerPRep", "setPrep", "unregisterPRep"]:
-
-            try:
-                params = data["params"]
-            except KeyError:
-                # Must be a failed Tx or something?
-                logger.info(f"Skipping Tx - no params {value.hash}")
+                self.session.add(prep)
+                self.session.commit()
                 return
 
-            prep = self.session.get(Prep, address)
+            if prep.last_updated_block is not None:
 
-            if prep is not None:
-                if method == "unregisterPRep":
-                    logger.info(f"Prep unregistration tx hash {value.hash}")
-                    prep.status = "unregistered"
-
-                    # Emit message
-                    self.produce_prep(value.from_address, is_prep=False)
-
-                    self.preps_created += 1
-                    prom_metrics.preps_created.set(self.preps_created)
-
-                    self.session.add(prep)
-                    self.session.commit()
+                if prep.last_updated_block > self.block.number and method == "setPrep":
+                    logger.info(
+                        f"Skipping setPrep call in tx_hash {self.transaction.hash} "
+                        f"because it has since been updated."
+                    )
                     return
+        else:
+            prep = Prep(
+                address=self.transaction.from_address,
+            )
 
-                if prep.last_updated_block is not None:
+        if prep.last_updated_block is None:
+            logger.info(f"Prep update registration tx hash {self.transaction.hash}")
+            prep.created_block = self.block.number
+            # prep.created_timestamp = timestamp
 
-                    if prep.last_updated_block > value.block_number and method == "setPrep":
-                        logger.info(
-                            f"Skipping setPrep call in tx_hash {value.hash} because it has since been updated."
-                        )
-                        return
-            else:
-                prep = Prep(
-                    address=address,
-                )
+        prep.last_updated_block = self.block.number
+        # prep.last_updated_timestamp = timestamp
+        prep.name = params["name"]
+        prep.email = params["email"]
+        prep.city = params["city"]
+        prep.website = params["website"]
+        prep.country = params["country"]
+        prep.details = params["details"]
+        prep.p2p_endpoint = params["p2pEndpoint"]
 
-            if prep.last_updated_block is None:
-                logger.info(f"Prep update registration tx hash {value.hash}")
-                prep.created_block = value.block_number
-                # prep.created_timestamp = timestamp
+        if "nodeAddress" in params:
+            prep.node_address = params["nodeAddress"]
 
-            prep.last_updated_block = value.block_number
-            # prep.last_updated_timestamp = timestamp
-            prep.name = params["name"]
-            prep.email = params["email"]
-            prep.city = params["city"]
-            prep.website = params["website"]
-            prep.country = params["country"]
-            prep.details = params["details"]
-            prep.p2p_endpoint = params["p2pEndpoint"]
+        details = get_details(params["details"])
+        # Add information from details
+        if details is not None:
+            for k, v in details.items():
+                try:
+                    setattr(prep, k, v)
+                except ValueError:
+                    continue
 
-            if "nodeAddress" in params:
-                prep.node_address = params["nodeAddress"]
+        self.preps_updated += 1
+        prom_metrics.preps_updated.set(self.preps_updated)
 
-            details = get_details(params["details"])
-            # Add information from details
-            if details is not None:
-                for k, v in details.items():
-                    try:
-                        setattr(prep, k, v)
-                    except ValueError:
-                        continue
+        self.session.add(prep)
+        try:
+            self.session.commit()
+        except:
+            self.session.rollback()
+            raise
 
-            self.preps_updated += 1
-            prom_metrics.preps_updated.set(self.preps_updated)
+    def process_transaction_rewards(self):
+        logger.info(f"set delegation {self.transaction.hash}")
+        reward = self.session.get(Reward, self.transaction.hash)
+        if reward is None:
+            logger.info(f"Creating reward transaction {self.transaction.hash}")
+            reward = Reward(
+                address=self.transaction.from_address,
+                tx_hash=self.transaction.hash,
+                block=self.block.number,
+                timestamp=self.transaction.timestamp / 1e6,
+            )
 
-            self.session.add(prep)
+            self.session.add(reward)
             try:
                 self.session.commit()
             except:
                 self.session.rollback()
                 raise
 
+    def process_transaction(self):
+        # Ignore any unsuccessful txs
+        if self.transaction.status != "0x1":
+            return
+
+        # Ignore anything without a method call like contract creation events
+        if self.transaction.data == "":
+            return
+
+        data = json.loads(self.transaction.data)
+
+        if "method" not in data:
+            return
+
+        # address = self.transaction.from_address
+        # timestamp = int(value.timestamp, 16) / 1e6
+        method = data["method"]
+
+        # P-Reps
+        if method in ["registerPRep", "setPrep", "unregisterPRep"]:
+            self.process_transaction_preps(data, method)
             # Emit message
-            if method == "registerPRep":
-                self.produce_prep(value.from_address)
+            # if method == "registerPRep":
+            #     self.produce_prep(value.from_address)
 
         # Staking
-        if method == "setStake":
+        elif method == "setStake":
             pass
 
-        if method == "setDelegation":
-            logger.info(f"set delegation {value.hash}")
+        elif method == "setDelegation":
+            logger.info(f"set delegation {self.transaction.hash}")
             set_delegation(
                 session=self.session,
                 data=data,
-                address=address,
-                block_height=value.block_number,
-                hash=value.hash,
+                address=self.transaction.from_address,
+                block_height=self.block.number,
+                hash=self.transaction.hash,
             )
 
-        if method == "claimIScore":
-            logger.info(f"set delegation {value.hash}")
-            set_rewards(session=self.session, value=value)
+        elif method == "claimIScore":
+            self.process_transaction_rewards()
 
-        if method == "registerProposal":
+        elif method == "registerProposal":
             pass
 
-        if method == "cancelProposal":
+        elif method == "cancelProposal":
             pass
 
         if method == "voteProposal":
             pass
+
+    def process(self, msg):
+        # # Filter on only txs to the governance address
+        # if settings.governance_address == msg.headers()[1][1]:
+        #     return
+
+        self.block.ParseFromString(msg.value())
+
+        for tx in self.block.transactions:
+            self.transaction = tx
+            self.process_transaction()
 
 
 def transactions_worker_head():
     with session_factory() as session:
         kafka = TransactionsWorker(
             session=session,
-            topic=settings.CONSUMER_TOPIC_TRANSACTIONS,
+            topic=settings.CONSUMER_TOPIC_BLOCKS,
             consumer_group=settings.CONSUMER_GROUP + "-head",
         )
 
@@ -177,13 +205,12 @@ def transactions_worker_head():
 
 
 def transactions_worker_tail():
-
     with session_factory() as session:
         consumer_group, partition_dict = get_current_offset(session)
 
         kafka = TransactionsWorker(
             session=session,
-            topic=settings.CONSUMER_TOPIC_TRANSACTIONS,
+            topic=settings.CONSUMER_TOPIC_BLOCKS,
             consumer_group=consumer_group,
             partition_dict=partition_dict,
         )
