@@ -1,8 +1,6 @@
 import json
 from typing import Type
 
-from sqlmodel import select
-
 from icon_governance.config import settings
 from icon_governance.db import session_factory
 from icon_governance.log import logger
@@ -10,13 +8,9 @@ from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
 from icon_governance.models.rewards import Reward
 from icon_governance.schemas.block_etl_pb2 import BlockETL, LogETL, TransactionETL
-from icon_governance.schemas.governance_prep_processed_pb2 import (
-    GovernancePrepProcessed,
-)
 from icon_governance.utils.details import get_details
 from icon_governance.workers.delegations import set_delegation
 from icon_governance.workers.kafka import KafkaClient, get_current_offset
-from icon_governance.workers.rewards import set_rewards
 
 
 class TransactionsWorker(KafkaClient):
@@ -27,14 +21,6 @@ class TransactionsWorker(KafkaClient):
     block: Type[BlockETL] = BlockETL()
     transaction: Type[TransactionETL] = TransactionETL()
     log: Type[LogETL] = LogETL()
-
-    # def produce_prep(self, address, is_prep: bool = True):
-    #     processes_prep = GovernancePrepProcessed(address=address, is_prep=is_prep)
-    #     self.produce_protobuf(
-    #         settings.PRODUCER_TOPIC_GOVERNANCE_PREPS,
-    #         address,  # Keyed on address
-    #         processes_prep,
-    #     )
 
     def process_transaction_preps(self, data, method):
         try:
@@ -50,9 +36,6 @@ class TransactionsWorker(KafkaClient):
             if method == "unregisterPRep":
                 logger.info(f"Prep unregistration tx hash {self.transaction.hash}")
                 prep.status = "unregistered"
-
-                # Emit message
-                # self.produce_prep(value.from_address, is_prep=False)
 
                 self.preps_created += 1
                 prom_metrics.preps_created.set(self.preps_created)
@@ -144,16 +127,11 @@ class TransactionsWorker(KafkaClient):
         if "method" not in data:
             return
 
-        # address = self.transaction.from_address
-        # timestamp = int(value.timestamp, 16) / 1e6
         method = data["method"]
 
         # P-Reps
         if method in ["registerPRep", "setPrep", "unregisterPRep"]:
             self.process_transaction_preps(data, method)
-            # Emit message
-            # if method == "registerPRep":
-            #     self.produce_prep(value.from_address)
 
         # Staking
         elif method == "setStake":
@@ -182,13 +160,14 @@ class TransactionsWorker(KafkaClient):
             pass
 
     def process(self, msg):
-        # # Filter on only txs to the governance address
-        # if settings.governance_address == msg.headers()[1][1]:
-        #     return
-
+        # Deserialize msg
         self.block.ParseFromString(msg.value())
 
         for tx in self.block.transactions:
+            if tx.to_address != settings.governance_address:
+                # Skip all Txs not to the gov address
+                return
+
             self.transaction = tx
             self.process_transaction()
 
