@@ -28,12 +28,6 @@ class Settings(BaseSettings):
     # Monitoring
     HEALTH_POLLING_INTERVAL: int = 60
 
-    # Logging
-    LOG_LEVEL: str = "INFO"
-    LOG_TO_FILE: str = "false"
-    LOG_FILE_NAME: str = "governance.log"
-    LOG_FORMAT: str = "string"
-
     # ICON Nodes
     ICON_NODE_URL: str = "https://api.icon.geometry.io/api/v3"
     BACKUP_ICON_NODE_URL: str = "https://ctz.solidwallet.io/api/v3"
@@ -46,24 +40,17 @@ class Settings(BaseSettings):
     PEER_SEED_IP: str = "52.196.159.184"
     PEER_SEED_ADDRESS: str = "hx9c63f73d3c564a54d0eed84f90718b1ebed16f09"
 
-    # Backfilling
-    JOB_ID: str = None
-
     # Kafka
     KAFKA_BROKER_URL: str = "localhost:29092"
     SCHEMA_REGISTRY_URL: str = "http://localhost:8081"
     CONSUMER_IS_TAIL: bool = False
 
-    KAFKA_GROUP_ID: str = "governance-service"
-
     # Topics
     CONSUMER_GROUP: str = "governance-1"
-    SCHEMA_NAME_TOPICS: str = "governance-ws:block"
-
     CONSUMER_TOPIC_BLOCKS: str = "blocks"
+    # Backfilling
     CONSUMER_AUTO_OFFSET_RESET: str = "earliest"
-    # CONSUMER_TOPIC_TRANSACTIONS: str = "transactions"
-    # CONSUMER_TOPIC_LOGS: str = "logs"
+    JOB_ID: str = None
 
     # DB
     POSTGRES_USER: str = "postgres"
@@ -75,19 +62,8 @@ class Settings(BaseSettings):
     # Endpoints
     MAX_PAGE_SIZE: int = 100
 
-    # Redis
-    # REDIS_HOST: str = "redis"
-    # REDIS_PORT: int = 6379
-    # REDIS_PASSWORD: str = ""
-    # REDIS_CHANNEL: str = "governance"
-    # REDIS_SENTINEL_CLIENT_MODE: bool = False
-    # REDIS_SENTINEL_CLIENT_MASTER_NAME: str = "master"
-
     governance_address: str = "cx0000000000000000000000000000000000000000"
-
     CRON_SLEEP_SEC: int = 600
-
-    PRODUCER_TOPIC_GOVERNANCE_PREPS: str = "governance-preps-processed"
 
     class Config:
         case_sensitive = True

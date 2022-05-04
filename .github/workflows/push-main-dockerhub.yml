@@ -58,22 +58,26 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#      - name: Build and push API
-#        uses: docker/build-push-action@v2
-#        with:
-#          context: .
-#          file: ./Dockerfile
-#          target: prod
-#          push: true
-#          tags: sudoblock/icon-governance-api:latest, sudoblock/icon-governance-api:${{ steps.source.outputs.TAG }}
+      - name: Build and push API
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          target: prod
+          push: true
+          build-args:
+            - SERVICE_NAME=worker
+          tags: sudoblock/icon-governance-api:latest, sudoblock/icon-governance-api:${{ steps.source.outputs.TAG }}
 
       - name: Build and push worker
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.worker
+          file: ./Dockerfile
           target: prod
           push: true
+          build-args:
+            - SERVICE_NAME=api
           tags: sudoblock/icon-governance-worker:latest, sudoblock/icon-governance-worker:${{ steps.source.outputs.TAG }}
 
   push_refs:
