@@ -66,7 +66,7 @@ jobs:
           target: prod
           push: true
           build-args: |
-            SERVICE_NAME=worker
+            SERVICE_NAME=api
           tags: sudoblock/icon-governance-api:latest, sudoblock/icon-governance-api:${{ steps.source.outputs.TAG }}
 
       - name: Build and push worker
@@ -77,7 +77,7 @@ jobs:
           target: prod
           push: true
           build-args: |
-            SERVICE_NAME=api
+            SERVICE_NAME=worker
           tags: sudoblock/icon-governance-worker:latest, sudoblock/icon-governance-worker:${{ steps.source.outputs.TAG }}
 
   push_refs:
