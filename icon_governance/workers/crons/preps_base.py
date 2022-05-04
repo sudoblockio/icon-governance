@@ -2,15 +2,11 @@ from time import sleep
 
 import requests
 
-from icon_governance.config import settings
-
 # from icon_governance.db import session
+from icon_governance.config import settings
 from icon_governance.log import logger
 from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
-from icon_governance.schemas.governance_prep_processed_pb2 import (
-    GovernancePrepProcessed,
-)
 from icon_governance.utils.rpc import convert_hex_int, getPReps
 from icon_governance.workers.kafka import KafkaClient
 
@@ -70,18 +66,6 @@ def get_preps_base(session, kafka=None):
             prep = Prep(
                 address=p["address"],
             )
-        else:
-            # This is a hack until
-            # https://github.com/geometry-labs/icon-addresses/issues/60
-            # is done. Emitting from governance.
-            processed_prep = GovernancePrepProcessed(address=p["address"], is_prep=True)
-            if kafka:
-                kafka.produce_protobuf(
-                    settings.PRODUCER_TOPIC_GOVERNANCE_PREPS,
-                    p["address"],  # Keyed on address for init - hash for Tx updates
-                    processed_prep,
-                )
-                logger.info(f"Emitting new prep {processed_prep.address}")
 
         prep.name = p["name"]
         prep.country = p["country"]
