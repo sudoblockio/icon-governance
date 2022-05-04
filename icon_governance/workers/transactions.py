@@ -164,12 +164,10 @@ class TransactionsWorker(KafkaClient):
         self.block.ParseFromString(msg.value())
 
         for tx in self.block.transactions:
-            if tx.to_address != settings.governance_address:
+            if tx.to_address == settings.governance_address:
                 # Skip all Txs not to the gov address
-                return
-
-            self.transaction = tx
-            self.process_transaction()
+                self.transaction = tx
+                self.process_transaction()
 
 
 def transactions_worker_head():
