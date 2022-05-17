@@ -13,7 +13,7 @@ from icon_governance.models.preps import Prep
 router = APIRouter()
 
 
-@router.get("/preps")
+@router.get("/governance/preps")
 async def get_preps(
     session: AsyncSession = Depends(get_session),
 ) -> List[Prep]:
@@ -24,7 +24,7 @@ async def get_preps(
     return preps
 
 
-@router.get("/preps/{address}")
+@router.get("/governance/preps/{address}")
 async def get_prep(
     address: str,
     session: AsyncSession = Depends(get_session),
