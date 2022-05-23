@@ -130,8 +130,13 @@ class TransactionsWorker(KafkaClient):
         method = data["method"]
 
         # P-Reps
-        if method in ["registerPRep", "setPrep", "unregisterPRep"]:
+        if method in ["registerPRep", "setPrep"]:
             self.process_transaction_preps(data, method)
+
+        if method in ["unregisterPRep"]:
+            # TODO: Handle unregister? Add field (unregistered?) Would need to add it
+            #  into api
+            print("Skipping for now.")
 
         # Staking
         elif method == "setStake":
