@@ -11,9 +11,11 @@ down-dbs:  ## Take down the DBs
 	docker-compose -f docker-compose.db.yml down
 
 test-unit:  ## Run unit tests
+	export ENV_FILE=""
 	python3 -m pytest tests/unit
 
 test-integration:  ## Run integration tests - Need DB compose up
+	export ENV_FILE=""
 	python3 -m pytest tests/integration
 
 test-coverage:  ## Run unit tests - Need DB compose up
