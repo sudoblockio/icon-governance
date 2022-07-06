@@ -3,6 +3,7 @@ Rewards are Txs with the claim-iscore method but since this service only listens
 new Txs, this job backfills the value and iscore from the logs service.
 """
 import json
+from time import sleep
 
 from requests import RequestException, get
 from sqlmodel import func, select
@@ -19,6 +20,8 @@ def get_iscore_value(tx_hash):
         response = get(f"{settings.LOGS_SERVICE_URL}/api/v1/logs?transaction_hash={tx_hash}")
     except RequestException as e:
         logger.info(f"Exception in iscore - \n{e} - \n{tx_hash}")
+        # TODO: Add backoff - This should not happen generally
+        sleep(0.5)
         return None, None
 
     if response.status_code == 200:
@@ -30,6 +33,7 @@ def get_iscore_value(tx_hash):
             return None, None
     else:
         logger.info(f"Could not find Tx hash from logs service {tx_hash}")
+        return None, None
 
 
 def get_rewards(session):
@@ -56,6 +60,9 @@ def get_rewards(session):
         )
         for r in rewards:
             # Get value from logs service
+            if r.tx_hash is None:
+                continue
+
             iscore, value = get_iscore_value(tx_hash=r.tx_hash)
 
             if iscore is None:

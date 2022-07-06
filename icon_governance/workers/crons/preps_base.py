@@ -1,14 +1,8 @@
-from time import sleep
-
 import requests
 
-# from icon_governance.db import session
-from icon_governance.config import settings
 from icon_governance.log import logger
-from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
-from icon_governance.utils.rpc import convert_hex_int, getPReps
-from icon_governance.workers.kafka import KafkaClient
+from icon_governance.utils.rpc import getPReps
 
 
 def extract_details(details: dict, prep: Prep):
@@ -55,7 +49,7 @@ def extract_details(details: dict, prep: Prep):
                 prep.server_city = details["server"]["location"]["city"]
 
 
-def get_preps_base(session, kafka=None):
+def get_preps_base(session):
     rpc_preps = getPReps().json()["result"]
     logger.info("Starting prep collection cron")
 
@@ -99,19 +93,6 @@ def get_preps_base(session, kafka=None):
             raise
 
     logger.info("Ending prep collection cron")
-
-
-def preps_cron(session):
-    """Gets metadata about a prep that does not change often."""
-    kafka = KafkaClient()
-    while True:
-        logger.info("Prep cron ran.")
-
-        with session_factory() as session:
-            get_preps_base(session, kafka)
-
-        prom_metrics.preps_base_cron_ran.inc()
-        sleep(settings.CRON_SLEEP_SEC)
 
 
 if __name__ == "__main__":

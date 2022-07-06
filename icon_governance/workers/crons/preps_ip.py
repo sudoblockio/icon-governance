@@ -27,9 +27,9 @@ def get_prep_state(session):
                 if r.status_code == 200:
                     for i in r.text.split("\n"):
                         if i.startswith("goloop_consensus_round_duration"):
-                            if int(float(i.split()[-1])) > 1500:
+                            if int(float(i.split()[-1])) > 1000:
                                 prep.node_state = "Synced"
-                            elif int(float(i.split()[-1])) < 1500:
+                            elif int(float(i.split()[-1])) < 1000:
                                 prep.node_state = "BlockSync"
                             break
             except requests.exceptions.RequestException:

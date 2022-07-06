@@ -2,9 +2,7 @@ from time import sleep
 
 from sqlmodel import select
 
-from icon_governance.config import settings
 from icon_governance.log import logger
-from icon_governance.metrics import prom_metrics
 from icon_governance.models.proposals import Proposal
 from icon_governance.utils.rpc import convert_hex_int, getProposals, post_rpc_json
 
@@ -61,16 +59,7 @@ def get_proposals(session):
             session.close()
 
 
-def proposals_cron(session):
-    while True:
-        logger.info("Starting proposals cron")
-        get_proposals(session)
-        logger.info("Proposals cron ran.")
-        prom_metrics.preps_proposals_cron_ran.inc()
-        sleep(settings.CRON_SLEEP_SEC)
-
-
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    proposals_cron(session_factory())
+    get_proposals(session_factory())

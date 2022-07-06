@@ -13,7 +13,6 @@ from icon_governance.workers.crons.preps_ip import get_prep_state
 from icon_governance.workers.crons.preps_stake import get_prep_stake
 from icon_governance.workers.crons.proposals import get_proposals
 from icon_governance.workers.crons.rewards import get_rewards
-from icon_governance.workers.kafka import KafkaClient
 from icon_governance.workers.transactions import (
     transactions_worker_head,
     transactions_worker_tail,
@@ -31,9 +30,8 @@ def main(worker_type: str = None):
     if worker_type == "tail":
         transactions_worker_tail()
 
-    kafka = KafkaClient()
     with session_factory() as session:
-        get_preps_base(session, kafka)
+        get_preps_base(session)
 
     if worker_type == "cron":
         while True:
@@ -74,6 +72,6 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Worker type input.")
-    parser.add_argument("worker_type", type=str, help="The type of worker")
+    parser.add_argument("worker_type", type=str, help="The type of worker", default="")
     args = parser.parse_args()
     main(args.worker_type)
