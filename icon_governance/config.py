@@ -1,8 +1,9 @@
+import os
+
 from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-
     NAME: str = "governance"
     NETWORK_NAME: str = "mainnet"
 
@@ -67,7 +68,13 @@ class Settings(BaseSettings):
 
     class Config:
         case_sensitive = True
-        # env_prefix = "GOVERNANCE_"
 
 
-settings = Settings()
+test_env = os.path.join(os.path.dirname(__file__), "..", ".env.test")
+
+if os.environ.get("ENV_FILE", False):
+    settings = Settings(_env_file=os.environ.get("ENV_FILE"))
+elif os.path.isfile(test_env):
+    settings = Settings(_env_file=test_env)
+else:
+    settings = Settings()
