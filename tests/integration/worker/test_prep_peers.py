@@ -1,5 +1,5 @@
-from icon_governance.db import session_factory
-from icon_governance.workers.crons.preps_ip import get_peers, get_prep_state
+# from icon_governance.db import session_factory
+# from icon_governance.workers.crons.preps_ip import get_prep_state
 
 # def test_get_prep_state(mocker):
 #     from .fixture import peers
