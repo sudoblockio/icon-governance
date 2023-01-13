@@ -6,6 +6,7 @@ from prometheus_client import start_http_server
 from icon_governance.config import settings
 from icon_governance.db import session_factory
 from icon_governance.metrics import prom_metrics
+from icon_governance.workers.crons.clean_delegation import clean_delegations
 from icon_governance.workers.crons.cps import get_cps
 from icon_governance.workers.crons.prep_attributes import get_prep_attributes
 from icon_governance.workers.crons.preps_base import get_preps_base
@@ -63,6 +64,9 @@ def main(worker_type: str = None):
                 logger.info("Starting proposals cron")
                 get_proposals(session)
                 prom_metrics.preps_attributes_cron_ran.inc()
+
+                logger.info("Deleting zero delegations.")
+                clean_delegations(session)
 
                 logger.info("Sleeping after crons.")
                 sleep(settings.CRON_SLEEP_SEC)
