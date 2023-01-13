@@ -42,9 +42,6 @@ services:
     environment:
       <<: *extractor-env
 
-  ############
-  # Database #
-  ############
   postgres:
     image: postgres
     environment:
@@ -53,9 +50,6 @@ services:
     ports:
       - "5432:5432"
 
-  #########
-  # Kafka #
-  #########
   zookeeper:
     image: confluentinc/cp-zookeeper:${CP_ZOOKEEPER_TAG:-latest}
     hostname: zookeeper
@@ -64,7 +58,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:${CP_ENTERPRISE_KAFKA_TAG:-latest}
+    image: confluentinc/cp-server:7.2.0
     hostname: kafka
     depends_on:
       - zookeeper
@@ -90,50 +84,6 @@ services:
       KAFKA_CONFLUENT_SUPPORT_CUSTOMER_ID: anonymous
       KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CONFLUENT_METRICS_ENABLE: 'true'
+      KAFKA_CONFLUENT_METRICS_ENABLE: 'false'
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
-
-#  rest-proxy:
-#    image: confluentinc/cp-kafka-rest:${CP_KAFKA_REST_TAG:-latest}
-#    hostname: rest-proxy
-#    depends_on:
-#      - kafka
-#      - schemaregistry
-#    environment:
-#      KAFKA_REST_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-#      KAFKA_REST_BOOTSTRAP_SERVERS: 'kafka:9092'
-#      KAFKA_REST_LISTENERS: 'http://0.0.0.0:8084'
-#      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schemaregistry:8081'
-#      KAFKA_REST_HOST_NAME: 'rest-proxy'
-#
-#  ksqldb-server:
-#    image: confluentinc/cp-ksql-server:5.4.6
-#    hostname: ksqldb-server
-#    container_name: ksqldb-server
-#    depends_on:
-#      - kafka
-#      - schemaregistry
-#    ports:
-#      - "8088:8088"
-#    environment:
-#      KSQL_LISTENERS: "http://0.0.0.0:8088"
-#      KSQL_BOOTSTRAP_SERVERS: "kafka:9092"
-#      KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schemaregistry:8081"
-#      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
-#      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
-
-#  schemaregistry:
-#    image: confluentinc/cp-schema-registry:${CP_SCHEMA_REGISTRY_TAG:-latest}
-#    hostname: schemaregistry
-#    depends_on:
-#      - zookeeper
-#      - kafka
-#    ports:
-#      - "8081:8081"
-#    environment:
-#      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
-#      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka:9092'
-#      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
-#      SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_ORIGIN: '*'
-#      SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_METHODS: 'GET,POST,PUT,OPTIONS'
-#      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
