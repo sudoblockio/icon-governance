@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     HEALTH_POLLING_INTERVAL: int = 60
 
     # ICON Nodes
-    ICON_NODE_URL: str = "https://api.icon.geometry.io/api/v3"
+    ICON_NODE_URL: str = "https://api.icon.community/api/v3"
     BACKUP_ICON_NODE_URL: str = "https://ctz.solidwallet.io/api/v3"
 
     # Logs service - For getting value for iscore
