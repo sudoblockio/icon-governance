@@ -39,7 +39,7 @@ CRONS: list[Cron] = [
     },
     {
         "func": clean_delegation.clean_delegations,
-        "interval": 600,
+        "interval": 86400,
     },
     {
         "func": preps_ip.run_prep_ip,
