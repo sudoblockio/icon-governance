@@ -1,7 +1,9 @@
 from icon_governance.utils.rpc import (
     convert_hex_int,
     get_bond,
+    get_missed_blocks,
     get_preps_cps,
+    get_preps_stats,
     get_sponsors_record,
     getDelegation,
     getPReps,
@@ -65,3 +67,13 @@ def test_get_bond():
     # bond = post_rpc_json(get_bond('hx0b047c751658f7ce1b2595da34d57a0e7dad357d'))
     bond = post_rpc_json(get_bond("hx1e15b53379e5ee634a2da493a43fdc2d03d0c718"))
     assert bond
+
+
+def test_get_missed_blocks():
+    output = get_missed_blocks().json()["result"]
+    assert output
+
+
+def test_get_preps_stats():
+    output = get_preps_stats().json()["result"]
+    assert output
