@@ -1,9 +1,37 @@
-import requests
+import asyncio
+
+import aiohttp
 from sqlmodel import select
 
 from icon_governance.log import logger
 from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
+
+
+async def get_pool_stats_async_resp(session, prep: Prep):
+    try:
+        async with session.get(url=prep.metrics_endpoint, timeout=5) as response:
+            resp = await response.read()
+    except Exception as e:
+        prep.node_state = "Unknown"
+        return
+
+    for i in resp.decode("utf-8").split("\n"):
+        if i.startswith("goloop_consensus_round_duration"):
+            if int(float(i.split()[-1])) > 1500:
+                prep.node_state = "Synced"
+                return
+            elif int(float(i.split()[-1])) < 1500:
+                prep.node_state = "BlockSync"
+                return
+            break
+    prep.node_state = "Unknown"
+
+
+async def get_prep_state(preps: list[Prep]):
+    async with aiohttp.ClientSession() as session:
+        ret = await asyncio.gather(*[get_pool_stats_async_resp(session, prep=i) for i in preps])
+    return ret
 
 
 def run_prep_state(session):
@@ -21,30 +49,17 @@ def run_prep_state(session):
             session.merge(prep)
             continue
 
-        rpc_endpoint = prep.api_endpoint + "/metrics"
+        prep.metrics_endpoint = prep.api_endpoint + "/metrics"
+        if not prep.metrics_endpoint.startswith("http://"):
+            prep.metrics_endpoint = "http://" + prep.metrics_endpoint
 
-        if not rpc_endpoint.startswith("http://"):
-            rpc_endpoint = "http://" + rpc_endpoint
+    asyncio.run(
+        get_prep_state(
+            preps=preps,
+        )
+    )
 
-        try:
-            r = requests.get(rpc_endpoint, timeout=1)
-        except requests.exceptions.RequestException:
-            prep.node_state = "Unknown"
-            session.merge(prep)
-            continue
-
-        if r.status_code == 200:
-            print()
-            for i in r.text.split("\n"):
-                if i.startswith("goloop_consensus_round_duration"):
-                    if int(float(i.split()[-1])) > 1500:
-                        prep.node_state = "Synced"
-                    elif int(float(i.split()[-1])) < 1500:
-                        prep.node_state = "BlockSync"
-                    break
-        else:
-            prep.node_state = "Unknown"
-
+    for prep in preps:
         session.merge(prep)
     session.commit()
 
