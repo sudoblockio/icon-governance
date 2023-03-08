@@ -10,6 +10,7 @@ from sqlmodel import func, select
 
 from icon_governance.config import settings
 from icon_governance.log import logger
+from icon_governance.metrics import prom_metrics
 from icon_governance.models.rewards import Reward
 from icon_governance.utils.rpc import convert_hex_int
 
@@ -36,13 +37,15 @@ def get_iscore_value(tx_hash):
         return None, None
 
 
-def get_rewards(session):
+def run_rewards(session):
     """
     Cron to get all the values and iscores for rewards txs. Works by getting all the
     iscore distributions which are picked up by the transactions processor and insert
     them into a DB. The values are then inserted with this cron job by querying for
     rewards that have no value.
     """
+    logger.info("Starting proposals cron")
+
     count = (
         session.execute(select([func.count(Reward.address)]).where(Reward.value == None))
         .scalars()
@@ -77,3 +80,6 @@ def get_rewards(session):
             except:
                 session.rollback()
                 raise
+
+    prom_metrics.rewards_cron_ran.inc()
+    logger.info("Ending proposals cron")

@@ -2,8 +2,8 @@ from time import sleep
 
 from sqlmodel import select
 
-from icon_governance.config import settings
 from icon_governance.log import logger
+from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
 from icon_governance.utils.rpc import (
     convert_hex_int,
@@ -13,7 +13,9 @@ from icon_governance.utils.rpc import (
 )
 
 
-def get_cps(session):
+def run_cps(session):
+    logger.info("Starting cps cron")
+
     sponsors = post_rpc_json(get_sponsors_record())
 
     if sponsors is None:
@@ -47,16 +49,11 @@ def get_cps(session):
         session.merge(prep)
         session.commit()
 
-
-def cps_cron(session):
-    while True:
-        logger.info("Starting cps cron")
-        get_cps(session)
-        logger.info("CPS cron ran.")
-        sleep(settings.CRON_SLEEP_SEC * 10)
+    prom_metrics.preps_stake_cron_ran.inc()
+    logger.info("Ending cps cron")
 
 
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    get_cps(session_factory())
+    run_cps(session_factory())

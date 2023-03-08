@@ -11,7 +11,7 @@ elif [ "$1" = "cron" ]; then
   cd icon_governance
   alembic upgrade head
   echo "Starting cron..."
-  python worker/cron/$2.py
+  python main_cron.py
 elif [ "$1" = "api" ]; then
   echo "Starting API..."
   python icon_governance/main_api.py

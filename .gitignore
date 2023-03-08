@@ -1,7 +1,7 @@
 .idea/
 .vscode/
 
-.env.test
+.env
 
 vaults_common
 

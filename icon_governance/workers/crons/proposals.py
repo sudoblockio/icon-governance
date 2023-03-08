@@ -3,11 +3,14 @@ from time import sleep
 from sqlmodel import select
 
 from icon_governance.log import logger
+from icon_governance.metrics import prom_metrics
 from icon_governance.models.proposals import Proposal
 from icon_governance.utils.rpc import convert_hex_int, getProposals, post_rpc_json
 
 
-def get_proposals(session):
+def run_proposals(session):
+    logger.info("Starting proposals cron")
+
     proposals = post_rpc_json(getProposals())
     if proposals is None:
         logger.info("No proposals found from rpc. Chilling for a bit.")
@@ -58,8 +61,11 @@ def get_proposals(session):
         finally:
             session.close()
 
+    prom_metrics.preps_attributes_cron_ran.inc()
+    logger.info("Ending proposals cron")
+
 
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    get_proposals(session_factory())
+    run_proposals(session_factory())

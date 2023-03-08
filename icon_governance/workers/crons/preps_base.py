@@ -1,6 +1,7 @@
 import requests
 
 from icon_governance.log import logger
+from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
 from icon_governance.utils.rpc import getPReps
 
@@ -49,7 +50,9 @@ def extract_details(details: dict, prep: Prep):
                 prep.server_city = details["server"]["location"]["city"]
 
 
-def get_preps_base(session):
+def run_preps_base(session):
+    logger.info("Starting base cron")
+
     rpc_preps = getPReps().json()["result"]
     logger.info("Starting prep collection cron")
 
@@ -82,7 +85,8 @@ def get_preps_base(session):
 
         except Exception:
             # Details not available so no more parsing
-            logger.info(f"error parsing {p['address']}")
+            # logger.info(f"error parsing {p['address']}")
+            pass
 
         session.add(prep)
         try:
@@ -92,10 +96,11 @@ def get_preps_base(session):
             session.rollback()
             raise
 
-    logger.info("Ending prep collection cron")
+    prom_metrics.preps_base_cron_ran.inc()
+    logger.info("Ending base cron")
 
 
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    get_preps_base(session_factory())
+    run_preps_base(session_factory())

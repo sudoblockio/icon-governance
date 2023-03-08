@@ -1,6 +1,7 @@
 from time import sleep
 
 from icon_governance.log import logger
+from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
 from icon_governance.utils.rpc import (
     convert_hex_int,
@@ -10,7 +11,9 @@ from icon_governance.utils.rpc import (
 )
 
 
-def get_prep_attributes(session):
+def run_prep_attributes(session):
+    logger.info("Starting attributes cron")
+
     preps = post_rpc_json(getPReps())
     if preps is None:
         logger.info("No preps found from rpc.")
@@ -52,9 +55,11 @@ def get_prep_attributes(session):
             raise
         finally:
             session.close()
+    prom_metrics.preps_attributes_cron_ran.inc()
+    logger.info("Ending attributes cron")
 
 
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    get_prep_attributes(session_factory())
+    run_prep_attributes(session_factory())
