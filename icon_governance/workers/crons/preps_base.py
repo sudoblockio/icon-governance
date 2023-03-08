@@ -40,9 +40,6 @@ def extract_details(details: dict, prep: Prep):
         if "server_type" in details["server"]:
             prep.server_type = details["server"]["server_type"]
 
-        if "api_endpoint" in details["server"]:
-            prep.api_endpoint = details["server"]["api_endpoint"]
-
         if "location" in details["server"]:
             if "country" in details["server"]["location"]:
                 prep.server_country = details["server"]["location"]["country"]
