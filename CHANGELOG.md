@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/sudoblockio/icon-governance/compare/v0.1.3...v0.2.0) (2023-03-08)
+
+
+### Features
+
+* add appscheduler and update all crons ([2896477](https://github.com/sudoblockio/icon-governance/commit/2896477e8266548dea06e23e99355afefa095139))
+
+
+### Bug Fixes
+
+* add additional delegations cleaner [#6](https://github.com/sudoblockio/icon-governance/issues/6) ([2f3db7d](https://github.com/sudoblockio/icon-governance/commit/2f3db7d15cd23c725d8a83e30a366c224981a4f4))
+
 ## [0.1.3](https://github.com/sudoblockio/icon-governance/compare/v0.1.2...v0.1.3) (2023-01-13)
 
 
