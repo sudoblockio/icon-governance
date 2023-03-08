@@ -1,73 +1,80 @@
-from typing import Any, List, Optional
+from typing import Optional
 
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, Session, SQLModel, create_engine
+from sqlmodel import Field, SQLModel
 
 
 class Prep(SQLModel, table=True):
     address: str = Field(primary_key=True)
 
-    name: Optional[str] = Field(None, index=False)
-    country: Optional[str] = Field(None, index=False)
-    city: Optional[str] = Field(None, index=False)
-    email: Optional[str] = Field(None, index=False)
-    website: Optional[str] = Field(None, index=False)
-    details: Optional[str] = Field(None, index=False)
-    p2p_endpoint: Optional[str] = Field(None, index=False)
-    node_address: Optional[str] = Field(None, index=False)
+    name: Optional[str] = Field(None)
+    country: Optional[str] = Field(None)
+    city: Optional[str] = Field(None)
+    email: Optional[str] = Field(None)
+    website: Optional[str] = Field(None)
+    details: Optional[str] = Field(None)
+    node_address: Optional[str] = Field(None)
 
-    node_state: Optional[str] = Field(None, index=False)
+    node_state: Optional[str] = Field(None)
 
-    status: Optional[str] = Field(None, index=False)
-    penalty: Optional[str] = Field(None, index=False)
-    grade: Optional[str] = Field(None, index=False)
+    status: Optional[str] = Field(None)
+    penalty: Optional[str] = Field(None)
+    grade: Optional[str] = Field(None)
 
-    last_updated_block: Optional[int] = Field(None, index=False)
-    last_updated_timestamp: Optional[int] = Field(None, index=False)
-    created_block: Optional[int] = Field(None, index=False)
-    created_timestamp: Optional[int] = Field(None, index=False)
+    last_updated_block: Optional[int] = Field(None)
+    last_updated_timestamp: Optional[int] = Field(None)
+    created_block: Optional[int] = Field(None)
+    created_timestamp: Optional[int] = Field(None)
 
     # Logos
-    logo_256: Optional[str] = Field(None, index=False)
-    logo_1024: Optional[str] = Field(None, index=False)
-    logo_svg: Optional[str] = Field(None, index=False)
+    logo_256: Optional[str] = Field(None)
+    logo_1024: Optional[str] = Field(None)
+    logo_svg: Optional[str] = Field(None)
 
     # Social Media
-    steemit: Optional[str] = Field(None, index=False)
-    twitter: Optional[str] = Field(None, index=False)
-    youtube: Optional[str] = Field(None, index=False)
-    facebook: Optional[str] = Field(None, index=False)
-    github: Optional[str] = Field(None, index=False)
-    reddit: Optional[str] = Field(None, index=False)
-    keybase: Optional[str] = Field(None, index=False)
-    telegram: Optional[str] = Field(None, index=False)
-    wechat: Optional[str] = Field(None, index=False)
+    steemit: Optional[str] = Field(None)
+    twitter: Optional[str] = Field(None)
+    youtube: Optional[str] = Field(None)
+    facebook: Optional[str] = Field(None)
+    github: Optional[str] = Field(None)
+    reddit: Optional[str] = Field(None)
+    keybase: Optional[str] = Field(None)
+    telegram: Optional[str] = Field(None)
+    wechat: Optional[str] = Field(None)
+
+    # Endpoints
+    api_endpoint: Optional[str] = Field(None)
+    metrics_endpoint: Optional[str] = Field(None)
+    p2p_endpoint: Optional[str] = Field(None)
 
     # Server
-    api_endpoint: Optional[str] = Field(None, index=False)
-    server_country: Optional[str] = Field(None, index=False)
-    server_city: Optional[str] = Field(None, index=False)
-    server_type: Optional[str] = Field(None, index=False)
+    server_country: Optional[str] = Field(None)
+    server_city: Optional[str] = Field(None)
+    server_type: Optional[str] = Field(None)
 
     # Delegation
-    voted: Optional[float] = Field(None, index=False)
-    voting_power: Optional[float] = Field(None, index=False)
-    delegated: Optional[float] = Field(None, index=False)
-    stake: Optional[float] = Field(None, index=False)
-    irep: Optional[float] = Field(None, index=False)
-    irep_updated_block_height: Optional[float] = Field(None, index=False)
+    voted: Optional[float] = Field(None)
+    voting_power: Optional[float] = Field(None)
+    delegated: Optional[float] = Field(None)
+    stake: Optional[float] = Field(None)
+    irep: Optional[float] = Field(None)
+    irep_updated_block_height: Optional[float] = Field(None)
 
     # Productivity
-    total_blocks: Optional[float] = Field(None, index=False)
-    validated_blocks: Optional[float] = Field(None, index=False)
-    unvalidated_sequence_blocks: Optional[float] = Field(None, index=False)
+    total_blocks: Optional[float] = Field(None)
+    validated_blocks: Optional[float] = Field(None)
+    unvalidated_sequence_blocks: Optional[float] = Field(None)
 
-    bonded: Optional[str] = Field(None, index=False)
-    power: Optional[str] = Field(None, index=False)
+    bonded: Optional[str] = Field(None)
+    power: Optional[str] = Field(None)
 
     # CPS
-    sponsored_cps_grants: Optional[int] = Field(None, index=False)
-    cps_governance: bool = Field(False, index=False)
+    sponsored_cps_grants: Optional[int] = Field(None)
+    cps_governance: bool = Field(False)
+
+    # Blocks
+    missed_blocks: int = Field(None)
+    missed_periods: int = Field(None)
 
     class Config:
         extra = "ignore"
