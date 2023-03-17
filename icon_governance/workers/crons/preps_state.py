@@ -70,4 +70,5 @@ def run_prep_state(session):
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    run_prep_state(session_factory())
+    with session_factory() as session:
+        run_prep_state(session=session)

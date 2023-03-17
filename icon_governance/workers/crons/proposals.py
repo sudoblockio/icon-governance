@@ -68,4 +68,5 @@ def run_proposals(session):
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    run_proposals(session_factory())
+    with session_factory() as session:
+        run_proposals(session=session)

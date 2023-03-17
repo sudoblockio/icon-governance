@@ -83,3 +83,10 @@ def run_rewards(session):
 
     prom_metrics.rewards_cron_ran.inc()
     logger.info("Ending proposals cron")
+
+
+if __name__ == "__main__":
+    from icon_governance.db import session_factory
+
+    with session_factory() as session:
+        run_rewards(session=session)

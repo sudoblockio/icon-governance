@@ -100,4 +100,5 @@ def run_preps_base(session):
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    run_preps_base(session_factory())
+    with session_factory() as session:
+        run_preps_base(session=session)

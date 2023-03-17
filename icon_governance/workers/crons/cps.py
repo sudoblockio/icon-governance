@@ -56,4 +56,5 @@ def run_cps(session):
 if __name__ == "__main__":
     from icon_governance.db import session_factory
 
-    run_cps(session_factory())
+    with session_factory() as session:
+        run_cps(session=session)
