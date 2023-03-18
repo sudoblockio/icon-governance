@@ -20,42 +20,41 @@ def set_delegation(session, data, address, block_height, hash):
         logger.info(f"Skipping because no delegation field.")
         return
 
-    # Select all the records
-    statement = select(Delegation).where(Delegation.address == address)
-
-    result = session.execute(statement)
-    address_delegation = result.scalars().all()
-
-    if len(address_delegation) != 0:
-        last_updated_block_set = set([i.last_updated_block for i in address_delegation])
-        if len(last_updated_block_set) > 1:
-            logger.info(
-                f"Found multiple different last_updated_block " f"- {last_updated_block_set}"
-            )
-
-        last_updated_block = address_delegation[0].last_updated_block
-        if last_updated_block is None:
-            last_updated_block = 0
-
-        if last_updated_block > block_height:
-            # Already have latest data in DB
-            logger.info(
-                f"Skipping setDelegation {hash} - before last updated block "
-                f"- {last_updated_block_set}"
-            )
-            return
-        # elif last_updated_block == block_height:
-        #     # Already have latest data in DB
-        #     logger.info(
-        #         f"Skipping setDelegation {hash} - already updated this Tx"
-        #         f"- {last_updated_block_set}"
-        #     )
-        #     return
-        else:
-
-            for d in address_delegation:
-                session.delete(d)
-                session.flush()
+    # # Select all the records
+    # statement = select(Delegation).where(Delegation.address == address)
+    #
+    # result = session.execute(statement)
+    # address_delegation = result.scalars().all()
+    #
+    # if len(address_delegation) != 0:
+    #     last_updated_block_set = set([i.last_updated_block for i in address_delegation])
+    #     if len(last_updated_block_set) > 1:
+    #         logger.info(
+    #             f"Found multiple different last_updated_block " f"- {last_updated_block_set}"
+    #         )
+    #
+    #     last_updated_block = address_delegation[0].last_updated_block
+    #     if last_updated_block is None:
+    #         last_updated_block = 0
+    #
+    #     if last_updated_block > block_height:
+    #         # Already have latest data in DB
+    #         logger.info(
+    #             f"Skipping setDelegation {hash} - before last updated block "
+    #             f"- {last_updated_block_set}"
+    #         )
+    #         return
+    #     # elif last_updated_block == block_height:
+    #     #     # Already have latest data in DB
+    #     #     logger.info(
+    #     #         f"Skipping setDelegation {hash} - already updated this Tx"
+    #     #         f"- {last_updated_block_set}"
+    #     #     )
+    #     #     return
+    #     else:
+    #         for d in address_delegation:
+    #             session.delete(d)
+    #             session.flush()
 
     for d in params["delegations"]:
         delegation = Delegation(
