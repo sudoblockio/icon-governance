@@ -64,5 +64,5 @@ def set_delegation(session, data, address, block_height, hash):
             last_updated_block=block_height,
         )
 
-        session.add(delegation)
+        session.merge(delegation)
         session.commit()
