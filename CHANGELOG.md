@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/sudoblockio/icon-governance/compare/v0.2.0...v0.3.0) (2023-03-21)
+
+
+### Features
+
+* add failures with endpoint params ([0bb88af](https://github.com/sudoblockio/icon-governance/commit/0bb88af92c1414a11450f1a810b828d87b833149))
+
 ## [0.2.0](https://github.com/sudoblockio/icon-governance/compare/v0.1.3...v0.2.0) (2023-03-08)
 
 
