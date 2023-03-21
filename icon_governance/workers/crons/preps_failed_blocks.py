@@ -1,7 +1,8 @@
+from loguru import logger
 from sqlmodel import select
 
 from icon_governance.models.preps import Prep
-from icon_governance.utils.rpc import get_network_info, get_prep_stats
+from icon_governance.utils.rpc import get_network_info, get_prep_stats, getPReps
 
 # Example schema
 # {
@@ -33,21 +34,31 @@ def run_failed_blocks(session):
     # TODO: Qualify based on whether penalties are active? -> No because we're not doing
     #  business logic here.
     # network_info = get_network_info()
+
+    r = getPReps()
+    if r.status_code == 200:
+        preps_rpc = r.json()["result"]["preps"]
+    else:
+        logger.info("Error getting preps in failed blocks.")
+        return
     prep_stats = get_prep_stats()["preps"]
 
-    # Get all the missed blocks for all the nodes
-    result = session.execute(select(Prep).order_by(Prep.power.desc()))
-    preps = result.scalars().all()
-
-    for i, p in enumerate(preps):
-        stats = prep_stats[i]
+    for i, p in enumerate(preps_rpc):
+        try:
+            stats = prep_stats[i]
+        except IndexError:
+            logger.info("Mismatch in count between stats and getPreps...")
+            return
         # Convert to int
         stats = {k: int(v, 0) for k, v in stats.items()}
 
-        p.failure_count = stats["realFailCont"]
-        p.penalties = stats["penalties"]
+        result = session.execute(select(Prep).where(Prep.address == p["address"]))
+        prep_db = result.scalars().first()
 
-        session.merge(p)
+        prep_db.failure_count = stats["realFailCont"]
+        prep_db.penalties = stats["penalties"]
+
+        session.merge(prep_db)
     session.commit()
 
 

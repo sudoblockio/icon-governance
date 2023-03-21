@@ -1,6 +1,7 @@
 from icon_governance.workers.crons.cps import run_cps
 from icon_governance.workers.crons.prep_attributes import run_prep_attributes
 from icon_governance.workers.crons.preps_base import run_preps_base
+from icon_governance.workers.crons.preps_failed_blocks import run_failed_blocks
 from icon_governance.workers.crons.preps_ip import run_prep_ip
 from icon_governance.workers.crons.preps_stake import run_prep_stake
 from icon_governance.workers.crons.preps_state import run_prep_state
@@ -46,3 +47,8 @@ def test_get_prep_state(db):
 def test_run_prep_state(db):
     with db as session:
         run_prep_state(session=session)
+
+
+def test_run_failed_blocks(db):
+    with db as session:
+        run_failed_blocks(session=session)
