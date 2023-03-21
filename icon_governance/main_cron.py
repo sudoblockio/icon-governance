@@ -11,6 +11,7 @@ from icon_governance.workers.crons import (  # preps_missed_blocks,
     cps,
     prep_attributes,
     preps_base,
+    preps_failed_blocks,
     preps_ip,
     preps_stake,
     preps_state,
@@ -61,10 +62,10 @@ CRONS: list[Cron] = [
         "func": preps_stake.run_prep_stake,
         "interval": 600,
     },
-    # {
-    #     'func': preps_missed_blocks.get_missed_blocks,
-    #     'interval': 600,
-    # }
+    {
+        "func": preps_failed_blocks.run_failed_blocks,
+        "interval": 30,
+    },
 ]
 
 

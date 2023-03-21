@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 import requests
 
@@ -189,3 +190,37 @@ def get_admin_chain(ip_address: str):
         return response.json()
     else:
         return None
+
+
+def unpack_call(r: requests.Response) -> Optional[dict]:
+    if r.status_code == 200:
+        return r.json()["result"]
+    return None
+
+
+def get_network_info():
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": {
+            "to": "cx0000000000000000000000000000000000000000",
+            "dataType": "call",
+            "data": {"method": "getNetworkInfo"},
+        },
+    }
+    return unpack_call(post_rpc(payload))
+
+
+def get_prep_stats():
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": {
+            "to": "cx0000000000000000000000000000000000000000",
+            "dataType": "call",
+            "data": {"method": "getPRepStats"},
+        },
+    }
+    return unpack_call(post_rpc(payload))

@@ -65,16 +65,16 @@ class Prep(SQLModel, table=True):
     validated_blocks: Optional[float] = Field(None)
     unvalidated_sequence_blocks: Optional[float] = Field(None)
 
-    bonded: Optional[str] = Field(None)
-    power: Optional[str] = Field(None)
+    bonded: Optional[float] = Field(None)
+    power: Optional[float] = Field(None)
 
     # CPS
     sponsored_cps_grants: Optional[int] = Field(None)
     cps_governance: bool = Field(False)
 
     # Blocks
-    missed_blocks: int = Field(None)
-    missed_periods: int = Field(None)
+    failure_count: int = Field(None)
+    penalties: int = Field(None)
 
     class Config:
         extra = "ignore"

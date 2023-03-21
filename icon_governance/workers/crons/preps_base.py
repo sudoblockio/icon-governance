@@ -51,7 +51,6 @@ def run_preps_base(session):
     logger.info("Starting base cron")
 
     rpc_preps = getPReps().json()["result"]
-    logger.info("Starting prep collection cron")
 
     for p in rpc_preps["preps"]:
         prep = session.get(Prep, p["address"])
@@ -85,13 +84,8 @@ def run_preps_base(session):
             # logger.info(f"error parsing {p['address']}")
             pass
 
-        session.add(prep)
-        try:
-            session.commit()
-            session.refresh(prep)
-        except:
-            session.rollback()
-            raise
+        session.merge(prep)
+    session.commit()
 
     prom_metrics.preps_base_cron_ran.inc()
     logger.info("Ending base cron")
