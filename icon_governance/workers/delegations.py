@@ -60,7 +60,7 @@ def set_delegation(session, data, address, block_height, hash):
         delegation = Delegation(
             address=address,
             prep_address=d["address"],
-            value=convert_hex_int(d["value"]),
+            value=int(d["value"], 0),
             last_updated_block=block_height,
         )
 

@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     ICON_NODE_URL: str = "https://api.icon.community/api/v3"
     BACKUP_ICON_NODE_URL: str = "https://ctz.solidwallet.io/api/v3"
 
+    # API endpoints
+    COMMUNITY_API_ENDPOINT: str = "https://tracker.icon.community"
+
     # Logs service - For getting value for iscore
     # TODO: Replace this when stateful processing comes in maybe
     LOGS_SERVICE_URL: str = "https://tracker.icon.community"
@@ -49,7 +52,7 @@ class Settings(BaseSettings):
     CONSUMER_IS_TAIL: bool = False
 
     # Topics
-    CONSUMER_GROUP: str = "governance-1"
+    CONSUMER_GROUP: str = "governance"
     CONSUMER_TOPIC_BLOCKS: str = "blocks"
     # Backfilling
     CONSUMER_AUTO_OFFSET_RESET: str = "earliest"
@@ -72,11 +75,7 @@ class Settings(BaseSettings):
         case_sensitive = True
 
 
-test_env = os.path.join(os.path.dirname(__file__), "..", ".env.test")
-
 if os.environ.get("ENV_FILE", False):
     settings = Settings(_env_file=os.environ.get("ENV_FILE"))
-elif os.path.isfile(test_env):
-    settings = Settings(_env_file=test_env)
 else:
     settings = Settings()

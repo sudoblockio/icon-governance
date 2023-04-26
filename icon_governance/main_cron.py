@@ -7,6 +7,7 @@ from prometheus_client import start_http_server
 from icon_governance.config import settings
 from icon_governance.db import session_factory
 from icon_governance.workers.crons import (  # preps_missed_blocks,
+    address_stake,
     clean_delegation,
     cps,
     prep_attributes,
@@ -65,6 +66,10 @@ CRONS: list[Cron] = [
     {
         "func": preps_failed_blocks.run_failed_blocks,
         "interval": 30,
+    },
+    {
+        "func": address_stake.run_address_stake,
+        "interval": 3600,
     },
 ]
 

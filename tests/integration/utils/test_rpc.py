@@ -20,6 +20,9 @@ def test_get_preps():
     result = getPReps().json()["result"]
     assert len(result["preps"]) > 50
 
+    x = [i for i in result["preps"] if i["address"] == "hxaf6f61827901d7c4674cf5d2ddbbca2bdae72faf"]
+    print()
+
 
 def test_post_rpc_json():
     delegation = post_rpc_json(getDelegation(ADDRESS))  # Parrot9
