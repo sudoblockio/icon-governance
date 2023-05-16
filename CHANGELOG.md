@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/sudoblockio/icon-governance/compare/v0.3.0...v0.3.1) (2023-04-26)
+
+
+### Bug Fixes
+
+* add contract delegations ([487fbe0](https://github.com/sudoblockio/icon-governance/commit/487fbe0aaa0d7b8f82481155a97f749cfca3174d))
+
 ## [0.3.0](https://github.com/sudoblockio/icon-governance/compare/v0.2.0...v0.3.0) (2023-03-21)
 
 
