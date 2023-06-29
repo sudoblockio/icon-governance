@@ -57,6 +57,23 @@ def getPReps():
     return post_rpc(payload)
 
 
+def getPRep(address: str):
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": {
+            "to": "cx0000000000000000000000000000000000000000",
+            "dataType": "call",
+            "data": {
+                "method": "getPRep",
+                "params": {"address": address},
+            },
+        },
+    }
+    return post_rpc(payload)
+
+
 def getDelegation(address: str):
     payload = {
         "jsonrpc": "2.0",
