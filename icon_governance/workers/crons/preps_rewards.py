@@ -27,6 +27,10 @@ def run_get_prep_rewards(session):
     i_prep = int(network_info["rewardFund"]["Iprep"], 16) / 100
 
     for prep in preps:
+        if prep.power is None:
+            # Nodes with grade = 0x3 have null power
+            prep.power = 0
+
         prep.reward_monthly = (prep.power / total_power) * (i_global * i_prep)
         prep.reward_monthly_usd = prep.reward_monthly * icx_usd_price
         prep.reward_daily = (prep.reward_monthly * 12) / 365
