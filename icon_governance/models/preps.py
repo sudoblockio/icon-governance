@@ -76,6 +76,12 @@ class Prep(SQLModel, table=True):
     failure_count: int = Field(None)
     penalties: int = Field(None)
 
+    # Rewards
+    reward_monthly: float = Field(None)
+    reward_monthly_usd: float = Field(None)
+    reward_daily: float = Field(None)
+    reward_daily_usd: float = Field(None)
+
     class Config:
         extra = "ignore"
 

@@ -241,3 +241,33 @@ def get_prep_stats():
         },
     }
     return unpack_call(post_rpc(payload))
+
+
+def get_band_price(symbol: str = "ICX", height: int = None) -> float:
+    """Band contract was updated from python to java at the below block height."""
+    if height is None or height > 59878978:
+        address = "cxca5faa5a71d986a2e84dd7e6f5ff791d29901ebe"
+        method = "getRefData"
+        param_name = "symbol"
+    else:
+        address = "cx087b4164a87fdfb7b714f3bafe9dfb050fd6b132"
+        method = "get_ref_data"
+        param_name = "_symbol"
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": {
+            "to": address,
+            "dataType": "call",
+            "data": {"method": method, "params": {param_name: symbol}},
+        },
+    }
+    if height is not None:
+        payload["params"]["height"] = hex(height)
+
+    r = post_rpc(payload)
+
+    if r.status_code == 200:
+        return int(r.json()["result"]["rate"], 16) / 1e9
+    raise Exception(f"Band contract for symbol={symbol} unreachable for get ref...")

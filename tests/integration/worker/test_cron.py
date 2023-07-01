@@ -1,54 +1,35 @@
-from icon_governance.workers.crons.cps import run_cps
-from icon_governance.workers.crons.prep_attributes import run_prep_attributes
-from icon_governance.workers.crons.preps_base import run_preps_base
-from icon_governance.workers.crons.preps_failed_blocks import run_failed_blocks
-from icon_governance.workers.crons.preps_ip import run_prep_ip
-from icon_governance.workers.crons.preps_stake import run_prep_stake
-from icon_governance.workers.crons.preps_state import run_prep_state
-from icon_governance.workers.crons.proposals import run_proposals
-from icon_governance.workers.crons.rewards import run_rewards
+import pytest
+
+from icon_governance.workers.crons import (
+    cps,
+    prep_attributes,
+    preps_base,
+    preps_failed_blocks,
+    preps_ip,
+    preps_iscore,
+    preps_rewards,
+    preps_single,
+    preps_stake,
+    preps_state,
+    proposals,
+)
+
+CRONS = [
+    preps_base.run_preps_base,
+    prep_attributes.run_prep_attributes,
+    cps.run_cps,
+    preps_failed_blocks.run_failed_blocks,
+    preps_ip.run_prep_ip,
+    preps_stake.run_prep_stake,
+    preps_single.run_get_prep,
+    preps_state.run_prep_state,
+    proposals.run_proposals,
+    preps_iscore.run_prep_iscore,
+    preps_rewards.run_get_prep_rewards,
+]
 
 
-def test_preps_cron(db):
+@pytest.mark.parametrize("cron", CRONS)
+def test_preps_cron(db, cron):
     with db as session:
-        run_preps_base(session)
-
-
-def test_cps_cron(db):
-    with db as session:
-        run_cps(session)
-
-
-def test_prep_attributes_cron(db):
-    with db as session:
-        run_prep_attributes(session)
-
-
-def test_proposals_cron(db):
-    with db as session:
-        run_proposals(session)
-
-
-def test_stake_cron(db):
-    with db as session:
-        run_prep_stake(session)
-
-
-def test_get_rewards(db):
-    with db as session:
-        run_rewards(session)
-
-
-def test_get_prep_state(db):
-    with db as session:
-        run_prep_ip(session)
-
-
-def test_run_prep_state(db):
-    with db as session:
-        run_prep_state(session=session)
-
-
-def test_run_failed_blocks(db):
-    with db as session:
-        run_failed_blocks(session=session)
+        cron(session)

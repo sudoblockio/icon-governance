@@ -14,11 +14,12 @@ from icon_governance.workers.crons import (  # preps_missed_blocks,
     preps_base,
     preps_failed_blocks,
     preps_ip,
+    preps_iscore,
+    preps_rewards,
     preps_single,
     preps_stake,
     preps_state,
     proposals,
-    rewards,
 )
 
 
@@ -61,7 +62,11 @@ CRONS: list[Cron] = [
         "interval": 600,
     },
     {
-        "func": rewards.run_rewards,
+        "func": preps_iscore.run_prep_iscore,
+        "interval": 600,
+    },
+    {
+        "func": preps_rewards.run_get_prep_rewards,
         "interval": 600,
     },
     {

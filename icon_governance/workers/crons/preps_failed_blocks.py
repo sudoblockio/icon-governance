@@ -2,7 +2,7 @@ from loguru import logger
 from sqlmodel import select
 
 from icon_governance.models.preps import Prep
-from icon_governance.utils.rpc import get_network_info, get_prep_stats, getPReps
+from icon_governance.utils.rpc import get_prep_stats, getPReps
 
 # Example schema
 # {

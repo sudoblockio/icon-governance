@@ -32,7 +32,7 @@ def run_get_prep(session):
     session.commit()
 
     prom_metrics.preps_base_cron_ran.inc()
-    logger.info("Ending base cron")
+    logger.info("Ending get prep cron")
 
 
 if __name__ == "__main__":
