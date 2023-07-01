@@ -14,7 +14,10 @@ class Metrics:
         self.preps_base_cron_ran = Counter("preps_base_cron_ran", "Number times cron ran")
         self.preps_stake_cron_ran = Counter("preps_stake_cron_ran", "Number times stake cron ran")
         self.preps_state_cron_ran = Counter("preps_state_cron_ran", "Number times state cron ran")
-        self.rewards_cron_ran = Counter("rewards_cron_ran", "Number times rewards cron ran")
+        self.preps_iscore_cron_ran = Counter("rewards_cron_ran", "Number times iscore cron ran")
+        self.preps_rewards_cron_ran = Counter(
+            "preps_rewards_cron_ran", "Number of times rewards cron ran"
+        )
 
 
 prom_metrics = Metrics()

@@ -37,14 +37,14 @@ def get_iscore_value(tx_hash):
         return None, None
 
 
-def run_rewards(session):
+def run_prep_iscore(session):
     """
     Cron to get all the values and iscores for rewards txs. Works by getting all the
-    iscore distributions which are picked up by the transactions processor and insert
-    them into a DB. The values are then inserted with this cron job by querying for
-    rewards that have no value.
+     iscore distributions which are picked up by the transactions processor and insert
+     them into a DB. The values are then inserted with this cron job by querying for
+     rewards that have no value.
     """
-    logger.info("Starting proposals cron")
+    logger.info("Starting iscore cron")
 
     count = (
         session.execute(select([func.count(Reward.address)]).where(Reward.value == None))
@@ -81,7 +81,7 @@ def run_rewards(session):
                 session.rollback()
                 raise
 
-    prom_metrics.rewards_cron_ran.inc()
+    prom_metrics.preps_iscore_cron_ran.inc()
     logger.info("Ending proposals cron")
 
 
@@ -89,4 +89,4 @@ if __name__ == "__main__":
     from icon_governance.db import session_factory
 
     with session_factory() as session:
-        run_rewards(session=session)
+        run_prep_iscore(session=session)
