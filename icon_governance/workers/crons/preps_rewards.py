@@ -1,5 +1,6 @@
 from sqlmodel import select
 
+from icon_governance.config import settings
 from icon_governance.log import logger
 from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
@@ -9,6 +10,11 @@ from icon_governance.utils.rpc import get_band_price, get_network_info
 def run_get_prep_rewards(session):
     """Cron to get the rewards from the preps."""
     logger.info("Starting get prep reward cron...")
+
+    # Hack
+    if settings.NETWORK_NAME != "mainnet":
+        logger.info(f"Exiting prep reward cron. Network = `{settings.NETWORK_NAME}...")
+        return
 
     result = session.execute(select(Prep))
     preps = result.scalars().all()
