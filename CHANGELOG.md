@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/sudoblockio/icon-governance/compare/v0.3.1...v0.4.0) (2023-07-01)
+
+
+### Features
+
+* add rewards cron to preps [#18](https://github.com/sudoblockio/icon-governance/issues/18) ([e61200a](https://github.com/sudoblockio/icon-governance/commit/e61200a4dd8f602d49c35cb7cef4e0817b34063e))
+
+
+### Bug Fixes
+
+* add cron to update prep grade and add filter to remove unregistered preps [#16](https://github.com/sudoblockio/icon-governance/issues/16) ([6499dce](https://github.com/sudoblockio/icon-governance/commit/6499dcec69d027e02444f0cc6b6aab7fdcd2b862))
+
 ## [0.3.1](https://github.com/sudoblockio/icon-governance/compare/v0.3.0...v0.3.1) (2023-04-26)
 
 
