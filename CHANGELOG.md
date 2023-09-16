@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/sudoblockio/icon-governance/compare/v0.4.0...v0.5.0) (2023-09-16)
+
+
+### Features
+
+* add cron to get public key ([cec9bd0](https://github.com/sudoblockio/icon-governance/commit/cec9bd0c971bb268f281361092468a8cc9c0085e))
+
 ## [0.4.0](https://github.com/sudoblockio/icon-governance/compare/v0.3.1...v0.4.0) (2023-07-01)
 
 
