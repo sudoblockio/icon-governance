@@ -14,6 +14,7 @@ class Prep(SQLModel, table=True):
     website: Optional[str] = Field(None)
     details: Optional[str] = Field(None)
     node_address: Optional[str] = Field(None)
+    public_key: Optional[str] = Field(None)
 
     node_state: Optional[str] = Field(None)
 

@@ -7,6 +7,7 @@ from icon_governance.workers.crons import (
     preps_failed_blocks,
     preps_ip,
     preps_iscore,
+    preps_public_key,
     preps_rewards,
     preps_single,
     preps_stake,
@@ -26,6 +27,7 @@ CRONS = [
     proposals.run_proposals,
     preps_iscore.run_prep_iscore,
     preps_rewards.run_get_prep_rewards,
+    preps_public_key.run_prep_public_key,
 ]
 
 

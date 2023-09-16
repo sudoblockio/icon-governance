@@ -6,6 +6,7 @@ from icon_governance.utils.rpc import (
     get_preps_stats,
     get_sponsors_record,
     getDelegation,
+    getPRepNodePublicKey,
     getPReps,
     getProposals,
     getStake,
@@ -19,9 +20,6 @@ ADDRESS = "hx0cc3a3d55ed55df7c8eee926a4fafb5412d0cca4"
 def test_get_preps():
     result = getPReps().json()["result"]
     assert len(result["preps"]) > 50
-
-    x = [i for i in result["preps"] if i["address"] == "hxaf6f61827901d7c4674cf5d2ddbbca2bdae72faf"]
-    print()
 
 
 def test_post_rpc_json():
@@ -79,4 +77,9 @@ def test_get_missed_blocks():
 
 def test_get_preps_stats():
     output = get_preps_stats().json()["result"]
+    assert output
+
+
+def test_getPRepNodePublicKey():
+    output = getPRepNodePublicKey(address="hxfc56203484921c3b7a4dee9579d8614d8c8daaf5")
     assert output

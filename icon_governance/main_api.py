@@ -1,11 +1,11 @@
 from multiprocessing.pool import ThreadPool
 
 import uvicorn
+from brotli_asgi import BrotliMiddleware
 from fastapi import FastAPI
 from fastapi_health import health
 from prometheus_client import start_http_server
 from starlette.middleware.cors import CORSMiddleware
-from brotli_asgi import BrotliMiddleware
 
 from icon_governance.api.health import is_database_online
 from icon_governance.api.v1.router import api_router
@@ -15,13 +15,16 @@ from icon_governance.log import logger
 app = FastAPI()
 
 tags_metadata = [
-    {"name": "icon-governance", "description": "...",},
+    {
+        "name": "icon-governance",
+        "description": "Governance backend.",
+    },
 ]
 
 app = FastAPI(
     title="ICON Governance Service",
     description="...",
-    version="v0.1.0",
+    version=settings.VERSION,
     openapi_tags=tags_metadata,
     openapi_url=f"{settings.DOCS_PREFIX}/openapi.json",
     docs_url=f"{settings.DOCS_PREFIX}",
@@ -29,11 +32,11 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[origin.strip() for origin in settings.CORS_ALLOW_ORIGINS.split(',')],
+    allow_origins=[origin.strip() for origin in settings.CORS_ALLOW_ORIGINS.split(",")],
     allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
-    allow_methods=[method.strip() for method in settings.CORS_ALLOW_METHODS.split(',')],
-    allow_headers=[header.strip() for header in settings.CORS_ALLOW_HEADERS.split(',')],
-    expose_headers=[header.strip() for header in settings.CORS_EXPOSE_HEADERS.split(',')],
+    allow_methods=[method.strip() for method in settings.CORS_ALLOW_METHODS.split(",")],
+    allow_headers=[header.strip() for header in settings.CORS_ALLOW_HEADERS.split(",")],
+    expose_headers=[header.strip() for header in settings.CORS_EXPOSE_HEADERS.split(",")],
 )
 
 app.add_middleware(
