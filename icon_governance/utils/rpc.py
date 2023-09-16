@@ -243,6 +243,20 @@ def get_prep_stats():
     return unpack_call(post_rpc(payload))
 
 
+def getPRepNodePublicKey(address: str):
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": {
+            "to": "cx0000000000000000000000000000000000000000",
+            "dataType": "call",
+            "data": {"method": "getPRepNodePublicKey", "params": {"address": address}},
+        },
+    }
+    return unpack_call(post_rpc(payload))
+
+
 def get_band_price(symbol: str = "ICX", height: int = None) -> float:
     """Band contract was updated from python to java at the below block height."""
     if height is None or height > 59878978:
