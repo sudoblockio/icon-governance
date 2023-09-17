@@ -14,9 +14,10 @@ def run_prep_public_key(session):
 
     for prep in preps:
         public_key = getPRepNodePublicKey(address=prep.address)
-        if public_key is None:
-            pass
 
+        if public_key is None:
+            continue
+        prep.public_key = public_key
         session.merge(prep)
         session.commit()
 
