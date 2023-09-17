@@ -8,7 +8,7 @@ from icon_governance.workers.transactions import (
 )
 
 
-def main(worker_type: str = "tail"):
+def main(worker_type: str = "head"):
     logger.info("Starting metrics server.")
     start_http_server(settings.METRICS_PORT, settings.METRICS_ADDRESS)
 
@@ -21,10 +21,10 @@ def main(worker_type: str = "tail"):
 
 
 if __name__ == "__main__":
-    # import argparse
-    #
-    # parser = argparse.ArgumentParser(description="Worker type input.")
-    # parser.add_argument("worker_type", type=str, help="The type of worker", default="")
-    # args = parser.parse_args()
-    # main(args.worker_type)
-    main()
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Worker type input.")
+    parser.add_argument("worker_type", type=str, help="The type of worker", default="")
+    args = parser.parse_args()
+    main(args.worker_type)
+    # main()
