@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.1](https://github.com/sudoblockio/icon-governance/compare/v0.5.0...v0.5.1) (2023-09-17)
+
+
+### Bug Fixes
+
+* public key insert in db ([4d7ed5e](https://github.com/sudoblockio/icon-governance/commit/4d7ed5eb1fc6927899749e0f7b0bd5b950af1a1a))
+* stream processor main ([59e5589](https://github.com/sudoblockio/icon-governance/commit/59e5589bc3e3863a7f6b29bc555865fb428b5c41))
+
 ## [0.5.0](https://github.com/sudoblockio/icon-governance/compare/v0.4.0...v0.5.0) (2023-09-16)
 
 
