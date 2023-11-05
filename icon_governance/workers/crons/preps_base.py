@@ -74,7 +74,14 @@ def run_preps_base(session):
         # prep.created_block = (convert_hex_int(p["blockHeight"])
 
         try:
-            r = requests.get(p["details"], timeout=4)
+            r = requests.get(
+                p["details"],
+                timeout=4,
+                headers={
+                    "Accept": "application/json",
+                    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
+                },
+            )
             if r.status_code == 200:
                 details = r.json()
                 extract_details(details, prep)
