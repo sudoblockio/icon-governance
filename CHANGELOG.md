@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://github.com/sudoblockio/icon-governance/compare/v0.5.1...v0.5.2) (2023-11-05)
+
+
+### Bug Fixes
+
+* add User-Agent header to details pull in preps_base [#23](https://github.com/sudoblockio/icon-governance/issues/23) ([920d26c](https://github.com/sudoblockio/icon-governance/commit/920d26c8f86e6143920aec810e7318e5fdd1379a))
+
 ## [0.5.1](https://github.com/sudoblockio/icon-governance/compare/v0.5.0...v0.5.1) (2023-09-17)
 
 
