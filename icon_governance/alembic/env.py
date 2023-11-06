@@ -11,10 +11,13 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlmodel import SQLModel
 
 from icon_governance.db import ASYNC_SQLALCHEMY_DATABASE_URL, SQLALCHEMY_DATABASE_URL
+from icon_governance.models.apy_time import ApyTime
 from icon_governance.models.delegations import Delegation
 from icon_governance.models.preps import Prep
 from icon_governance.models.proposals import Proposal
 from icon_governance.models.rewards import Reward
+
+# from icon_governance.models.stats import Stats
 
 # Other versions imported each object
 config = context.config
@@ -36,6 +39,23 @@ target_metadata = SQLModel.metadata
 # ... etc.
 
 
+IGNORE_TABLES = ["claims"]
+
+
+def include_object(object, name, type_, reflected, compare_to):
+    """
+    Should you include this table or not?
+    """
+
+    if type_ == "table" and (name in IGNORE_TABLES or object.info.get("skip_autogenerate", False)):
+        return False
+
+    elif type_ == "column" and object.info.get("skip_autogenerate", False):
+        return False
+
+    return True
+
+
 def run_migrations_offline():
     url = SQLALCHEMY_DATABASE_URL
     context.configure(
@@ -43,6 +63,7 @@ def run_migrations_offline():
         target_metadata=target_metadata,
         literal_binds=True,
         compare_type=True,
+        include_object=include_object,
     )
 
     with context.begin_transaction():
@@ -50,7 +71,11 @@ def run_migrations_offline():
 
 
 def do_run_migrations(connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        include_object=include_object,
+    )
 
     with context.begin_transaction():
         context.run_migrations()
@@ -61,9 +86,6 @@ async def run_migrations_online():
     In this scenario we need to create an Engine
     and associate a connection with the context.
     """
-    x = config.get_section(config.config_ini_section)
-    print()
-
     connectable = AsyncEngine(
         engine_from_config(
             config.get_section(config.config_ini_section),
