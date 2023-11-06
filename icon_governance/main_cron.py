@@ -8,6 +8,7 @@ from icon_governance.config import settings
 from icon_governance.db import session_factory
 from icon_governance.workers.crons import (  # preps_missed_blocks,
     address_stake,
+    apy_time,
     clean_delegation,
     cps,
     prep_attributes,
@@ -85,6 +86,10 @@ CRONS: list[Cron] = [
     {
         "func": preps_public_key.run_prep_public_key,
         "interval": 3600,
+    },
+    {
+        "func": apy_time.run_apy_time,
+        "interval": 3600 * 12,  # 12 hours
     },
 ]
 

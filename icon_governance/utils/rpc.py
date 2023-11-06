@@ -57,6 +57,26 @@ def getPReps():
     return post_rpc(payload)
 
 
+def get_preps(height: int = None):
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": {
+            "to": "cx0000000000000000000000000000000000000000",
+            "dataType": "call",
+            "data": {
+                "method": "getPReps",
+                "params": {"startRanking": "0x1", "endRanking": "0xaaa"},
+            },
+        },
+    }
+    if height is not None:
+        payload["params"]["height"] = hex(height)
+
+    return unpack_call(post_rpc(payload))
+
+
 def getPRep(address: str):
     payload = {
         "jsonrpc": "2.0",
@@ -254,6 +274,23 @@ def getPRepNodePublicKey(address: str):
             "data": {"method": "getPRepNodePublicKey", "params": {"address": address}},
         },
     }
+    return unpack_call(post_rpc(payload))
+
+
+def getIISSInfo(height: int = None):
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": {
+            "to": "cx0000000000000000000000000000000000000000",
+            "dataType": "call",
+            "data": {"method": "getIISSInfo"},
+        },
+    }
+    if height is not None:
+        payload["params"]["height"] = hex(height)
+
     return unpack_call(post_rpc(payload))
 
 

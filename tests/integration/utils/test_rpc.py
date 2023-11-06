@@ -6,6 +6,7 @@ from icon_governance.utils.rpc import (
     get_preps_stats,
     get_sponsors_record,
     getDelegation,
+    getIISSInfo,
     getPRepNodePublicKey,
     getPReps,
     getProposals,
@@ -82,4 +83,9 @@ def test_get_preps_stats():
 
 def test_getPRepNodePublicKey():
     output = getPRepNodePublicKey(address="hxfc56203484921c3b7a4dee9579d8614d8c8daaf5")
+    assert output
+
+
+def test_getIISSInfo():
+    output = getIISSInfo()
     assert output
