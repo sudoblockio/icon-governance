@@ -13,6 +13,7 @@ from icon_governance.workers.crons import (
     preps_stake,
     preps_state,
     proposals,
+    stats,
 )
 
 CRONS = [
@@ -22,6 +23,7 @@ CRONS = [
     preps_failed_blocks.run_failed_blocks,
     preps_ip.run_prep_ip,
     preps_stake.run_prep_stake,
+    stats.run_stats,
     preps_single.run_get_prep,
     preps_state.run_prep_state,
     proposals.run_proposals,

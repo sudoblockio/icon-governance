@@ -186,6 +186,20 @@ def get_bond(address: str):
     return post_rpc(payload)
 
 
+def get_bonder_list(address: str):
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1234,
+        "method": "icx_call",
+        "params": {
+            "to": "cx0000000000000000000000000000000000000000",
+            "dataType": "call",
+            "data": {"method": "getBonderList", "params": {"address": address}},
+        },
+    }
+    return post_rpc(payload)
+
+
 def get_missed_blocks():
     payload = {
         "jsonrpc": "2.0",

@@ -39,6 +39,10 @@ class Metrics:
             "preps_public_key_cron_ran",
             "Number of times public key cron ran",
         )
+        self.cron_ran = Counter(
+            "cron_ran",
+            "Number of times cron ran",
+        )
 
 
 prom_metrics = Metrics()

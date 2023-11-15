@@ -23,9 +23,6 @@ def run_get_prep(session):
             continue
         prep = r.json()["result"]
 
-        if p.name == "Binance Node":
-            pass
-
         if p.grade != prep["grade"]:
             p.grade = prep["grade"]
             session.merge(p)

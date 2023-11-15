@@ -83,6 +83,9 @@ class Prep(SQLModel, table=True):
     reward_daily: float = Field(None)
     reward_daily_usd: float = Field(None)
 
+    stakers: int = Field(None)
+    bonders: int = Field(None)
+
     class Config:
         extra = "ignore"
 

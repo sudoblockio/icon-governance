@@ -16,8 +16,7 @@ from icon_governance.models.delegations import Delegation
 from icon_governance.models.preps import Prep
 from icon_governance.models.proposals import Proposal
 from icon_governance.models.rewards import Reward
-
-# from icon_governance.models.stats import Stats
+from icon_governance.models.stats import Stats
 
 # Other versions imported each object
 config = context.config

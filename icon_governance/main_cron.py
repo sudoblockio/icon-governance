@@ -22,6 +22,7 @@ from icon_governance.workers.crons import (  # preps_missed_blocks,
     preps_stake,
     preps_state,
     proposals,
+    stats,
 )
 
 
@@ -90,6 +91,10 @@ CRONS: list[Cron] = [
     {
         "func": apy_time.run_apy_time,
         "interval": 3600 * 12,  # 12 hours
+    },
+    {
+        "func": stats.run_stats,
+        "interval": 3600,  # 1 hour
     },
 ]
 

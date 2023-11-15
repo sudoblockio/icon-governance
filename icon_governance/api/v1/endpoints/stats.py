@@ -8,6 +8,7 @@ from sqlmodel import func, select
 
 from icon_governance.db import get_session
 from icon_governance.models.apy_time import ApyTime
+from icon_governance.models.stats import Stats
 
 router = APIRouter()
 
@@ -44,3 +45,17 @@ async def get_apy_over_time(
     response.headers["x-total-count"] = total_count
 
     return apy_time_series
+
+
+@router.get("/governance/stats")
+async def get_governance_stats(
+    response: Response,
+    session: AsyncSession = Depends(get_session),
+) -> List[Stats]:
+    """Get stats - single entry json."""
+    query = select(Stats).limit(1).order_by(Stats.timestamp.desc())
+
+    result = await session.execute(query)
+    stats = result.scalars().first()
+
+    return stats
