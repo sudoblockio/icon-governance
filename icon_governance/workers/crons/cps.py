@@ -38,6 +38,9 @@ def run_cps(session):
     preps = result.scalars().all()
 
     cps_preps = post_rpc_json(get_preps_cps())
+    if cps_preps is None:
+        return
+
     prep_list = [i["address"] for i in cps_preps]
 
     for prep in preps:
