@@ -12,7 +12,7 @@ from icon_governance.utils.rpc import (
 
 
 def run_prep_attributes(session):
-    logger.info("Starting attributes cron")
+    logger.info(f"Starting {__name__} cron")
 
     preps = post_rpc_json(getPReps())
     if preps is None:
@@ -56,7 +56,7 @@ def run_prep_attributes(session):
         finally:
             session.close()
     prom_metrics.preps_attributes_cron_ran.inc()
-    logger.info("Ending attributes cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

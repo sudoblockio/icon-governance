@@ -8,7 +8,7 @@ delegation_delete_count = 0
 
 
 def clean_delegations(session):
-    logger.info("Running clean delegations.")
+    logger.info(f"Starting {__name__} cron")
 
     query = select(Delegation.address).distinct()
     result = session.execute(query)
@@ -52,7 +52,7 @@ def clean_delegations(session):
     session.execute(statement)
     session.commit()
 
-    logger.info("Ending clean delegations.")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

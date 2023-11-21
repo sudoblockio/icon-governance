@@ -48,7 +48,6 @@ def get_peers(peer_set: set, added_peers: list = None):
             continue
 
         for peer in admin_metrics["module"]["network"]["p2p"]["orphanages"]:
-
             peer_item = (peer["addr"].split(":")[0], peer["id"])
 
             if peer_item not in peer_set:
@@ -61,7 +60,7 @@ def get_peers(peer_set: set, added_peers: list = None):
 
 
 def run_prep_ip(session):
-    logger.info("Running prep ip cron")
+    logger.info(f"Starting {__name__} cron")
 
     # Gets a full set of IP addresses
     peers = get_peers({(settings.PEER_SEED_IP, settings.PEER_SEED_ADDRESS)})
@@ -82,7 +81,7 @@ def run_prep_ip(session):
 
         session.merge(prep)
     session.commit()
-    logger.info("Ending prep ip cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

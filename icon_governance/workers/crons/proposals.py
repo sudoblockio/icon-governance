@@ -9,7 +9,7 @@ from icon_governance.utils.rpc import convert_hex_int, getProposals, post_rpc_js
 
 
 def run_proposals(session):
-    logger.info("Starting proposals cron")
+    logger.info(f"Starting {__name__} cron")
 
     proposals = post_rpc_json(getProposals())
     if proposals is None:
@@ -62,7 +62,7 @@ def run_proposals(session):
             session.close()
 
     prom_metrics.preps_attributes_cron_ran.inc()
-    logger.info("Ending proposals cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

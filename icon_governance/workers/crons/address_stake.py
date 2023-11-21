@@ -15,7 +15,7 @@ def run_address_stake(session):
      to get their delegation. It then inserts the delegation into the DB which is
      always another eoa since the contract delegates for these addresses.
     """
-    logger.info("Starting address stake cron")
+    logger.info(f"Starting {__name__} cron")
 
     max_addresses = get_max_addresses(is_contract=True)
     batch_size = 10  # number of `limits` to run
@@ -53,7 +53,7 @@ def run_address_stake(session):
             session.commit()
 
     prom_metrics.preps_attributes_cron_ran.inc()
-    logger.info("Ending stake cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

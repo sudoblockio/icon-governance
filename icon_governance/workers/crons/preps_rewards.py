@@ -9,7 +9,7 @@ from icon_governance.utils.rpc import get_band_price, get_network_info
 
 def run_get_prep_rewards(session):
     """Cron to get the rewards from the preps."""
-    logger.info("Starting get prep reward cron...")
+    logger.info(f"Starting {__name__} cron")
 
     # Hack
     if settings.NETWORK_NAME != "mainnet":
@@ -41,7 +41,7 @@ def run_get_prep_rewards(session):
     session.commit()
 
     prom_metrics.preps_rewards_cron_ran.inc()
-    logger.info("Ending reward cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

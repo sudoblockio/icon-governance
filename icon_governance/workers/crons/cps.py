@@ -14,7 +14,7 @@ from icon_governance.utils.rpc import (
 
 
 def run_cps(session):
-    logger.info("Starting cps cron")
+    logger.info(f"Starting {__name__} cron")
 
     sponsors = post_rpc_json(get_sponsors_record())
 
@@ -53,7 +53,7 @@ def run_cps(session):
         session.commit()
 
     prom_metrics.preps_stake_cron_ran.inc()
-    logger.info("Ending cps cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ async def get_prep_state(preps: list[Prep]):
 
 
 def run_prep_state(session):
-    logger.info("Running prep ip state")
+    logger.info(f"Starting {__name__} cron")
 
     result = session.execute(select(Prep))
     preps = result.scalars().all()
@@ -64,7 +64,7 @@ def run_prep_state(session):
     session.commit()
 
     prom_metrics.preps_attributes_cron_ran.inc()
-    logger.info("Ending prep node state")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

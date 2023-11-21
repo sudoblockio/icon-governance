@@ -31,6 +31,7 @@ def run_failed_blocks(session):
     4. At Block(N): Node(A) got realFailCont: "0x5"
     5. At Block(N+1): If Node(A) votes, realFailCont will be reset
     """
+    logger.info(f"Starting {__name__} cron")
     # TODO: Qualify based on whether penalties are active? -> No because we're not doing
     #  business logic here.
     # network_info = get_network_info()
@@ -59,7 +60,8 @@ def run_failed_blocks(session):
         prep_db.penalties = stats["penalties"]
 
         session.merge(prep_db)
-    session.commit()
+        session.commit()
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

@@ -48,7 +48,7 @@ def extract_details(details: dict, prep: Prep):
 
 
 def run_preps_base(session):
-    logger.info("Starting base cron")
+    logger.info(f"Starting {__name__} cron")
 
     rpc_preps = getPReps().json()["result"]
 
@@ -92,10 +92,10 @@ def run_preps_base(session):
             pass
 
         session.merge(prep)
-    session.commit()
+        session.commit()
 
     prom_metrics.preps_base_cron_ran.inc()
-    logger.info("Ending base cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

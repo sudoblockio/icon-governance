@@ -12,7 +12,7 @@ def run_get_prep(session):
      which will include information like `grade` which when the prep is unregistered
      will go from 0x0 to 0x3 and no longer be included in the list of preps
     """
-    logger.info("Starting get prep cron...")
+    logger.info(f"Starting {__name__} cron")
 
     result = session.execute(select(Prep))
     preps = result.scalars().all()
@@ -29,7 +29,7 @@ def run_get_prep(session):
     session.commit()
 
     prom_metrics.preps_base_cron_ran.inc()
-    logger.info("Ending get prep cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

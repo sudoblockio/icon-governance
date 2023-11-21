@@ -7,7 +7,7 @@ from icon_governance.utils.rpc import getPRepNodePublicKey
 
 
 def run_prep_public_key(session):
-    logger.info("Starting preps public key cron")
+    logger.info(f"Starting {__name__} cron")
 
     result = session.execute(select(Prep))
     preps = result.scalars().all()
@@ -22,7 +22,7 @@ def run_prep_public_key(session):
         session.commit()
 
     prom_metrics.preps_public_key_cron_ran.inc()
-    logger.info("Ending preps public key cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":

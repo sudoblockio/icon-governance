@@ -44,7 +44,7 @@ def run_prep_iscore(session):
      them into a DB. The values are then inserted with this cron job by querying for
      rewards that have no value.
     """
-    logger.info("Starting iscore cron")
+    logger.info(f"Starting {__name__} cron")
 
     count = (
         session.execute(select([func.count(Reward.address)]).where(Reward.value == None))
@@ -82,7 +82,7 @@ def run_prep_iscore(session):
                 raise
 
     prom_metrics.preps_iscore_cron_ran.inc()
-    logger.info("Ending proposals cron")
+    logger.info(f"Ending {__name__} cron")
 
 
 if __name__ == "__main__":
