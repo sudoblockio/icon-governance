@@ -249,7 +249,7 @@ def unpack_call(r: requests.Response) -> Optional[dict]:
     return None
 
 
-def get_network_info():
+def get_network_info(height: int = None):
     payload = {
         "jsonrpc": "2.0",
         "id": 1234,
@@ -260,6 +260,9 @@ def get_network_info():
             "data": {"method": "getNetworkInfo"},
         },
     }
+    if height is not None:
+        payload["params"]["height"] = hex(height)
+
     return unpack_call(post_rpc(payload))
 
 

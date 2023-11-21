@@ -1,16 +1,8 @@
-import datetime
-
-from sqlalchemy import Column
 from sqlalchemy.orm import declared_attr
-from sqlalchemy.types import DateTime
 from sqlmodel import Field, SQLModel
 
 
 class ApyTime(SQLModel, table=True):
-    # date: datetime.datetime = Field(
-    #     sa_column=Column(DateTime(timezone=True)),
-    #     primary_key=True,
-    # )
     timestamp: int = Field(primary_key=True)
     height: int = Field(nullable=False)
 
@@ -27,6 +19,8 @@ class ApyTime(SQLModel, table=True):
 
     total_delegated: float = Field(nullable=False)
     total_stake: float = Field(nullable=False)
+    total_bonded: float = Field(nullable=False)
+    total_power: float = Field(nullable=False)
 
     @declared_attr
     def __tablename__(cls) -> str:  # noqa: N805
