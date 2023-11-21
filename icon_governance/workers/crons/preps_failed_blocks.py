@@ -51,7 +51,7 @@ def run_failed_blocks(session):
             logger.info("Mismatch in count between stats and getPreps...")
             return
         # Convert to int
-        stats = {k: int(v, 0) for k, v in stats.items()}
+        stats = {k: int(v, 0) for k, v in stats.items() if k != "address"}
 
         result = session.execute(select(Prep).where(Prep.address == p["address"]))
         prep_db = result.scalars().first()
