@@ -5,6 +5,7 @@ from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
 from icon_governance.utils.rpc import (
     convert_hex_int,
+    get_bond,
     get_bonder_list,
     getStake,
     post_rpc_json,
@@ -22,7 +23,16 @@ def run_prep_stake(session):
 
         bonders = post_rpc_json(get_bonder_list(prep.address))
         if bonders is not None:
-            prep.bonders = len(bonders["bonderList"])
+            prep.bonders = 0
+            for b in bonders["bonderList"]:
+                get_bond_result = post_rpc_json(get_bond(address=b))
+
+                for bond in get_bond_result["bonds"]:
+                    if bond["address"] != prep.address:
+                        continue
+                    bond_amount = int(bond["value"], 0) / 10e18
+                    if bond_amount > 0:
+                        prep.bonders += 1
 
         sql = (
             f"select count(distinct address) from delegations where prep_address = '{prep.address}'"
