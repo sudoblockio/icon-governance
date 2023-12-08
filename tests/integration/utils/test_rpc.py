@@ -1,3 +1,4 @@
+from icon_governance.config import settings
 from icon_governance.utils.rpc import (
     convert_hex_int,
     get_bond,
@@ -93,4 +94,10 @@ def test_getPRepNodePublicKey():
 
 def test_getIISSInfo():
     output = getIISSInfo()
+    assert output
+
+
+def test_getIISSInfo_networks():
+    settings.ICON_NODE_URL = "https://api.berlin.icon.community/api/v3"
+    output = getIISSInfo(height=1)
     assert output
