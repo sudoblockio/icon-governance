@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0](https://github.com/sudoblockio/icon-governance/compare/v0.5.2...v0.6.0) (2023-12-08)
+
+
+### Features
+
+* add apy over time endpoint ([b5a170b](https://github.com/sudoblockio/icon-governance/commit/b5a170bd3831023a32d9313f03b0643004b8910b))
+* add bonders and stakers counts to preps and stats table with total delegators [#29](https://github.com/sudoblockio/icon-governance/issues/29) [#27](https://github.com/sudoblockio/icon-governance/issues/27) ([725c550](https://github.com/sudoblockio/icon-governance/commit/725c5507114289ad6ed513c3efa6068653e38208))
+
+
+### Bug Fixes
+
+* apy time crashing in testnets - start block does not exist [#31](https://github.com/sudoblockio/icon-governance/issues/31) ([608f12f](https://github.com/sudoblockio/icon-governance/commit/608f12f4ced8179cca8ee04bb13e246e0338f2c5))
+
 ## [0.5.2](https://github.com/sudoblockio/icon-governance/compare/v0.5.1...v0.5.2) (2023-11-05)
 
 
