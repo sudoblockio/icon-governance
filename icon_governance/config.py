@@ -71,6 +71,8 @@ class Settings(BaseSettings):
     governance_address: str = "cx0000000000000000000000000000000000000000"
     CRON_SLEEP_SEC: int = 600
 
+    apy_start_block: int = 44000000
+
     class Config:
         case_sensitive = True
 

@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
+from icon_governance.config import settings
 from icon_governance.log import logger
 from icon_governance.metrics import prom_metrics
 from icon_governance.models.apy_time import ApyTime
@@ -19,7 +20,11 @@ def run_apy_time(session: Session):
 
     if last_apy_time is None:
         # This is roughly when the governance stats were started (ie ICON 2.0)
-        staking_time = int(get_timestamp_from_block(44000000) / 1e6)
+        if settings.NETWORK_NAME in ["lisbon", "berlin"]:
+            start_height = 2000000
+        else:
+            start_height = settings.apy_start_block
+        staking_time = int(get_timestamp_from_block(start_height) / 1e6)
     else:
         staking_time = last_apy_time.timestamp + 86400
 
