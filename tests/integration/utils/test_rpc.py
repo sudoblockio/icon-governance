@@ -97,7 +97,7 @@ def test_getIISSInfo():
     assert output
 
 
-def test_getIISSInfo_networks():
-    settings.ICON_NODE_URL = "https://api.berlin.icon.community/api/v3"
-    output = getIISSInfo(height=1)
-    assert output
+def test_getIISSInfo_networks(tmp_set_settings):
+    with tmp_set_settings("ICON_NODE_URL", "https://api.berlin.icon.community/api/v3"):
+        output = getIISSInfo(height=1)
+    assert output["blockHeight"] == "0x1"

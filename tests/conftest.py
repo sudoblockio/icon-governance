@@ -1,4 +1,5 @@
 import logging
+from contextlib import contextmanager
 from typing import Generator
 
 import pytest
@@ -40,3 +41,17 @@ def caplog(_caplog):
     handler_id = logger.add(PropogateHandler(), format="{message} {extra}")
     yield _caplog
     logger.remove(handler_id)
+
+
+@pytest.fixture
+def tmp_set_settings():
+    @contextmanager
+    def f(settings_name: str, value):
+        from icon_governance.config import settings
+
+        old_value = getattr(settings, settings_name)
+        setattr(settings, settings_name, value)
+        yield
+        setattr(settings, settings_name, old_value)
+
+    return f

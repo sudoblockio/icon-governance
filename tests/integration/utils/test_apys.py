@@ -18,11 +18,10 @@ def test_get_staking_apy():
         ("https://api.berlin.icon.community/api/v3", 2000000),
     ],
 )
-def test_get_staking_apy_height(url, height):
+def test_get_staking_apy_height(url, height, tmp_set_settings):
     # height when height base RPC was enabled - this is pre ICON 2.0 so governance stats
     # not available
-    # apys = get_apys(height=33518615)
-    settings.ICON_NODE_URL = url
-    apys = get_apys(height=height)
+    with tmp_set_settings("ICON_NODE_URL", url):
+        apys = get_apys(height=height)
 
     assert apys.staking_apy > 0
