@@ -86,6 +86,19 @@ class Prep(SQLModel, table=True):
     stakers: int = Field(None)
     bonders: int = Field(None)
 
+    # Jail
+    jail_flags: str = Field(None)
+    unjail_request_height: int = Field(None)
+
+    # Commission
+    max_commission_change_rate: float = Field(None)
+    max_commission_rate: float = Field(None)
+    commission_rate: float = Field(None)
+
+    # iiss 4 misc
+    min_double_sign_height: int = Field(None)
+    has_public_key: bool = Field(None)
+
     class Config:
         extra = "ignore"
 

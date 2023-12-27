@@ -1,6 +1,5 @@
 import pytest
 
-from icon_governance.config import settings
 from icon_governance.utils.apys import get_apys
 
 
@@ -11,17 +10,21 @@ def test_get_staking_apy():
 
 
 @pytest.mark.parametrize(
-    "url,height",
+    "url,height,expected_value",
     [
-        ("https://api.icon.community/api/v3", 44000000),
-        ("https://api.lisbon.icon.community/api/v3", 2000000),
-        ("https://api.berlin.icon.community/api/v3", 2000000),
+        ("https://api.icon.community/api/v3", 44000000, 7.9),
+        ("https://api.lisbon.icon.community/api/v3", 2000000, 27.7),
+        ("https://api.berlin.icon.community/api/v3", 2000000, 55.3),
+        # iiss 4.0
+        ("https://api.berlin.icon.community/api/v3", None, 0),
+        # TODO: Update this for iiss 4
+        # ("https://api.icon.community/api/v3", 75000000, 6.4),
     ],
 )
-def test_get_staking_apy_height(url, height, tmp_set_settings):
+def test_get_staking_apy_height(url, height, expected_value, tmp_set_settings):
     # height when height base RPC was enabled - this is pre ICON 2.0 so governance stats
     # not available
     with tmp_set_settings("ICON_NODE_URL", url):
         apys = get_apys(height=height)
 
-    assert apys.staking_apy > 0
+    assert round(apys.staking_apy, 3) * 100 == expected_value

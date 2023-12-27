@@ -77,7 +77,11 @@ class Settings(BaseSettings):
         case_sensitive = True
 
 
+TEST_ENV = os.path.join(os.path.dirname(__file__), "..", ".env.test")
+
 if os.environ.get("ENV_FILE", False):
     settings = Settings(_env_file=os.environ.get("ENV_FILE"))
+elif os.path.exists(TEST_ENV):
+    settings = Settings(_env_file=TEST_ENV)
 else:
     settings = Settings()

@@ -38,7 +38,7 @@ CRONS: list[Cron] = [
     },
     {
         "func": prep_attributes.run_prep_attributes,
-        "interval": 300,
+        "interval": 120,
     },
     {
         "func": cps.run_cps,

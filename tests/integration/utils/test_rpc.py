@@ -4,6 +4,7 @@ from icon_governance.utils.rpc import (
     get_bond,
     get_bonder_list,
     get_missed_blocks,
+    get_network_info,
     get_preps_cps,
     get_preps_stats,
     get_sponsors_record,
@@ -22,6 +23,7 @@ ADDRESS = "hx0cc3a3d55ed55df7c8eee926a4fafb5412d0cca4"
 
 def test_get_preps():
     result = getPReps().json()["result"]
+
     assert len(result["preps"]) > 50
 
 
@@ -29,6 +31,7 @@ def test_post_rpc_json():
     delegation = post_rpc_json(getDelegation(ADDRESS))  # Parrot9
     stake = post_rpc_json(getStake(ADDRESS))["stake"]  # Foundation
     stake = int(stake, 16) / 1e18
+
     assert delegation
     assert stake >= 0
 
@@ -100,4 +103,11 @@ def test_getIISSInfo():
 def test_getIISSInfo_networks(tmp_set_settings):
     with tmp_set_settings("ICON_NODE_URL", "https://api.berlin.icon.community/api/v3"):
         output = getIISSInfo(height=1)
+
     assert output["blockHeight"] == "0x1"
+
+
+def test_rpc_get_network_info():
+    output = get_network_info()
+
+    assert output

@@ -7,10 +7,13 @@ class ApyTime(SQLModel, table=True):
     height: int = Field(nullable=False)
 
     i_global: float = Field(nullable=False)
-    i_voter: float = Field(nullable=False)
     i_prep: float = Field(nullable=False)
     i_cps: float = Field(nullable=False)
     i_relay: float = Field(nullable=False)
+
+    # Pre / post iiss 4.0
+    i_voter: float | None = Field(nullable=True)
+    i_wage: float | None = Field(nullable=True)
 
     staking_apy: float = Field(nullable=False)
     prep_apy: float = Field(nullable=False)

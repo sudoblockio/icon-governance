@@ -14,13 +14,13 @@ from icon_governance.utils.rpc import (
 def run_prep_attributes(session):
     logger.info(f"Starting {__name__} cron")
 
-    preps = post_rpc_json(getPReps())
-    if preps is None:
+    preps_rpc = post_rpc_json(getPReps())
+    if preps_rpc is None:
         logger.info("No preps found from rpc.")
         sleep(1)
         return
 
-    for p in preps["preps"]:
+    for p in preps_rpc["preps"]:
         prep = session.get(Prep, p["address"])
 
         if prep is None:
@@ -45,6 +45,22 @@ def run_prep_attributes(session):
 
         prep.grade = p["grade"]
         prep.penalty = p["penalty"]
+
+        # iiss 4
+        if "jailFlags" in p:
+            prep.jail_flags = p["jailFlags"]
+        if "unjailRequestHeight" in p:
+            prep.unjail_request_height = int(p["unjailRequestHeight"], 0)
+        if "maxCommissionChangeRate" in p:
+            prep.max_commission_change_rate = int(p["maxCommissionChangeRate"], 0) / 100
+        if "maxCommissionRate" in p:
+            prep.max_commission_rate = int(p["maxCommissionRate"], 0) / 100
+        if "commissionRate" in p:
+            prep.commission_rate = int(p["commissionRate"], 0) / 100
+        if "minDoubleSignHeight" in p:
+            prep.min_double_sign_height = int(p["minDoubleSignHeight"], 0)
+        if "hasPublicKey" in p:
+            prep.has_public_key = bool(int(p["hasPublicKey"], 0))
 
         session.merge(prep)
         try:

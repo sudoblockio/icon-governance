@@ -5,10 +5,13 @@ from icon_governance.utils.rpc import get_network_info, get_preps, getIISSInfo
 
 class Apys(BaseModel):
     i_global: float
-    i_voter: float
     i_prep: float
     i_cps: float
     i_relay: float
+
+    # Pre / post iiss 4.0
+    i_voter: float | None
+    i_wage: float | None
 
     staking_apy: float
     prep_apy: float
@@ -31,10 +34,25 @@ def get_apys(height: int = None) -> Apys:
     total_power = int(network_info["totalPower"], 0) / 10**18
 
     i_global = int(iiss_info["variable"]["Iglobal"], 0) / 10**18
-    i_voter = int(iiss_info["variable"]["Ivoter"], 0) / 100
-    i_prep = int(iiss_info["variable"]["Iprep"], 0) / 100
-    i_cps = int(iiss_info["variable"]["Icps"], 0) / 100
-    i_relay = int(iiss_info["variable"]["Irelay"], 0) / 100
+    i_voter = None
+    i_wage = None
+    # Proxy for transition to iiss 4.0 where rates are not multiplied by 100
+    if int(network_info["iissVersion"], 0) <= 3:
+        # iiss 3.0
+        i_prep = int(iiss_info["variable"]["Iprep"], 0) / 100
+        i_cps = int(iiss_info["variable"]["Icps"], 0) / 100
+        i_relay = int(iiss_info["variable"]["Irelay"], 0) / 100
+        i_voter = int(iiss_info["variable"]["Ivoter"], 0) / 100
+
+        staking_apy = i_voter * i_global * 12 / (total_delegated + total_bonded)
+    else:
+        # iiss 4.0
+        i_prep = int(iiss_info["variable"]["Iprep"], 0) / 100 / 100
+        i_cps = int(iiss_info["variable"]["Icps"], 0) / 100 / 100
+        i_relay = int(iiss_info["variable"]["Irelay"], 0) / 100 / 100
+        i_wage = int(iiss_info["variable"]["Iwage"], 0) / 100 / 100
+
+        staking_apy = i_wage * i_global * 12 / (total_delegated + total_bonded)
 
     apys = Apys(
         i_global=i_global,
@@ -42,7 +60,8 @@ def get_apys(height: int = None) -> Apys:
         i_prep=i_prep,
         i_cps=i_cps,
         i_relay=i_relay,
-        staking_apy=i_voter * i_global * 12 / (total_delegated + total_bonded),
+        i_wage=i_wage,
+        staking_apy=staking_apy,
         prep_apy=i_prep * i_global * 12 / total_stake,
         cps_apy=i_cps * i_global * 12 / total_stake,
         relay_apy=i_relay * i_global * 12 / total_stake,
