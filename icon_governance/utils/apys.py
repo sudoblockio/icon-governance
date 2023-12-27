@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 from icon_governance.utils.rpc import get_network_info, get_preps, getIISSInfo
@@ -10,8 +12,8 @@ class Apys(BaseModel):
     i_relay: float
 
     # Pre / post iiss 4.0
-    i_voter: float | None
-    i_wage: float | None
+    i_voter: Optional[float]
+    i_wage: Optional[float]
 
     staking_apy: float
     prep_apy: float

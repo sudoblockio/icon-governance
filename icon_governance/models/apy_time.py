@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy.orm import declared_attr
 from sqlmodel import Field, SQLModel
 
@@ -12,8 +14,8 @@ class ApyTime(SQLModel, table=True):
     i_relay: float = Field(nullable=False)
 
     # Pre / post iiss 4.0
-    i_voter: float | None = Field(nullable=True)
-    i_wage: float | None = Field(nullable=True)
+    i_voter: Optional[float] = Field(nullable=True)
+    i_wage: Optional[float] = Field(nullable=True)
 
     staking_apy: float = Field(nullable=False)
     prep_apy: float = Field(nullable=False)
