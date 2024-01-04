@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/sudoblockio/icon-governance/compare/v0.6.0...v0.7.0) (2023-12-27)
+
+
+### Features
+
+* implement iiss 4.0 attributes [#32](https://github.com/sudoblockio/icon-governance/issues/32) ([ccc6822](https://github.com/sudoblockio/icon-governance/commit/ccc682264801f167872759be83403bebc6a852a6))
+
 ## [0.6.0](https://github.com/sudoblockio/icon-governance/compare/v0.5.2...v0.6.0) (2023-12-08)
 
 
