@@ -42,10 +42,6 @@ class Settings(BaseSettings):
     # TODO: Replace this when stateful processing comes in maybe
     LOGS_SERVICE_URL: str = "https://tracker.icon.community"
 
-    # ICON Peers - Used to discover nodes across the network
-    PEER_SEED_IP: str = "52.196.159.184"
-    PEER_SEED_ADDRESS: str = "hx9c63f73d3c564a54d0eed84f90718b1ebed16f09"
-
     # Kafka
     KAFKA_BROKER_URL: str = "localhost:29092"
     SCHEMA_REGISTRY_URL: str = "http://localhost:8081"

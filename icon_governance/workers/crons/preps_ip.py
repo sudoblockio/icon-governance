@@ -59,11 +59,24 @@ def get_peers(peer_set: set, added_peers: list = None):
         return get_peers(peer_set, added_peers=added_peers)
 
 
+PEER_SEED_IP = {
+    "mainnet": "52.196.159.184",
+    "berlin": "52.196.0.123",
+    "lisbon": "3.216.154.169",
+}[settings.NETWORK_NAME]
+
+PEER_SEED_ADDRESS = {
+    "mainnet": "hx9c63f73d3c564a54d0eed84f90718b1ebed16f09",
+    "berlin": "hxffb2996f2da27fa8e37053e7d54ab12076ebc242",
+    "lisbon": "hx6be987ca77e0c2efbe991ee77b7c166086eaf6ef",
+}[settings.NETWORK_NAME]
+
+
 def run_prep_ip(session):
     logger.info(f"Starting {__name__} cron")
 
     # Gets a full set of IP addresses
-    peers = get_peers({(settings.PEER_SEED_IP, settings.PEER_SEED_ADDRESS)})
+    peers = get_peers({(PEER_SEED_IP, PEER_SEED_ADDRESS)})
 
     result = session.execute(select(Prep))
     preps = result.scalars().all()
