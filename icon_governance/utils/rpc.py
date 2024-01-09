@@ -151,7 +151,7 @@ def get_sponsors_record():
         "params": {
             "to": "cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f",
             "dataType": "call",
-            "data": {"method": "get_sponsors_record"},
+            "data": {"method": "getSponsorsRecord"},
         },
         "id": 3205148222,
     }
@@ -165,7 +165,7 @@ def get_preps_cps():
         "params": {
             "to": "cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f",
             "dataType": "call",
-            "data": {"method": "get_PReps"},
+            "data": {"method": "getPReps"},
         },
         "id": 3746196027,
     }

@@ -52,17 +52,17 @@ def test_get_delegation():
     assert totalDelegated == total_delegation
 
 
-# def test_get_sponsors_record():
-#     sponsors = post_rpc_json(get_sponsors_record())
-#     assert len(sponsors) > 10
+def test_get_sponsors_record():
+    sponsors = post_rpc_json(get_sponsors_record())
+    assert len(sponsors) > 10
 
 
-# def test_get_preps_cps():
-#     cps_preps = post_rpc_json(get_preps_cps())
-#     assert len(cps_preps) > 10
-#
-#     prep_list = [i["address"] for i in cps_preps]
-#     assert len(prep_list) > 15
+def test_get_preps_cps():
+    cps_preps = post_rpc_json(get_preps_cps())
+    assert len(cps_preps) > 10
+
+    prep_list = [i["address"] for i in cps_preps]
+    assert len(prep_list) > 10
 
 
 def test_getProposals():
