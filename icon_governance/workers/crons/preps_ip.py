@@ -61,13 +61,13 @@ def get_peers(peer_set: set, added_peers: list = None):
 
 PEER_SEED_IP = {
     "mainnet": "52.196.159.184",
-    "berlin": "52.196.0.123",
+    "berlin": "3.114.238.157",
     "lisbon": "3.216.154.169",
 }[settings.NETWORK_NAME]
 
 PEER_SEED_ADDRESS = {
     "mainnet": "hx9c63f73d3c564a54d0eed84f90718b1ebed16f09",
-    "berlin": "hxffb2996f2da27fa8e37053e7d54ab12076ebc242",
+    "berlin": "hx6eba79486f98193537bae35ad521b8965a2c3548",
     "lisbon": "hx6be987ca77e0c2efbe991ee77b7c166086eaf6ef",
 }[settings.NETWORK_NAME]
 
