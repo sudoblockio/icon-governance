@@ -39,7 +39,7 @@ def get_apys(height: int = None) -> Apys:
     i_voter = None
     i_wage = None
     # Proxy for transition to iiss 4.0 where rates are not multiplied by 100
-    if int(network_info["iissVersion"], 0) <= 3:
+    if int(network_info["iissVersion"], 0) <= 3 or "Iwage" not in iiss_info["variable"]:
         # iiss 3.0
         i_prep = int(iiss_info["variable"]["Iprep"], 0) / 100
         i_cps = int(iiss_info["variable"]["Icps"], 0) / 100
@@ -54,6 +54,7 @@ def get_apys(height: int = None) -> Apys:
         i_relay = int(iiss_info["variable"]["Irelay"], 0) / 100 / 100
         i_wage = int(iiss_info["variable"]["Iwage"], 0) / 100 / 100
 
+        # https://forum.icon.community/t/changes-to-icon-economic-policy-iiss-4/3612
         staking_apy = i_wage * i_global * 12 / (total_delegated + total_bonded)
 
     apys = Apys(

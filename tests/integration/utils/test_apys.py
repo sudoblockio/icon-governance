@@ -17,6 +17,7 @@ def test_get_staking_apy():
         ("https://api.berlin.icon.community/api/v3", 2000000, 55),
         # iiss 4.0
         ("https://api.berlin.icon.community/api/v3", None, 0),
+        ("https://api.lisbon.icon.community/api/v3", None, 0),
         # TODO: Update this for iiss 4
         # ("https://api.icon.community/api/v3", 75000000, 6.4),
     ],
