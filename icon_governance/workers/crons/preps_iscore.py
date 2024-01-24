@@ -6,6 +6,7 @@ import json
 from time import sleep
 
 from requests import RequestException, get
+from sqlalchemy.exc import DataError
 from sqlmodel import func, select
 
 from icon_governance.config import settings
@@ -77,9 +78,12 @@ def run_prep_iscore(session):
             session.add(r)
             try:
                 session.commit()
-            except:
+            except DataError as e:
+                if settings.NETWORK_NAME == "mainnet":
+                    # Lisbon has been giving issues here
+                    # 0x1f48830983c0a4b4a576ec082b23b52833d8bb9ab73a1e88c4938f96a68c633a
+                    raise e
                 session.rollback()
-                raise
 
     prom_metrics.preps_iscore_cron_ran.inc()
     logger.info(f"Ending {__name__} cron")
