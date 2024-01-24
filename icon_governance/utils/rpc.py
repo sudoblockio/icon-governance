@@ -17,8 +17,11 @@ def post_rpc_json(response):
     return response.json()["result"]
 
 
-def post_rpc(payload: dict):
-    r = requests.post(settings.ICON_NODE_URL, data=json.dumps(payload))
+def post_rpc(payload: dict, node_url: str = None):
+    if node_url is None:
+        node_url = settings.ICON_NODE_URL
+
+    r = requests.post(node_url, data=json.dumps(payload))
 
     if r.status_code != 200:
         logger.info(f"Error {r.status_code} with payload {payload}")
@@ -334,7 +337,8 @@ def get_band_price(symbol: str = "ICX", height: int = None) -> float:
     if height is not None:
         payload["params"]["height"] = hex(height)
 
-    r = post_rpc(payload)
+    # Band is only on mainnet
+    r = post_rpc(payload, node_url="https://api.icon.community/api/v3")
 
     if r.status_code == 200:
         return int(r.json()["result"]["rate"], 16) / 1e9
