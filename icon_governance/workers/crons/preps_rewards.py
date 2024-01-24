@@ -38,7 +38,7 @@ def run_get_prep_rewards(session):
             prep.reward_daily_usd = 0
         else:
             prep.reward_monthly = (prep.power / total_power) * (
-                i_global * i_prep * commission_rate
+                i_global * i_prep * commission_rate / 100
             ) + (prep.power / total_power) * (i_global * i_wage)
             prep.reward_monthly_usd = prep.reward_monthly * icx_usd_price
             # prep.reward_daily = (prep.reward_monthly * 12) / 365
