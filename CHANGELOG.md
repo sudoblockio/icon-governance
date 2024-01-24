@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.1](https://github.com/sudoblockio/icon-governance/compare/v0.7.0...v0.7.1) (2024-01-24)
+
+
+### Bug Fixes
+
+* cps methods from updated contract closes[#30](https://github.com/sudoblockio/icon-governance/issues/30) ([9d10e30](https://github.com/sudoblockio/icon-governance/commit/9d10e3050b1074b188e5f9c355297c07d7571d5a))
+* update rewards per iiss4 ([664bae0](https://github.com/sudoblockio/icon-governance/commit/664bae0bf1a3feaa5dcccc97aca8fee9b0b4ae61))
+
 ## [0.7.0](https://github.com/sudoblockio/icon-governance/compare/v0.6.0...v0.7.0) (2023-12-27)
 
 
