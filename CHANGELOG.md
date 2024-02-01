@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/sudoblockio/icon-governance/compare/v0.7.1...v0.7.2) (2024-02-01)
+
+
+### Bug Fixes
+
+* update ci to release main ([5d23e8a](https://github.com/sudoblockio/icon-governance/commit/5d23e8a715afc297c054e0a9c50162fcbad6d69a))
+
 ## [0.7.1](https://github.com/sudoblockio/icon-governance/compare/v0.7.0...v0.7.1) (2024-01-24)
 
 
