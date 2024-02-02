@@ -35,7 +35,7 @@ def run_get_prep_rewards(session):
         else:
             commission_rate = prep.commission_rate
 
-        if prep.jail_flags != "0x0":
+        if prep.jail_flags is not None and prep.jail_flags != "0x0":
             # Nodes in jail get not rewards
             prep.reward_monthly = 0
             prep.reward_monthly_usd = 0
