@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.3](https://github.com/sudoblockio/icon-governance/compare/v0.7.2...v0.7.3) (2024-02-02)
+
+
+### Bug Fixes
+
+* issue with rev 24/25 missing iwage data ([7ab5a01](https://github.com/sudoblockio/icon-governance/commit/7ab5a01fbc717e1b7b671c1a77fa721c6aa92916))
+
 ## [0.7.2](https://github.com/sudoblockio/icon-governance/compare/v0.7.1...v0.7.2) (2024-02-01)
 
 
