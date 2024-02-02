@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.4](https://github.com/sudoblockio/icon-governance/compare/v0.7.3...v0.7.4) (2024-02-02)
+
+
+### Bug Fixes
+
+* conditional on jail flag for rewards ([19dda0b](https://github.com/sudoblockio/icon-governance/commit/19dda0b021d28bb36f0bd693df6049c3ed527762))
+
 ## [0.7.3](https://github.com/sudoblockio/icon-governance/compare/v0.7.2...v0.7.3) (2024-02-02)
 
 
