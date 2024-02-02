@@ -18,8 +18,13 @@ def run_get_prep_rewards(session):
 
     total_power = int(network_info["totalPower"], 16)  # / 10 ** 18
     i_global = int(network_info["rewardFund"]["Iglobal"], 16) / 10**18
-    i_prep = int(network_info["rewardFund"]["Iprep"], 16) / 100 / 100
-    i_wage = int(network_info["rewardFund"]["Iwage"], 16) / 100 / 100
+    if "Iwage" in network_info["rewardFund"]:
+        i_prep = int(network_info["rewardFund"]["Iprep"], 16) / 100 / 100
+        i_wage = int(network_info["rewardFund"]["Iwage"], 16) / 100 / 100
+    else:
+        # TODO: Remove this post rev 25
+        i_wage = None
+        i_prep = int(network_info["rewardFund"]["Iprep"], 16) / 100
 
     for prep in preps:
         if prep.power is None:
@@ -37,9 +42,13 @@ def run_get_prep_rewards(session):
             prep.reward_daily = 0
             prep.reward_daily_usd = 0
         else:
-            prep.reward_monthly = (prep.power / total_power) * (
-                i_global * i_prep * commission_rate / 100
-            ) + (prep.power / total_power) * (i_global * i_wage)
+            if i_wage is None:
+                # TODO: Remove this post rev 25
+                prep.reward_monthly = (prep.power / total_power) * (i_global * i_prep)
+            else:
+                prep.reward_monthly = (prep.power / total_power) * (
+                    i_global * i_prep * commission_rate / 100
+                ) + (prep.power / total_power) * (i_global * i_wage)
             prep.reward_monthly_usd = prep.reward_monthly * icx_usd_price
             # prep.reward_daily = (prep.reward_monthly * 12) / 365
             prep.reward_daily = prep.reward_monthly / 30  # Month = 30 days
