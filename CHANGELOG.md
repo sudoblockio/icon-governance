@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.5](https://github.com/sudoblockio/icon-governance/compare/v0.7.4...v0.7.5) (2024-02-04)
+
+
+### Bug Fixes
+
+* flakey iiss test ([bc4f42b](https://github.com/sudoblockio/icon-governance/commit/bc4f42b9ddaafb71b137b18990a50d34b10783ce))
+
 ## [0.7.4](https://github.com/sudoblockio/icon-governance/compare/v0.7.3...v0.7.4) (2024-02-02)
 
 
