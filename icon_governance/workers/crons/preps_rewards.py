@@ -18,13 +18,10 @@ def run_get_prep_rewards(session):
 
     total_power = int(network_info["totalPower"], 16)  # / 10 ** 18
     i_global = int(network_info["rewardFund"]["Iglobal"], 16) / 10**18
-    if "Iwage" in network_info["rewardFund"]:
-        i_prep = int(network_info["rewardFund"]["Iprep"], 16) / 100 / 100
-        i_wage = int(network_info["rewardFund"]["Iwage"], 16) / 100 / 100
-    else:
-        # TODO: Remove this post rev 25
-        i_wage = None
-        i_prep = int(network_info["rewardFund"]["Iprep"], 16) / 100
+    i_prep = int(network_info["rewardFund"]["Iprep"], 16) / 100 / 100
+    i_wage = int(network_info["rewardFund"]["Iwage"], 16) / 100 / 100
+
+    active_preps = len([i for i in preps if i.grade in ['0x0', '0x1']])
 
     for prep in preps:
         if prep.power is None:
@@ -42,20 +39,19 @@ def run_get_prep_rewards(session):
             prep.reward_daily = 0
             prep.reward_daily_usd = 0
         else:
-            if i_wage is None:
-                # TODO: Remove this post rev 25
-                prep.reward_monthly = (prep.power / total_power) * (i_global * i_prep)
-            else:
+            if prep.grade in ['0x0', '0x1']:
                 prep.reward_monthly = (prep.power / total_power) * (
                     i_global * i_prep * commission_rate / 100
-                ) + (prep.power / total_power) * (i_global * i_wage)
+                ) + (i_global * i_wage) / active_preps
+            else:
+                prep.reward_monthly = 0
             prep.reward_monthly_usd = prep.reward_monthly * icx_usd_price
             # prep.reward_daily = (prep.reward_monthly * 12) / 365
             prep.reward_daily = prep.reward_monthly / 30  # Month = 30 days
             prep.reward_daily_usd = prep.reward_daily * icx_usd_price
 
-        session.merge(prep)
-    session.commit()
+    #     session.merge(prep)
+    # session.commit()
 
     prom_metrics.preps_rewards_cron_ran.inc()
     logger.info(f"Ending {__name__} cron")
