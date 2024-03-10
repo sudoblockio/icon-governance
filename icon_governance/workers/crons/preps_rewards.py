@@ -46,12 +46,11 @@ def run_get_prep_rewards(session):
             else:
                 prep.reward_monthly = 0
             prep.reward_monthly_usd = prep.reward_monthly * icx_usd_price
-            # prep.reward_daily = (prep.reward_monthly * 12) / 365
             prep.reward_daily = prep.reward_monthly / 30  # Month = 30 days
             prep.reward_daily_usd = prep.reward_daily * icx_usd_price
 
-    #     session.merge(prep)
-    # session.commit()
+        session.merge(prep)
+    session.commit()
 
     prom_metrics.preps_rewards_cron_ran.inc()
     logger.info(f"Ending {__name__} cron")
