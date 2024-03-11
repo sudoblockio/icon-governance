@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.6](https://github.com/sudoblockio/icon-governance/compare/v0.7.5...v0.7.6) (2024-03-11)
+
+
+### Bug Fixes
+
+* wage calculation ([4307639](https://github.com/sudoblockio/icon-governance/commit/43076398d7caaa858da4aa75e8ab98b505ea36c0))
+* wage calculation again ([339c39f](https://github.com/sudoblockio/icon-governance/commit/339c39f65a15d880d49ad516f87409eadbf6557c))
+
 ## [0.7.5](https://github.com/sudoblockio/icon-governance/compare/v0.7.4...v0.7.5) (2024-02-04)
 
 
