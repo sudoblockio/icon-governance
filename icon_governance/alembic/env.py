@@ -17,6 +17,7 @@ from icon_governance.models.preps import Prep
 from icon_governance.models.proposals import Proposal
 from icon_governance.models.rewards import Reward
 from icon_governance.models.stats import Stats
+from icon_governance.models.commission_time import CommissionTime
 
 # Other versions imported each object
 config = context.config
