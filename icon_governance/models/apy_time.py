@@ -27,6 +27,10 @@ class ApyTime(SQLModel, table=True):
     total_bonded: float = Field(nullable=False)
     total_power: float = Field(nullable=False)
 
+    total_wage: float = Field(nullable=False)
+    active_preps: int = Field(nullable=False)
+
+
     @declared_attr
     def __tablename__(cls) -> str:  # noqa: N805
         return "apy_time"
