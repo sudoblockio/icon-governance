@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.8.0](https://github.com/sudoblockio/icon-governance/compare/v0.7.6...v0.8.0) (2024-03-23)
+
+
+### Features
+
+* add commission time stats ([5625dad](https://github.com/sudoblockio/icon-governance/commit/5625dad4417875c2a9e7eea1356bb41be7eb88b6))
+
+
+### Bug Fixes
+
+* update apy time with average commission rate for iiss4 ([a7dbf37](https://github.com/sudoblockio/icon-governance/commit/a7dbf375f9c5c5def79a15251ba57e81fbc8fda0))
+* wage with default in table ([842a0d3](https://github.com/sudoblockio/icon-governance/commit/842a0d383c1c8eaf8c6ccb29b8dc6e03c322efd1))
+
 ## [0.7.6](https://github.com/sudoblockio/icon-governance/compare/v0.7.5...v0.7.6) (2024-03-11)
 
 
