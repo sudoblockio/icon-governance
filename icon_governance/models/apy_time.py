@@ -19,8 +19,6 @@ class ApyTime(SQLModel, table=True):
 
     staking_apy: float = Field(nullable=False)
     prep_apy: float = Field(nullable=False)
-    cps_apy: float = Field(nullable=False)
-    relay_apy: float = Field(nullable=False)
 
     total_delegated: float = Field(nullable=False)
     total_stake: float = Field(nullable=False)
