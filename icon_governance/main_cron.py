@@ -11,6 +11,7 @@ from icon_governance.workers.crons import (  # preps_missed_blocks,
     apy_time,
     clean_delegation,
     cps,
+    commission_time,
     prep_attributes,
     preps_base,
     preps_failed_blocks,
@@ -95,6 +96,10 @@ CRONS: list[Cron] = [
     {
         "func": stats.run_stats,
         "interval": 3600,  # 1 hour
+    },
+    {
+        "func": commission_time.run_commission_time,
+        "interval": 86400 / 4,
     },
 ]
 
