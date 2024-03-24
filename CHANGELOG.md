@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/sudoblockio/icon-governance/compare/v0.8.0...v0.8.1) (2024-03-24)
+
+
+### Bug Fixes
+
+* add some extra try except around db conns [#42](https://github.com/sudoblockio/icon-governance/issues/42) ([b2f4fa0](https://github.com/sudoblockio/icon-governance/commit/b2f4fa0d21a32cafe7ba56731114cd4056da3c35))
+
 ## [0.8.0](https://github.com/sudoblockio/icon-governance/compare/v0.7.6...v0.8.0) (2024-03-23)
 
 
