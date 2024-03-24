@@ -1,3 +1,4 @@
+import sys
 from typing import Callable, TypedDict
 
 from apscheduler.schedulers.background import BlockingScheduler
@@ -105,8 +106,12 @@ CRONS: list[Cron] = [
 
 
 def run_cron_with_session(cron: Callable):
-    with session_factory() as session:
-        cron(session=session)
+    try:
+        with session_factory() as session:
+            cron(session=session)
+    except Exception as e:
+        logger.error(f"Database operation failed: {str(e)}")
+        sys.exit(1)
 
 
 def main():

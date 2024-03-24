@@ -1,7 +1,10 @@
+import sys
+
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, create_engine
+from psycopg2 import OperationalError
 
 from icon_governance.config import settings
 from icon_governance.models.preps import Prep
@@ -35,5 +38,9 @@ async def get_session() -> AsyncSession:
         yield session
 
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-session_factory = sessionmaker(bind=engine)
+try:
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+    session_factory = sessionmaker(bind=engine)
+except Exception as e:
+    logger.error(f"Database connection dropped: {str(e)}")
+    raise
