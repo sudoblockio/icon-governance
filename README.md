@@ -7,6 +7,7 @@
 [//]: # (![Uptime]&#40;https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgeometry-labs%2Ficon-status-page%2Fmaster%2Fapi%2Fdev-governance-service%2Fuptime.json&#41;)
 
 [Live API Docs](https://tracker.icon.community/api/v1/governance/docs)
+
 Off chain indexer for the ICON Blockchain serving the **governance** context of the [icon-explorer](https://github.com/geometry-labs/icon-explorer). Service is broken up into API and worker components that are run as individual docker containers. It depends on data coming in from [icon-etl](https://github.com/geometry-labs/icon-etl) over a Kafka message queue with persistence on a postgres database.
 
 ### Deployment
