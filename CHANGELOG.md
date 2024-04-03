@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.1](https://github.com/sudoblockio/icon-governance/compare/v0.8.0...v0.8.1) (2024-04-02)
+
+
+### Bug Fixes
+
+* add some extra try except around db conns [#42](https://github.com/sudoblockio/icon-governance/issues/42) ([b2f4fa0](https://github.com/sudoblockio/icon-governance/commit/b2f4fa0d21a32cafe7ba56731114cd4056da3c35))
+* make apy column nullable ([a890e17](https://github.com/sudoblockio/icon-governance/commit/a890e1730840725c44a4ae36e70f815a4ee64a66))
+
 ## [0.8.0](https://github.com/sudoblockio/icon-governance/compare/v0.7.6...v0.8.0) (2024-03-23)
 
 
