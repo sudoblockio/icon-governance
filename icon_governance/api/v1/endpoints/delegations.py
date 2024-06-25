@@ -12,13 +12,13 @@ from icon_governance.models.delegations import Delegation
 router = APIRouter()
 
 
-@router.get("/governance/delegations/{address}")
+@router.get("/governance/delegations/{address}", response_model=list[Delegation])
 async def get_delegations(
-    response: Response,
-    address: str,
-    skip: int = Query(0),
-    limit: int = Query(100, gt=0, lt=101),
-    session: AsyncSession = Depends(get_session),
+        response: Response,
+        address: str,
+        skip: int = Query(0),
+        limit: int = Query(100, gt=0, lt=101),
+        session: AsyncSession = Depends(get_session),
 ) -> List[Delegation]:
     """Return list of delegations."""
     query = (
@@ -47,11 +47,11 @@ async def get_delegations(
 
 @router.get("/governance/votes/{address}")
 async def get_delegations(
-    address: str,
-    response: Response,
-    skip: int = Query(0),
-    limit: int = Query(100, gt=0, lt=101),
-    session: AsyncSession = Depends(get_session),
+        address: str,
+        response: Response,
+        skip: int = Query(0),
+        limit: int = Query(100, gt=0, lt=101),
+        session: AsyncSession = Depends(get_session),
 ) -> List[Delegation]:
     """Return list of votes."""
     query = (
