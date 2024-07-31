@@ -67,6 +67,7 @@ class Prep(SQLModel, table=True):
     unvalidated_sequence_blocks: Optional[float] = Field(None)
 
     bonded: Optional[float] = Field(None)
+    bond_percent: Optional[float] = Field(None)
     power: Optional[float] = Field(None)
 
     # CPS

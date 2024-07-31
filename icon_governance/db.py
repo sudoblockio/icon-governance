@@ -28,7 +28,6 @@ async_engine = create_async_engine(ASYNC_SQLALCHEMY_DATABASE_URL, echo=True, fut
 # Run onetime if we want to init with a prebuilt table of attributes
 async def init_db():
     async with async_engine.begin() as conn:
-        # await conn.run_sync(SQLModel.metadata.drop_all)
         await conn.run_sync(SQLModel.metadata.create_all)
 
 
@@ -43,4 +42,4 @@ try:
     session_factory = sessionmaker(bind=engine)
 except Exception as e:
     logger.error(f"Database connection dropped: {str(e)}")
-    raise
+    raise e
