@@ -16,8 +16,9 @@ from icon_governance.utils.rpc import (
 def run_prep_attributes(session):
     logger.info(f"Starting {__name__} cron")
 
-    network_info = get_network_info()
-    bond_requirement_rate = int(network_info["bondRequirementRate"], 0) / 10_000
+    if settings.NETWORK_NAME in ["lisbon", "berlin"]:
+        network_info = get_network_info()
+        bond_requirement_rate = int(network_info["bondRequirementRate"], 0) / 10_000
 
     preps_rpc = post_rpc_json(getPReps())
     if preps_rpc is None:
