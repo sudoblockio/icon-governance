@@ -1,5 +1,6 @@
 from time import sleep
 
+from icon_governance.config import settings
 from icon_governance.log import logger
 from icon_governance.metrics import prom_metrics
 from icon_governance.models.preps import Prep
@@ -8,11 +9,15 @@ from icon_governance.utils.rpc import (
     getDelegation,
     getPReps,
     post_rpc_json,
+    get_network_info,
 )
 
 
 def run_prep_attributes(session):
     logger.info(f"Starting {__name__} cron")
+
+    network_info = get_network_info()
+    bond_requirement_rate = int(network_info["bondRequirementRate"], 0) / 10_000
 
     preps_rpc = post_rpc_json(getPReps())
     if preps_rpc is None:
@@ -42,7 +47,12 @@ def run_prep_attributes(session):
         prep.delegated = convert_hex_int(p["delegated"]) / 1e18
 
         if prep.delegated != 0:
-            prep.bond_percent = 20 * prep.bonded / prep.delegated / 1e18
+            if settings.NETWORK_NAME in ["lisbon", "berlin"]:
+                prep.bond_percent = (
+                    prep.bonded / bond_requirement_rate / prep.delegated / 1e18
+                )
+            else:
+                prep.bond_percent = 20 * prep.bonded / prep.delegated / 1e18
         else:
             prep.bond_percent = 0
 
