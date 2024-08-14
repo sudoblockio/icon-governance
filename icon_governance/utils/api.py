@@ -39,7 +39,7 @@ def get_addresses(
     if is_contract is not None:
         endpoint += "&is_contract=true"
 
-    r = requests.get(endpoint)
+    r = requests.get(endpoint, timeout=5)
     if r.status_code == 200:
         data += r.json()
         return get_addresses(max_addresses, data, skip + limit)
