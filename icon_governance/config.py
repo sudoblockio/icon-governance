@@ -5,7 +5,7 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     NAME: str = "governance"
-    VERSION: str = "v0.8.1"  # x-release-please-version
+    VERSION: str = "v0.9.0"  # x-release-please-version
 
     NETWORK_NAME: str = "mainnet"
 
