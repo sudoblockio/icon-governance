@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.0](https://github.com/sudoblockio/icon-governance/compare/v0.8.1...v0.9.0) (2024-08-14)
+
+
+### Features
+
+* add sort on preps endpoint [#44](https://github.com/sudoblockio/icon-governance/issues/44) ([16ffd87](https://github.com/sudoblockio/icon-governance/commit/16ffd871a0ce8f71994b67f0bce737b43cc3c459))
+
+
+### Bug Fixes
+
+* recalculate bond % with new bond requirment rate ([acc78b6](https://github.com/sudoblockio/icon-governance/commit/acc78b69a3d6039b31c644225f457b35dac5a745))
+
 ## [0.8.1](https://github.com/sudoblockio/icon-governance/compare/v0.8.0...v0.8.1) (2024-04-02)
 
 
