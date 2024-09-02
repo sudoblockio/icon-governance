@@ -1,0 +1,16 @@
+{
+    "name": "Python 3",
+    "image": "mcr.microsoft.com/devcontainers/python:0-3.9-bullseye",
+    "features": {
+      "ghcr.io/devcontainers-contrib/features/coverage-py:2": {}
+    },  
+    "postCreateCommand": "pip3 install --user -r requirements_workers.txt -r requirements_api.txt -r requirements_dev.txt",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "streetsidesoftware.code-spell-checker"
+        ]
+      }
+    }
+    // "remoteUser": "root"
+  }
