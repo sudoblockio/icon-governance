@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.10.0](https://github.com/sudoblockio/icon-governance/compare/v0.9.0...v0.10.0) (2024-09-03)
+
+
+### Features
+
+* update bondRequirementRate per rev28 for mainnet ([bae3878](https://github.com/sudoblockio/icon-governance/commit/bae387845a3e12b4a623ea3a07ebe36bef4ae3b1))
+
+
+### Bug Fixes
+
+* apy_time endpoint - limit to 100 due to timeout ([f620f0b](https://github.com/sudoblockio/icon-governance/commit/f620f0b9aaa745315203b9be0965ec767ef2cd3c))
+* release ([475bf59](https://github.com/sudoblockio/icon-governance/commit/475bf5970d63999ebeddbad24b3e4dca1048ff35))
+
 ## [0.9.0](https://github.com/sudoblockio/icon-governance/compare/v0.8.1...v0.9.0) (2024-08-14)
 
 
