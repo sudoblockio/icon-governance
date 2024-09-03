@@ -20,7 +20,7 @@ async def get_apy_over_time(
     start_timestamp: int = None,
     end_timestamp: int = None,
     skip: int = Query(0),
-    limit: int = Query(1000, gt=0, lt=1001),
+    limit: int = Query(100, gt=0, lt=101),
     session: AsyncSession = Depends(get_session),
 ) -> List[ApyTime]:
     """
