@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/sudoblockio/icon-governance/compare/v0.10.0...v0.10.1) (2024-09-04)
+
+
+### Bug Fixes
+
+* rm code cov in ci ([ad0be77](https://github.com/sudoblockio/icon-governance/commit/ad0be77c45cbe060d1206f45d65d802e677fa746))
+
 ## [0.10.0](https://github.com/sudoblockio/icon-governance/compare/v0.9.0...v0.10.0) (2024-09-03)
 
 
