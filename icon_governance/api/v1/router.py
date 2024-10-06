@@ -8,7 +8,7 @@ from icon_governance.api.v1.endpoints import (
     stats,
 )
 
-api_router = APIRouter()
+api_router = APIRouter(tags=["governance"])
 api_router.include_router(preps.router)
 api_router.include_router(delegations.router)
 api_router.include_router(proposals.router)

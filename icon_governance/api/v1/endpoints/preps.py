@@ -77,7 +77,7 @@ async def get_preps(
 
 
 @router.get("/governance/preps/{address}")
-async def get_prep(
+async def get_preps_by_address(
     address: str,
     session: AsyncSession = Depends(get_session),
 ) -> List[Prep]:

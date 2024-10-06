@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 @router.get("/governance/delegations/{address}")
-async def get_delegations(
+async def get_delegations_by_address(
     response: Response,
     address: str,
     skip: int = Query(0),
@@ -46,7 +46,7 @@ async def get_delegations(
 
 
 @router.get("/governance/votes/{address}")
-async def get_delegations(
+async def get_votes_by_address(
     address: str,
     response: Response,
     skip: int = Query(0),

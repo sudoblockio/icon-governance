@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 @router.get("/governance/rewards/{address}")
-async def get_delegations(
+async def get_rewards_by_address(
     response: Response,
     address: str,
     skip: int = Query(0),
