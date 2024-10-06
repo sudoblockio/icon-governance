@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.3](https://github.com/sudoblockio/icon-governance/compare/v0.10.2...v0.10.3) (2024-10-06)
+
+
+### Bug Fixes
+
+* cps test ([eff79b8](https://github.com/sudoblockio/icon-governance/commit/eff79b89718a4c2f0262cf5fdebd578866ca8177))
+
 ## [0.10.2](https://github.com/sudoblockio/icon-governance/compare/v0.10.1...v0.10.2) (2024-10-06)
 
 
