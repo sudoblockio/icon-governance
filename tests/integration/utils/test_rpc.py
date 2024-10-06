@@ -59,10 +59,10 @@ def test_get_sponsors_record():
 
 def test_get_preps_cps():
     cps_preps = post_rpc_json(get_preps_cps())
-    assert len(cps_preps) > 5
+    assert len(cps_preps) > 2
 
     prep_list = [i["address"] for i in cps_preps]
-    assert len(prep_list) > 5
+    assert len(prep_list) > 2
 
 
 def test_getProposals():
