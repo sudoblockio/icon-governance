@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.2](https://github.com/sudoblockio/icon-governance/compare/v0.10.1...v0.10.2) (2024-10-06)
+
+
+### Bug Fixes
+
+* add tags to fastapi router and fix function names ([be6875c](https://github.com/sudoblockio/icon-governance/commit/be6875c318a5d3bef0c1221a988dbdf5fcec9a0c))
+
 ## [0.10.1](https://github.com/sudoblockio/icon-governance/compare/v0.10.0...v0.10.1) (2024-09-04)
 
 
