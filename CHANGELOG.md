@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.4](https://github.com/sudoblockio/icon-governance/compare/v0.10.3...v0.10.4) (2024-10-11)
+
+
+### Bug Fixes
+
+* capitalise router tags ([994a260](https://github.com/sudoblockio/icon-governance/commit/994a260770bf69af18a6c27c7ad1c56e1be25038))
+
 ## [0.10.3](https://github.com/sudoblockio/icon-governance/compare/v0.10.2...v0.10.3) (2024-10-06)
 
 
