@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.5](https://github.com/sudoblockio/icon-governance/compare/v0.10.4...v0.10.5) (2024-10-14)
+
+
+### Bug Fixes
+
+* ci runner image version ([79e9626](https://github.com/sudoblockio/icon-governance/commit/79e9626f4b191266e2a3ec86ae801525558aeef9))
+
 ## [0.10.4](https://github.com/sudoblockio/icon-governance/compare/v0.10.3...v0.10.4) (2024-10-11)
 
 
