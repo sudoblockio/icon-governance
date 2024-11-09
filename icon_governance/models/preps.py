@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 from typing import Optional
 
 from sqlalchemy.orm import declared_attr
 from sqlmodel import Field, SQLModel
+from sqlmodel._compat import SQLModelConfig
 
 
 class Prep(SQLModel, table=True):
@@ -75,7 +78,7 @@ class Prep(SQLModel, table=True):
     cps_governance: bool = Field(False)
 
     # Blocks
-    failure_count: int = Field(None)
+    failure_count: Optional[int] = Field(None)
     penalties: int = Field(None)
 
     # Rewards
@@ -84,24 +87,25 @@ class Prep(SQLModel, table=True):
     reward_daily: float = Field(None)
     reward_daily_usd: float = Field(None)
 
-    stakers: int = Field(None)
-    bonders: int = Field(None)
+    stakers: Optional[int] = Field(None)
+    bonders: Optional[int] = Field(None)
 
     # Jail
-    jail_flags: str = Field(None)
-    unjail_request_height: int = Field(None)
+    jail_flags: Optional[str] = Field(None)
+    unjail_request_height: Optional[int] = Field(None)
 
     # Commission
-    max_commission_change_rate: float = Field(None)
-    max_commission_rate: float = Field(None)
-    commission_rate: float = Field(None)
+    max_commission_change_rate: Optional[float] = Field(None)
+    max_commission_rate: Optional[float] = Field(None)
+    commission_rate: Optional[float] = Field(None)
 
     # iiss 4 misc
-    min_double_sign_height: int = Field(None)
-    has_public_key: bool = Field(None)
+    min_double_sign_height: Optional[int] = Field(None)
+    has_public_key: Optional[bool] = Field(None)
 
-    class Config:
-        extra = "ignore"
+    model_config = SQLModelConfig(
+        extra="ignore",
+    )
 
     @declared_attr
     def __tablename__(cls) -> str:  # noqa: N805
