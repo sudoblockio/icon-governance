@@ -79,13 +79,13 @@ class Prep(SQLModel, table=True):
 
     # Blocks
     failure_count: Optional[int] = Field(None)
-    penalties: int = Field(None)
+    penalties: Optional[int] = Field(None)
 
     # Rewards
-    reward_monthly: float = Field(None)
-    reward_monthly_usd: float = Field(None)
-    reward_daily: float = Field(None)
-    reward_daily_usd: float = Field(None)
+    reward_monthly: Optional[float] = Field(None)
+    reward_monthly_usd: Optional[float] = Field(None)
+    reward_daily: Optional[float] = Field(None)
+    reward_daily_usd: Optional[float] = Field(None)
 
     stakers: Optional[int] = Field(None)
     bonders: Optional[int] = Field(None)
