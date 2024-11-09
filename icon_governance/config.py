@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     NAME: str = "governance"
-    VERSION: str = "v0.10.2"  # x-release-please-version
+    VERSION: str = "v0.10.5"  # x-release-please-version
 
     NETWORK_NAME: str = "mainnet"
 

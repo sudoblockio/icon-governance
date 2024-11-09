@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.10.5](https://github.com/sudoblockio/icon-governance/compare/v0.10.4...v0.10.5) (2024-10-14)
+
+
+### Bug Fixes
+
+* ci runner image version ([79e9626](https://github.com/sudoblockio/icon-governance/commit/79e9626f4b191266e2a3ec86ae801525558aeef9))
+
+## [0.10.4](https://github.com/sudoblockio/icon-governance/compare/v0.10.3...v0.10.4) (2024-10-11)
+
+
+### Bug Fixes
+
+* capitalise router tags ([994a260](https://github.com/sudoblockio/icon-governance/commit/994a260770bf69af18a6c27c7ad1c56e1be25038))
+
+## [0.10.3](https://github.com/sudoblockio/icon-governance/compare/v0.10.2...v0.10.3) (2024-10-06)
+
+
+### Bug Fixes
+
+* cps test ([eff79b8](https://github.com/sudoblockio/icon-governance/commit/eff79b89718a4c2f0262cf5fdebd578866ca8177))
+
 ## [0.10.2](https://github.com/sudoblockio/icon-governance/compare/v0.10.1...v0.10.2) (2024-10-06)
 
 
