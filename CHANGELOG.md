@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.6](https://github.com/sudoblockio/icon-governance/compare/v0.10.5...v0.10.6) (2024-11-14)
+
+
+### Bug Fixes
+
+* rm echo in db and add pool ([8a2b0bc](https://github.com/sudoblockio/icon-governance/commit/8a2b0bc69cff04a326cc18b0ae2930dbdead6f31))
+
 ## [0.10.5](https://github.com/sudoblockio/icon-governance/compare/v0.10.4...v0.10.5) (2024-10-14)
 
 
