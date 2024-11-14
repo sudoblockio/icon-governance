@@ -22,7 +22,7 @@ test-coverage:  ## Run unit tests - Need DB compose up
 	PYTHONPATH=$PYTHONPATH:`pwd` pytest --cov=icon_governance --cov-report xml tests/integration
 	PYTHONPATH=$PYTHONPATH:`pwd` pytest --cov=icon_governance --cov-append --cov-report xml tests/unit
 
-up:  ## Bring everything up as containers
+up-all:  ## Bring everything up as containers
 	docker compose -f docker-compose.db.yml -f docker-compose.yml up -d
 
 down:  ## Take down all the containers
@@ -41,7 +41,7 @@ postgres-console:  ## Start postgres terminal
 	docker compose -f docker-compose.db.yml -f docker-compose.yml exec postgres psql -U postgres
 
 install:
-	pip install -r requirements_api.txt -r requirements_dev.txt -r requirements_dev.txt
+	pip install -r requirements-api.txt -r requirements-worker.txt -r requirements-dev.txt
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
