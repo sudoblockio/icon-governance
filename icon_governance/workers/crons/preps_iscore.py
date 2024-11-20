@@ -19,7 +19,8 @@ from icon_governance.utils.rpc import convert_hex_int
 def get_iscore_value(tx_hash):
     """Get rewards value and Tx from logs service."""
     try:
-        response = get(f"{settings.LOGS_SERVICE_URL}/api/v1/logs?transaction_hash={tx_hash}")
+        response = get(
+            f"{settings.LOGS_SERVICE_URL}/api/v1/logs?transaction_hash={tx_hash}")
     except RequestException as e:
         logger.info(f"Exception in iscore - \n{e} - \n{tx_hash}")
         # TODO: Add backoff - This should not happen generally
@@ -48,7 +49,8 @@ def run_prep_iscore(session):
     logger.info(f"Starting {__name__} cron")
 
     count = (
-        session.execute(select([func.count(Reward.address)]).where(Reward.value == None))
+        session.execute(
+            select(func.count()).select_from(Reward).where(Reward.value.is_(None)))
         .scalars()
         .all()
     )
@@ -58,7 +60,11 @@ def run_prep_iscore(session):
     chunk_size = 10
     for i in range(0, int(count[0] / chunk_size) + 1):
         rewards = (
-            session.execute(select(Reward).where(Reward.value == None).limit(chunk_size))
+            session.execute(
+                select(Reward)
+                .where(Reward.value.is_(None))
+                .limit(chunk_size)
+            )
             .scalars()
             .all()
         )
