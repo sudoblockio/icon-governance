@@ -1,5 +1,7 @@
 pytest
 pytest-mock
 pytest-cov
+pytest-order
+pytest-asyncio
 httpx
 grpcio-tools==1.40.0

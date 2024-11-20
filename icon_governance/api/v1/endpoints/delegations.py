@@ -14,11 +14,11 @@ router = APIRouter()
 
 @router.get("/governance/delegations/{address}")
 async def get_delegations_by_address(
-    response: Response,
-    address: str,
-    skip: int = Query(0),
-    limit: int = Query(100, gt=0, lt=101),
-    session: AsyncSession = Depends(get_session),
+        response: Response,
+        address: str,
+        skip: int = Query(0),
+        limit: int = Query(100, gt=0, lt=101),
+        session: AsyncSession = Depends(get_session),
 ) -> List[Delegation]:
     """Return list of delegations."""
     query = (
@@ -37,7 +37,8 @@ async def get_delegations_by_address(
         return Response(status_code=HTTPStatus.NO_CONTENT.value)
 
     # Return the count in header
-    query_count = select([func.count(Delegation.address)]).where(Delegation.address == address)
+    query_count = select(func.count()).select_from(Delegation).where(
+        Delegation.address == address)
     result_count = await session.execute(query_count)
     total_count = str(result_count.scalars().all()[0])
     response.headers["x-total-count"] = total_count
@@ -47,11 +48,11 @@ async def get_delegations_by_address(
 
 @router.get("/governance/votes/{address}")
 async def get_votes_by_address(
-    address: str,
-    response: Response,
-    skip: int = Query(0),
-    limit: int = Query(100, gt=0, lt=101),
-    session: AsyncSession = Depends(get_session),
+        address: str,
+        response: Response,
+        skip: int = Query(0),
+        limit: int = Query(100, gt=0, lt=101),
+        session: AsyncSession = Depends(get_session),
 ) -> List[Delegation]:
     """Return list of votes."""
     query = (
@@ -70,7 +71,11 @@ async def get_votes_by_address(
         return Response(status_code=HTTPStatus.NO_CONTENT.value)
 
     # Return the count in header
-    query_count = select([func.count(Delegation.address)]).where(Delegation.prep_address == address)
+    query_count = (
+        select(func.count())
+        .select_from(Delegation)
+        .where(Delegation.prep_address == address)
+    )
 
     result_count = await session.execute(query_count)
     total_count = str(result_count.scalars().all()[0])

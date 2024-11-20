@@ -1,5 +1,6 @@
 import datetime
 
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from icon_governance.log import logger
@@ -11,14 +12,14 @@ def run_stats(session: Session):
     """This cron scrapes the cmc endpoint for."""
     logger.info(f"Starting {__name__} cron")
 
-    sql = "select count(distinct address) from delegations"
+    sql = text("select count(distinct address) from delegations")
     stakers_count = session.execute(sql).scalar()
 
-    sql = "select count(bonders) from preps"
+    sql = text("select count(bonders) from preps")
     bonders_count = session.execute(sql).scalar()
 
     stats = Stats(
-        timestamp=int(datetime.datetime.utcnow().timestamp()),
+        timestamp=int(datetime.datetime.now(tz=datetime.timezone.utc).timestamp()),
         stakers=stakers_count,
         bonders=bonders_count,
     )
