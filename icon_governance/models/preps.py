@@ -10,7 +10,7 @@ from sqlmodel._compat import SQLModelConfig
 class Prep(SQLModel, table=True):
     address: str = Field(primary_key=True)
 
-    name: Optional[str] = Field(None)
+    name: Optional[str] = Field(None, index=True)
     country: Optional[str] = Field(None)
     city: Optional[str] = Field(None)
     email: Optional[str] = Field(None)
@@ -22,8 +22,8 @@ class Prep(SQLModel, table=True):
     node_state: Optional[str] = Field(None)
 
     status: Optional[str] = Field(None)
-    penalty: Optional[str] = Field(None)
-    grade: Optional[str] = Field(None)
+    penalty: Optional[str] = Field(None, index=True)
+    grade: Optional[str] = Field(None, index=True)
 
     last_updated_block: Optional[int] = Field(None)
     last_updated_timestamp: Optional[int] = Field(None)
@@ -70,7 +70,7 @@ class Prep(SQLModel, table=True):
     unvalidated_sequence_blocks: Optional[float] = Field(None)
 
     bonded: Optional[float] = Field(None)
-    bond_percent: Optional[float] = Field(None)
+    bond_percent: Optional[float] = Field(None, index=True)
     power: Optional[float] = Field(None)
 
     # CPS
@@ -78,8 +78,8 @@ class Prep(SQLModel, table=True):
     cps_governance: bool = Field(False)
 
     # Blocks
-    failure_count: Optional[int] = Field(None)
     penalties: Optional[int] = Field(None)
+    failure_count: Optional[int] = Field(None, index=True)
 
     # Rewards
     reward_monthly: Optional[float] = Field(None)
@@ -91,17 +91,17 @@ class Prep(SQLModel, table=True):
     bonders: Optional[int] = Field(None)
 
     # Jail
-    jail_flags: Optional[str] = Field(None)
+    jail_flags: Optional[str] = Field(None, index=True)
     unjail_request_height: Optional[int] = Field(None)
 
     # Commission
     max_commission_change_rate: Optional[float] = Field(None)
     max_commission_rate: Optional[float] = Field(None)
-    commission_rate: Optional[float] = Field(None)
+    commission_rate: Optional[float] = Field(None, index=True)
 
     # iiss 4 misc
     min_double_sign_height: Optional[int] = Field(None)
-    has_public_key: Optional[bool] = Field(None)
+    has_public_key: Optional[bool] = Field(None, index=True)
 
     model_config = SQLModelConfig(
         extra="ignore",
