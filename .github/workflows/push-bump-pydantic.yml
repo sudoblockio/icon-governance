@@ -16,16 +16,13 @@ jobs:
 
       - name: Install deps
         run: |
-          pip3 install -r requirements_api.txt -r requirements_worker.txt -r requirements_dev.txt
+          make install
 
       - name: Bring up stack
-        run: make up-dbs && sleep 30
-
-      - name: Check stack
-        run: make ps
+        run: make up-dbs
 
       - name: Run tests with coverage
-        run: make test-coverage
+        run: make test
 
   docker:
     runs-on: ubuntu-latest
