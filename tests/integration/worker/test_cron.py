@@ -33,6 +33,7 @@ CRONS = [
 ]
 
 
+@pytest.mark.order(1)
 @pytest.mark.parametrize("cron", CRONS)
 def test_preps_cron(db, cron):
     with db as session:

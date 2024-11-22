@@ -1,6 +1,5 @@
 import pytest
 
-from icon_governance.config import settings
 from icon_governance.utils.time_to_block import get_timestamp_from_block
 
 
