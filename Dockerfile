@@ -15,8 +15,8 @@ RUN apt-get update \
   && apt-get clean
 
 RUN pip install --upgrade pip
-COPY ./requirements_$SERVICE_NAME.txt .
-RUN pip install -r ./requirements_$SERVICE_NAME.txt
+COPY ./requirements-$SERVICE_NAME.txt .
+RUN pip install -r ./requirements-$SERVICE_NAME.txt
 
 COPY icon_governance ./icon_governance
 
