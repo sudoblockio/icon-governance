@@ -1,3 +1,5 @@
+import pytest
+
 from icon_governance.config import settings
 from icon_governance.utils.rpc import (
     convert_hex_int,
