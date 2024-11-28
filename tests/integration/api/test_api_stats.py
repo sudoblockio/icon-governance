@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from icon_governance.config import settings
 
-# There is
+# These 2 tests will fail as there are no data in respective tables
 # def test_api_stats_get_apy_over_time(client: TestClient):
 #     response = client.get(f"{settings.REST_PREFIX}/governance/stats/apy/time")
 #     assert response.status_code == 200
