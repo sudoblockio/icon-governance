@@ -4,5 +4,5 @@ pytest-cov
 pytest-order
 pytest-retry
 pytest-asyncio
-httpx
+pytest-httpx
 grpcio-tools==1.40.0
