@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster as base
+FROM python:3.10-slim-buster as base
 
 ARG SERVICE_NAME
 ENV SERVICE_NAME ${SERVICE_NAME:-api}
