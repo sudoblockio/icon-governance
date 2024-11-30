@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -54,7 +55,7 @@ class Settings(BaseSettings):
     CONSUMER_TOPIC_BLOCKS: str = "blocks"
     # Backfilling
     CONSUMER_AUTO_OFFSET_RESET: str = "earliest"
-    JOB_ID: str | None = None
+    JOB_ID: Optional[str] = None
 
     # DB
     POSTGRES_USER: str = "postgres"
