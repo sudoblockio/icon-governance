@@ -12,4 +12,4 @@ protobuf==3.20.*
 confluent_kafka==1.9.2
 APScheduler==3.9.1
 aiohttp==3.8.4
-psycopg2
+psycopg2-binary
