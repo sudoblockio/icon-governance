@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster as base
+FROM python:3.10-slim-buster as base
 
 ARG SERVICE_NAME
 ENV SERVICE_NAME ${SERVICE_NAME:-api}
@@ -15,8 +15,8 @@ RUN apt-get update \
   && apt-get clean
 
 RUN pip install --upgrade pip
-COPY ./requirements_$SERVICE_NAME.txt .
-RUN pip install -r ./requirements_$SERVICE_NAME.txt
+COPY ./requirements-$SERVICE_NAME.txt .
+RUN pip install -r ./requirements-$SERVICE_NAME.txt
 
 COPY icon_governance ./icon_governance
 

@@ -4,10 +4,8 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, create_engine
-from psycopg2 import OperationalError
 
 from icon_governance.config import settings
-from icon_governance.models.preps import Prep
 
 SQLALCHEMY_DATABASE_URL_STUB = "://{user}:{password}@{server}:{port}/{db}".format(
     user=settings.POSTGRES_USER,
@@ -24,10 +22,10 @@ logger.info(f"Connecting to server: {settings.POSTGRES_SERVER} and {settings.POS
 
 async_engine = create_async_engine(
     ASYNC_SQLALCHEMY_DATABASE_URL,
-    echo=False,
+    echo=True,
     future=True,
-    pool_size=10,
-    max_overflow=5,
+    pool_size=20,
+    max_overflow=10,
 )
 
 

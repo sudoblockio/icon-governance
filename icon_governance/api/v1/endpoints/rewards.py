@@ -38,7 +38,11 @@ async def get_rewards_by_address(
         return Response(status_code=HTTPStatus.NO_CONTENT.value)
 
     # Return the count in header
-    query_count = select([func.count(Reward.address)]).where(Reward.address == address)
+    query_count = select(
+        func.count()
+    ).select_from(
+        Reward
+    ).where(Reward.address == address)
     result_count = await session.execute(query_count)
     total_count = str(result_count.scalars().all()[0])
     response.headers["x-total-count"] = total_count

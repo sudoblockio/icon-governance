@@ -1,0 +1,9 @@
+pytest
+pytest-mock
+pytest-cov
+pytest-order
+pytest-retry
+pytest-asyncio
+httpx<0.28.0
+pytest-httpx
+grpcio-tools==1.40.0

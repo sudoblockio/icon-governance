@@ -1,3 +1,5 @@
+import pytest
+
 from icon_governance.config import settings
 from icon_governance.utils.rpc import (
     convert_hex_int,
@@ -100,6 +102,7 @@ def test_getIISSInfo():
     assert output
 
 
+@pytest.mark.flaky(delay=1, retries=3)
 def test_getIISSInfo_networks(tmp_set_settings):
     with tmp_set_settings("ICON_NODE_URL", "https://api.berlin.icon.community/api/v3"):
         output = getIISSInfo(height=1)

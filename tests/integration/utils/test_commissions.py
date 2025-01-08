@@ -3,6 +3,8 @@ import pytest
 from icon_governance.utils.commissions import get_commission_stats
 
 
+@pytest.mark.flaky(delay=1, retries=3)
+@pytest.mark.order(3)
 @pytest.mark.parametrize(
     "url,height",
     [

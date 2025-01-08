@@ -35,15 +35,15 @@ async def get_preps(
         query = query.where(Prep.grade != "0x3")
     if has_public_key is not None:
         if has_public_key:
-            query = query.where(is_not(Prep.public_key, None))
+            query = query.where(Prep.public_key.is_not(None))
         else:
-            query = query.where(is_(Prep.public_key, None))
+            query = query.where(Prep.public_key.is_(None))
 
     if in_jail is not None:
         if in_jail:
-            query = query.where(is_not(Prep.jail_flags, '0x0'))
+            query = query.where(Prep.jail_flags != '0x0')
         else:
-            query = query.where(is_(Prep.jail_flags, '0x0'))
+            query = query.where(Prep.jail_flags != '0x0')
 
     if sort is not None:
         valid_sort_fields = ["name", "commission_rate", "bond_percent"]

@@ -83,9 +83,8 @@ async def get_commission_over_time(
 
 @router.get("/governance/stats")
 async def get_governance_stats(
-    response: Response,
     session: AsyncSession = Depends(get_session),
-) -> List[Stats]:
+) -> Stats:
     """Get stats - single entry json."""
     query = select(Stats).limit(1).order_by(Stats.timestamp.desc())
 

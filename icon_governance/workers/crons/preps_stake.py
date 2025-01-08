@@ -1,4 +1,5 @@
 from loguru import logger
+from sqlalchemy import text
 from sqlmodel import select
 
 from icon_governance.metrics import prom_metrics
@@ -37,7 +38,7 @@ def run_prep_stake(session):
         sql = (
             f"select count(distinct address) from delegations where prep_address = '{prep.address}'"
         )
-        delegators_count = session.execute(sql).scalar()
+        delegators_count = session.execute(text(sql)).scalar()
         prep.stakers = delegators_count
 
         session.merge(prep)

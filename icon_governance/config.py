@@ -1,6 +1,9 @@
-import os
+from __future__ import annotations
 
-from pydantic import BaseSettings
+import os
+from typing import Optional
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -52,7 +55,7 @@ class Settings(BaseSettings):
     CONSUMER_TOPIC_BLOCKS: str = "blocks"
     # Backfilling
     CONSUMER_AUTO_OFFSET_RESET: str = "earliest"
-    JOB_ID: str = None
+    JOB_ID: Optional[str] = None
 
     # DB
     POSTGRES_USER: str = "postgres"
@@ -69,8 +72,9 @@ class Settings(BaseSettings):
 
     apy_start_block: int = 44000000
 
-    class Config:
-        case_sensitive = True
+    model_config = SettingsConfigDict(
+        extra="ignore",
+    )
 
 
 TEST_ENV = os.path.join(os.path.dirname(__file__), "..", ".env.test")

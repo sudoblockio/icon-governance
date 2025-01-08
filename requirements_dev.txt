@@ -1,5 +1,0 @@
-pytest
-pytest-mock
-pytest-cov
-
-grpcio-tools==1.40.0

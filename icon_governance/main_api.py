@@ -12,8 +12,6 @@ from icon_governance.api.v1.router import api_router
 from icon_governance.config import settings
 from icon_governance.log import logger
 
-app = FastAPI()
-
 tags_metadata = [
     {
         "name": "icon-governance",
@@ -59,6 +57,5 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=settings.PORT,
         log_level="info",
-        debug=True,
         workers=1,
     )

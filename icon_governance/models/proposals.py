@@ -14,7 +14,9 @@ class Proposal(SQLModel, table=True):
     start_block_height: Optional[int] = Field(None, index=False)
     end_block_height: Optional[int] = Field(None, index=False)
 
-    contents_json: Optional[dict] = Field(None, index=False, sa_column=Column(JSON))
+    contents_json: Optional[dict] = Field(
+        None, sa_column=Column(JSON, index=False)
+    )
     title: Optional[str] = Field(None, index=False)
     description: Optional[str] = Field(None, index=False)
     type: Optional[str] = Field(None, index=False)

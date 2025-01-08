@@ -28,11 +28,12 @@ CRONS = [
     preps_state.run_prep_state,
     proposals.run_proposals,
     preps_iscore.run_prep_iscore,
-    # preps_rewards.run_get_prep_rewards,
+    preps_rewards.run_get_prep_rewards,
     preps_public_key.run_prep_public_key,
 ]
 
 
+@pytest.mark.order(1)
 @pytest.mark.parametrize("cron", CRONS)
 def test_preps_cron(db, cron):
     with db as session:
