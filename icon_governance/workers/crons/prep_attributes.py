@@ -46,12 +46,12 @@ def run_prep_attributes(session):
         prep.delegated = convert_hex_int(p["delegated"]) / 1e18
 
         if prep.delegated != 0:
-            prep.bond_percent = (
-                prep.bonded / bond_requirement_rate / prep.delegated / 1e18
-            )
+            bonded_icx = prep.bonded / 1e18
+            bond_percent = (bonded_icx / bond_requirement_rate) / (bonded_icx + prep.delegated)
+            prep.bond_percent = bond_percent
         else:
             prep.bond_percent = 0
-
+            
         prep.irep = convert_hex_int(p["irep"]) / 1e18
 
         prep.grade = p["grade"]
