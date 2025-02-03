@@ -7,20 +7,21 @@ import pytest
 import httpx
 from _pytest.logging import caplog as _caplog
 from fastapi.testclient import TestClient
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
-from icon_governance.main_api import app
+import pytest_asyncio
+# from starlette.testclient import TestClient
 
+from icon_governance.main_api import app
 from icon_governance.db import engine
+
 
 # from icon_governance.db import get_session
 # @pytest.fixture(scope="session")
 # def db() -> Generator:
 #     yield get_session()
-import pytest_asyncio
-# from starlette.testclient import TestClient
 
 
 @pytest.fixture(scope="session")
@@ -29,6 +30,7 @@ def event_loop():
     loop = asyncio.new_event_loop()
     yield loop
     loop.close()
+
 
 # @pytest.fixture(scope="function")
 # async def db():
@@ -50,8 +52,12 @@ def db():
 
 @pytest_asyncio.fixture(scope="module")
 async def client() -> httpx.AsyncClient:
-    async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
+    async with httpx.AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url="http://testserver",
+    ) as client:
         yield client
+
 
 @pytest.fixture
 def caplog(_caplog):
