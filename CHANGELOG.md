@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.10.6](https://github.com/sudoblockio/icon-governance/compare/v0.10.5...v0.10.6) (2025-02-03)
+
+
+### Bug Fixes
+
+* add preps indexes ([3c06114](https://github.com/sudoblockio/icon-governance/commit/3c06114647877e193983ee11c4584d4e8de44065))
+* make more fixes from sqla + fastapi updates ([228679c](https://github.com/sudoblockio/icon-governance/commit/228679c13a93b0993d34dbb4fff2979f5134eef2))
+* rm echo in db and add pool ([8a2b0bc](https://github.com/sudoblockio/icon-governance/commit/8a2b0bc69cff04a326cc18b0ae2930dbdead6f31))
+* updated bond_percent formula [#60](https://github.com/sudoblockio/icon-governance/issues/60) ([8d0e583](https://github.com/sudoblockio/icon-governance/commit/8d0e583eab1f9472c9893f7344238ae36147fb87))
+
 ## [0.10.5](https://github.com/sudoblockio/icon-governance/compare/v0.10.4...v0.10.5) (2024-10-14)
 
 
