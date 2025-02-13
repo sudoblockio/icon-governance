@@ -24,8 +24,8 @@ def upgrade():
         sa.Column("address", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
         sa.Column("block", sa.Integer(), nullable=True),
         sa.Column("timestamp", sa.Integer(), nullable=True),
-        sa.Column("value", sa.Numeric(precision=10, scale=3), nullable=True),
-        sa.Column("iscore", sa.Numeric(precision=13, scale=3), nullable=True),
+        sa.Column("value", sa.Numeric(precision=13, scale=3), nullable=True),
+        sa.Column("iscore", sa.Numeric(precision=15, scale=3), nullable=True),
         sa.PrimaryKeyConstraint("tx_hash"),
     )
     op.create_index(op.f("ix_rewards_address"), "rewards", ["address"], unique=False)

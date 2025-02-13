@@ -12,8 +12,8 @@ class Reward(SQLModel, table=True):
     timestamp: Optional[int] = Field(None)
 
     # Come from Tx logs
-    value: Optional[condecimal(max_digits=10, decimal_places=3)] = Field(None)
-    iscore: Optional[condecimal(max_digits=13, decimal_places=3)] = Field(None)
+    value: Optional[condecimal(max_digits=13, decimal_places=3)] = Field(None)
+    iscore: Optional[condecimal(max_digits=15, decimal_places=3)] = Field(None)
 
     @declared_attr
     def __tablename__(cls) -> str:  # noqa: N805
