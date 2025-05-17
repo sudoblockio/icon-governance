@@ -14,7 +14,13 @@ def get_max_addresses(is_contract: bool = None) -> Optional[int]:
 
     r = requests.head(endpoint)
     if r.status_code == 200:
-        total_records = int(dict(r.headers)["x-total-count"])
+        headers = dict(r.headers)
+        if "x-total-count" in headers:
+            total_records = int(headers["x-total-count"])
+        elif "X-Total-Count" in headers:
+            total_records = int(headers["X-Total-Count"])
+        else:
+            raise Exception(f"No count in headers headers: {headers}")
         return total_records
     else:
         logger.info(f"Could not head addresses")
