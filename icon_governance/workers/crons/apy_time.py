@@ -16,14 +16,18 @@ from icon_governance.utils.time_to_block import (
 def run_apy_time(session: Session):
     logger.info(f"Starting {__name__} cron")
 
-    last_apy_time = session.query(ApyTime).order_by(ApyTime.timestamp.desc()).first()
+    if settings.NETWORK_NAME in ["lisbon", "berlin"]:
+        logger.info("Skipping apytime for testnets")
+        return
 
+    last_apy_time = session.query(ApyTime).order_by(ApyTime.timestamp.desc()).first()
     if last_apy_time is None:
+        logger.info("Starting new apy time....")
         # This is roughly when the governance stats were started (ie ICON 2.0)
-        if settings.NETWORK_NAME in ["lisbon", "berlin"]:
-            start_height = 2000000
-        else:
-            start_height = settings.apy_start_block
+        # if settings.NETWORK_NAME in ["lisbon", "berlin"]:
+        #     start_height = 2000000
+        # else:
+        start_height = settings.apy_start_block
         staking_time = int(get_timestamp_from_block(start_height) / 1e6)
     else:
         staking_time = last_apy_time.timestamp + 86400
@@ -41,7 +45,7 @@ def run_apy_time(session: Session):
         staking_apy_time = ApyTime(
             timestamp=staking_time,
             height=height,
-            **apys.dict(),
+            **apys.model_dump(),
         )
         session.merge(staking_apy_time)
         session.commit()
