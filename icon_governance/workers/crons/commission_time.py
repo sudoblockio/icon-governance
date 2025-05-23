@@ -21,6 +21,9 @@ def _transpose_dict_keys(commission_dict: dict[str, CommissionStats]) -> dict:
     return output
 
 def run_commission_time(session: Session):
+    if settings.NETWORK_NAME in ["lisbon", "berlin"]:
+        logger.info(f"Skipping {__name__} cron for testnets")
+        return
     logger.info(f"Starting {__name__} cron")
 
     last_commission_time = session.query(CommissionTime).order_by(

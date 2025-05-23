@@ -14,11 +14,10 @@ from icon_governance.utils.time_to_block import (
 
 
 def run_apy_time(session: Session):
-    logger.info(f"Starting {__name__} cron")
-
     if settings.NETWORK_NAME in ["lisbon", "berlin"]:
         logger.info("Skipping apytime for testnets")
         return
+    logger.info(f"Starting {__name__} cron")
 
     last_apy_time = session.query(ApyTime).order_by(ApyTime.timestamp.desc()).first()
     if last_apy_time is None:
