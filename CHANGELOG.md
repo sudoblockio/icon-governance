@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.7](https://github.com/sudoblockio/icon-governance/compare/v0.10.6...v0.10.7) (2025-06-09)
+
+
+### Bug Fixes
+
+* decimal overflow issue breaking lisbon sync ([3bf4a95](https://github.com/sudoblockio/icon-governance/commit/3bf4a95501451d7f2d62fae8edea422c127a559f))
+* sync issue with count in headers ([f391765](https://github.com/sudoblockio/icon-governance/commit/f391765cc7492c8430783423138f94cf85776334))
+
 ## [0.10.6](https://github.com/sudoblockio/icon-governance/compare/v0.10.5...v0.10.6) (2025-02-03)
 
 
