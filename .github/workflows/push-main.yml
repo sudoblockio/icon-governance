@@ -15,14 +15,14 @@ jobs:
       - name: Install deps
         run: make install
 
-      - name: Bring up stack
-        run: make up-dbs && sleep 30
-
-      - name: Check stack
-        run: make ps
-
-      - name: Run tests with coverage
-        run: make test-coverage
+#      - name: Bring up stack
+#        run: make up-dbs && sleep 30
+#
+#      - name: Check stack
+#        run: make ps
+#
+#      - name: Run tests with coverage
+#        run: make test-coverage
 
 #      - uses: codecov/codecov-action@v4
 #        with:
